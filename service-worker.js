@@ -1,0 +1,1 @@
+// Functional content for service-worker.js
