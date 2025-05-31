@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import flashcardsData from '../data/flashcards.json'
-import martialArtsData from '../data/martialArts.json'
 import { ProgressTracker } from '../utils/progressTracker'
 
 const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
@@ -12,7 +11,8 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
   const [flagSubmitted, setFlagSubmitted] = useState(false)
   
   const allFlashcards = flashcardsData.flashcards
-    // Filter flashcards based on session mode
+  
+  // Filter flashcards based on session mode
   const getFilteredFlashcards = () => {
     if (!sessionMode) return allFlashcards
     
@@ -27,15 +27,29 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
         // Filter by healing themes - you can add specific theme filtering logic here
         return allFlashcards
       case 'maek-chi-ki':
-        // Return cards in exact teaching order as specified in martial arts data
-        return martialArtsData.maekChiKi.map(pointNumber => 
-          allFlashcards.find(card => card.number === pointNumber)
-        ).filter(card => card !== undefined)
+        // Filter cards relevant for fist/hand techniques
+        return allFlashcards.filter(card => 
+          card.martialApplication && 
+          (card.martialApplication.toLowerCase().includes('fist') || 
+           card.martialApplication.toLowerCase().includes('hand') ||
+           card.martialApplication.toLowerCase().includes('arm') ||
+           card.martialApplication.toLowerCase().includes('finger') ||
+           card.martialApplication.toLowerCase().includes('wrist') ||
+           card.martialApplication.toLowerCase().includes('grip') ||
+           card.martialApplication.toLowerCase().includes('strike'))
+        )
       case 'maek-cha-ki':
-        // Return cards in exact teaching order as specified in martial arts data
-        return martialArtsData.maekChaKi.map(pointNumber => 
-          allFlashcards.find(card => card.number === pointNumber)
-        ).filter(card => card !== undefined)
+        // Filter cards relevant for foot/leg techniques
+        return allFlashcards.filter(card => 
+          card.martialApplication && 
+          (card.martialApplication.toLowerCase().includes('foot') || 
+           card.martialApplication.toLowerCase().includes('leg') ||
+           card.martialApplication.toLowerCase().includes('ankle') ||
+           card.martialApplication.toLowerCase().includes('knee') ||
+           card.martialApplication.toLowerCase().includes('kick') ||
+           card.martialApplication.toLowerCase().includes('stance') ||
+           card.martialApplication.toLowerCase().includes('balance'))
+        )
       default:
         return allFlashcards
     }

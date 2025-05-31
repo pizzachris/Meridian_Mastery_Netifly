@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import flashcardsData from '../data/flashcards.json'
-import martialArtsData from '../data/martialArts.json'
 import { ProgressTracker } from '../utils/progressTracker'
 
 const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
@@ -10,8 +9,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
   const [showFlagModal, setShowFlagModal] = useState(false)
   const [flagReason, setFlagReason] = useState('')
   const [flagSubmitted, setFlagSubmitted] = useState(false)
-  
-  const allFlashcards = flashcardsData.flashcards
+    const allFlashcards = flashcardsData.flashcards
     // Filter flashcards based on session mode
   const getFilteredFlashcards = () => {
     if (!sessionMode) return allFlashcards
@@ -27,15 +25,29 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
         // Filter by healing themes - you can add specific theme filtering logic here
         return allFlashcards
       case 'maek-chi-ki':
-        // Return cards in exact teaching order as specified in martial arts data
-        return martialArtsData.maekChiKi.map(pointNumber => 
-          allFlashcards.find(card => card.number === pointNumber)
-        ).filter(card => card !== undefined)
+        // Filter cards relevant for fist/hand techniques
+        return allFlashcards.filter(card => 
+          card.martialApplication && 
+          (card.martialApplication.toLowerCase().includes('fist') || 
+           card.martialApplication.toLowerCase().includes('hand') ||
+           card.martialApplication.toLowerCase().includes('arm') ||
+           card.martialApplication.toLowerCase().includes('finger') ||
+           card.martialApplication.toLowerCase().includes('wrist') ||
+           card.martialApplication.toLowerCase().includes('grip') ||
+           card.martialApplication.toLowerCase().includes('strike'))
+        )
       case 'maek-cha-ki':
-        // Return cards in exact teaching order as specified in martial arts data
-        return martialArtsData.maekChaKi.map(pointNumber => 
-          allFlashcards.find(card => card.number === pointNumber)
-        ).filter(card => card !== undefined)
+        // Filter cards relevant for foot/leg techniques
+        return allFlashcards.filter(card => 
+          card.martialApplication && 
+          (card.martialApplication.toLowerCase().includes('foot') || 
+           card.martialApplication.toLowerCase().includes('leg') ||
+           card.martialApplication.toLowerCase().includes('ankle') ||
+           card.martialApplication.toLowerCase().includes('knee') ||
+           card.martialApplication.toLowerCase().includes('kick') ||
+           card.martialApplication.toLowerCase().includes('stance') ||
+           card.martialApplication.toLowerCase().includes('balance'))
+        )
       default:
         return allFlashcards
     }
@@ -53,7 +65,6 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
       }
     }
   }, [selectedPointId, flashcards])
-  
   // Load user stats for current card
   useEffect(() => {
     if (card) {
@@ -83,7 +94,6 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
     }
     setIsFlipped(!isFlipped)
   }
-  
   const startQuiz = () => {
     navigateTo('quiz', { sessionMode: 'flashcard-review' })
   }
@@ -137,7 +147,6 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
     }
     return colors[element] || 'border-gray-500 bg-gray-500/10'
   }
-  
   if (flashcards.length === 0) {
     return (
       <div className="min-h-screen kuk-sool-gradient text-white flex items-center justify-center">
@@ -146,8 +155,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
           <p>Loading flashcards...</p>
         </div>
       </div>
-    )
-  }
+    )  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -225,9 +233,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
             <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
               <h4 className="font-bold text-yellow-400 mb-2">Theoretical effects:</h4>
               <p className="text-gray-200 text-sm">{card.martialApplication}</p>
-            </div>
-            
-            {/* GPT Guided Insight */}
+            </div>            {/* GPT Guided Insight */}
             <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
               <div className="flex justify-between items-start mb-2">
                 <h4 className="font-bold text-yellow-400">GPT-GUIDED INSIGHT</h4>
@@ -247,9 +253,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
               )}
             </div>
           </div>
-        )}
-        
-        {/* Bottom Controls */}
+        )}        {/* Bottom Controls */}
         <div className="space-y-4">
           {/* Navigation and Flip Controls */}
           <div className="flex justify-between items-center">

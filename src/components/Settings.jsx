@@ -1,17 +1,83 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import DisclaimerModal from './DisclaimerModal'
 
-const Settings = ({ darkMode, setDarkMode }) => {
+const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
+  const [autoFlip, setAutoFlip] = useState(false)
+  const [showRomanization, setShowRomanization] = useState(true)
+  const [voicePronunciation, setVoicePronunciation] = useState(false)
+  const [cardsPerSession, setCardsPerSession] = useState('10')
+  const [shuffleCards, setShuffleCards] = useState(true)
+
+  const exportProgress = () => {
+    try {
+      const progressData = localStorage.getItem('meridian-mastery-progress')
+      const data = {
+        progress: progressData ? JSON.parse(progressData) : {},
+        exportDate: new Date().toISOString(),
+        version: '1.0'
+      }
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `meridian-mastery-progress-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      alert('Failed to export progress data')
+    }
+  }
+
+  const importData = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = (e) => {
+      const file = e.target.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result)
+            if (data.progress) {
+              localStorage.setItem('meridian-mastery-progress', JSON.stringify(data.progress))
+              alert('Progress data imported successfully!')
+            } else {
+              alert('Invalid file format')
+            }
+          } catch (error) {
+            alert('Failed to import data')
+          }
+        }
+        reader.readAsText(file)
+      }
+    }
+    input.click()
+  }
+
+  const resetAllData = () => {
+    if (confirm('Are you sure you want to reset all progress data? This cannot be undone.')) {
+      localStorage.removeItem('meridian-mastery-progress')
+      localStorage.removeItem('meridian-mastery-flags')
+      alert('All data has been reset.')
+      window.location.reload()
+    }
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
+      <div className="container mx-auto px-4 py-8">        {/* Header */}
         <header className="text-center mb-8">
-          <Link to="/" className="inline-block mb-4">
-            <button className="text-yellow-400 hover:text-yellow-300 text-sm font-medium">
-              ← Back to Home
-            </button>
-          </Link>
+          <button 
+            onClick={() => navigateTo('home')}
+            className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
+          >
+            ← Back to Home
+          </button>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Settings</h1>
           <p className="text-gray-300">Customize your experience</p>
         </header>
@@ -41,44 +107,64 @@ const Settings = ({ darkMode, setDarkMode }) => {
 
           {/* Study Preferences */}
           <div className="card">
-            <h3 className="font-semibold text-lg mb-4">Study Preferences</h3>
-            <div className="space-y-3">
+            <h3 className="font-semibold text-lg mb-4">Study Preferences</h3>            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span>Auto-flip cards</span>
-                <input type="checkbox" className="w-4 h-4" />
+                <input 
+                  type="checkbox" 
+                  checked={autoFlip}
+                  onChange={(e) => setAutoFlip(e.target.checked)}
+                  className="w-4 h-4 accent-yellow-500" 
+                />
               </div>
               <div className="flex items-center justify-between">
                 <span>Show romanization</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4" />
+                <input 
+                  type="checkbox" 
+                  checked={showRomanization}
+                  onChange={(e) => setShowRomanization(e.target.checked)}
+                  className="w-4 h-4 accent-yellow-500" 
+                />
               </div>
               <div className="flex items-center justify-between">
                 <span>Voice pronunciation</span>
-                <input type="checkbox" className="w-4 h-4" />
+                <input 
+                  type="checkbox" 
+                  checked={voicePronunciation}
+                  onChange={(e) => setVoicePronunciation(e.target.checked)}
+                  className="w-4 h-4 accent-yellow-500" 
+                />
               </div>
             </div>
           </div>
 
           {/* Session Settings */}
           <div className="card">
-            <h3 className="font-semibold text-lg mb-4">Session Settings</h3>
-            <div className="space-y-3">
+            <h3 className="font-semibold text-lg mb-4">Session Settings</h3>            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span>Cards per session</span>
-                <select className="bg-gray-700 text-white px-3 py-1 rounded">
-                  <option>10</option>
-                  <option>20</option>
-                  <option>50</option>
-                  <option>All</option>
+                <select 
+                  value={cardsPerSession}
+                  onChange={(e) => setCardsPerSession(e.target.value)}
+                  className="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 focus:border-yellow-500 focus:outline-none"
+                >
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="all">All</option>
                 </select>
               </div>
               <div className="flex items-center justify-between">
                 <span>Shuffle cards</span>
-                <input type="checkbox" defaultChecked className="w-4 h-4" />
+                <input 
+                  type="checkbox" 
+                  checked={shuffleCards}
+                  onChange={(e) => setShuffleCards(e.target.checked)}
+                  className="w-4 h-4 accent-yellow-500" 
+                />
               </div>
             </div>
-          </div>
-
-          {/* About Section */}
+          </div>          {/* About Section */}
           <div className="card">
             <h3 className="font-semibold text-lg mb-4">About</h3>
             <div className="text-sm text-gray-300 space-y-2">
@@ -91,7 +177,41 @@ const Settings = ({ darkMode, setDarkMode }) => {
             </div>
           </div>
 
-          {/* Data Management */}
+          {/* Safety Disclaimer */}
+          <div className="card">
+            <h3 className="font-semibold text-lg mb-4 text-red-400">⚠️ Safety Disclaimer</h3>
+            <div className="bg-red-900/20 border border-red-600 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-300 mb-3">
+                <strong className="text-red-400">FOR EDUCATIONAL PURPOSES ONLY</strong>
+              </p>
+              <p className="text-xs text-gray-400 leading-relaxed">
+                This application provides theoretical knowledge only. Pressure point techniques 
+                can be dangerous if applied incorrectly. <strong>Never practice these techniques 
+                without proper training and supervision from a qualified martial arts instructor.</strong>
+              </p>
+            </div>
+            <div className="space-y-2 text-xs text-gray-400">
+              <p><strong>Requirements for practice:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Certified martial arts instructor supervision</li>
+                <li>Proper training in pressure point application</li>
+                <li>Understanding of safety protocols and contraindications</li>
+                <li>Knowledge of potential risks and proper techniques</li>
+              </ul>              <p className="mt-3 pt-2 border-t border-gray-700">
+                Disclaimer accepted on: {(() => {
+                  const date = localStorage.getItem('meridian-mastery-disclaimer-date')
+                  return date ? new Date(date).toLocaleDateString() : 'Not recorded'
+                })()}
+              </p>
+            </div>
+            
+            <button
+              onClick={() => setShowDisclaimer(true)}
+              className="w-full mt-4 bg-yellow-800/30 hover:bg-yellow-700/40 border border-yellow-600 text-yellow-400 py-2 px-4 rounded-lg text-sm transition-all duration-200"
+            >
+              📋 View Full Disclaimer
+            </button>
+          </div>{/* Data Management */}
           <div className="card">
             <h3 className="font-semibold text-lg mb-4">Data Management</h3>
             <div className="space-y-3">
@@ -106,8 +226,35 @@ const Settings = ({ darkMode, setDarkMode }) => {
               </button>
             </div>
           </div>
-        </div>
+
+          {/* Developer Tools */}
+          <div className="card">
+            <h3 className="font-semibold text-lg mb-4">Developer Tools</h3>
+            <div className="space-y-3">
+              <button 
+                onClick={() => navigateTo('flagged-issues')}
+                className="w-full bg-orange-700 hover:bg-orange-600 text-white py-2 px-4 rounded-xl flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+                </svg>
+                View Flagged Issues
+              </button>
+              <div className="text-xs text-gray-400 text-center">
+                {(() => {
+                  const flags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
+                  return `${flags.length} issues reported`
+                })()}
+              </div>
+            </div>
+          </div>        </div>
       </div>
+      
+      {/* Disclaimer Modal */}
+      <DisclaimerModal 
+        isOpen={showDisclaimer} 
+        onAccept={() => setShowDisclaimer(false)} 
+      />
     </div>
   )
 }
