@@ -161,6 +161,16 @@
 - Points needing review identification
 - Performance trends over time
 
+#### **Martial Arts Teaching Order System** - **NEW**
+- **SPECIALIZED SEQUENCE PRESERVATION** for martial arts techniques
+- **Maek Chi Ki Training**: Displays flashcards in exact teaching order:
+  - LU7 → LI20 → LU3 → HT1 → HOHN_SOO_1 → GB3 → HOHN_SOO_2 → SP21 → CV7 → CV15 → CV23 → LV13 → GV15 → GV24 → ST18
+- **Maek Cha Ki Training**: Displays flashcards in exact teaching order:
+  - SP6 → ST35 → BL40 → SP10 → LV13 → HT1 → CV8 → CV15 → CV23 → HOHN_SOO_3 → ST18 → GV15 → GB3 → GV14 → NEUNG_CHUHN
+- **Other Training Modes**: Use original flashcards array order (organized by meridian point numbers)
+- **Implementation**: Uses `map()` instead of `filter()` to preserve exact teaching sequences
+- **Data Source**: `src/data/martialArts.json` contains the official teaching order arrays
+
 ---
 
 ## 🏗️ TECHNICAL SPECIFICATIONS
