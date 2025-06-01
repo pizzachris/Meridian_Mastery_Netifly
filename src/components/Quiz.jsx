@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import flashcardsData from '../data/flashcards.json'
 import { ProgressTracker } from '../utils/progressTracker'
+import pronunciationManager from '../utils/pronunciation'
 
 const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -422,7 +423,6 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       ProgressTracker.completeSession('quiz')
     }
   }
-
   const restartQuiz = () => {
     setCurrentQuestionIndex(0)
     setSelectedAnswer(null)
@@ -431,6 +431,14 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
     setSessionComplete(false)
     setSessionResults([])
     generateQuizQuestions()
+  }
+
+  const handlePronunciation = (text, isKorean = false) => {
+    if (isKorean) {
+      pronunciationManager.speakKorean(text)
+    } else {
+      pronunciationManager.speakRomanized(text)
+    }
   }
   if (quizQuestions.length === 0) {
     return (
@@ -605,13 +613,37 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           </div>
         </div>        {/* Question */}
         <div className="mb-8">
-          <h3 className="text-xl font-bold text-yellow-400 mb-4 text-center">
+          <h3 className="text-lg sm:text-xl font-bold text-yellow-400 mb-4 text-center">
             {currentQuestion.question}
           </h3>
           
+          {/* Pronunciation buttons for Korean text in question */}
+          {currentQuestion.card && (currentQuestion.question.includes(currentQuestion.card.nameHangul) || currentQuestion.question.includes(currentQuestion.card.nameRomanized)) && (
+            <div className="flex justify-center gap-2 mb-4">
+              {currentQuestion.question.includes(currentQuestion.card.nameHangul) && (
+                <button 
+                  onClick={() => handlePronunciation(currentQuestion.card.nameHangul, true)}
+                  className="w-8 h-8 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 shadow-lg"
+                  title="Pronounce Korean name"
+                >
+                  🔊
+                </button>
+              )}
+              {currentQuestion.question.includes(currentQuestion.card.nameRomanized) && (
+                <button 
+                  onClick={() => handlePronunciation(currentQuestion.card.nameRomanized, false)}
+                  className="w-8 h-8 bg-green-600 hover:bg-green-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 shadow-lg"
+                  title="Pronounce romanized name"
+                >
+                  🔊
+                </button>
+              )}
+            </div>
+          )}
+          
           {/* Question subtext if available */}
           {currentQuestion.subtext && (
-            <p className="text-gray-400 text-sm text-center mb-6 italic">
+            <p className="text-gray-400 text-xs sm:text-sm text-center mb-6 italic">
               {currentQuestion.subtext}
             </p>
           )}
@@ -624,15 +656,14 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
               </span>
             </div>
           )}
-          
-          {/* Answer Options */}
-          <div className="space-y-3">
+            {/* Answer Options */}
+          <div className="space-y-2 sm:space-y-3">
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswerSelect(option)}
                 disabled={showResult}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all duration-200 ${
+                className={`w-full p-3 sm:p-4 rounded-lg border-2 text-left transition-all duration-200 text-sm sm:text-base ${
                   showResult
                     ? option === currentQuestion.correctAnswer
                       ? 'border-green-500 bg-green-500/20 text-green-400'
@@ -644,7 +675,22 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
                     : 'border-gray-600 bg-gray-800 text-white hover:border-yellow-600 hover:bg-yellow-600/10'
                 }`}
               >
-                {option}
+                <div className="flex items-center justify-between">
+                  <span>{option}</span>
+                  {/* Add pronunciation button for Korean text in options */}
+                  {option.match(/[\u3131-\uD79D]/) && (
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handlePronunciation(option, true)
+                      }}
+                      className="w-6 h-6 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 ml-2"
+                      title="Pronounce Korean text"
+                    >
+                      🔊
+                    </button>
+                  )}
+                </div>
               </button>
             ))}
           </div>

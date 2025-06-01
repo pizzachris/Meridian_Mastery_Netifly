@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DisclaimerModal from './DisclaimerModal'
+import pwaInstaller from '../utils/pwaInstaller'
 
 const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(false)
@@ -8,6 +9,24 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   const [voicePronunciation, setVoicePronunciation] = useState(false)
   const [cardsPerSession, setCardsPerSession] = useState('10')
   const [shuffleCards, setShuffleCards] = useState(true)
+  const [pwaStatus, setPwaStatus] = useState(pwaInstaller.getStatus())
+
+  useEffect(() => {
+    // Update PWA status periodically
+    const updatePWAStatus = () => {
+      setPwaStatus(pwaInstaller.getStatus())
+    }
+    
+    const interval = setInterval(updatePWAStatus, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleInstallPWA = async () => {
+    const success = await pwaInstaller.install()
+    if (success) {
+      setPwaStatus(pwaInstaller.getStatus())
+    }
+  }
 
   const exportProgress = () => {
     try {
@@ -44,7 +63,7 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
           try {
             const data = JSON.parse(e.target.result)
             if (data.progress) {
-              localStorage.setItem('meridian-mastery-progress', JSON.stringify(data.progress))
+                          localStorage.setItem('meridian-mastery-progress', JSON.stringify(data.progress))
               alert('Progress data imported successfully!')
             } else {
               alert('Invalid file format')
@@ -70,21 +89,20 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">        {/* Header */}
-        <header className="text-center mb-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header */}
+        <header className="text-center mb-6 sm:mb-8">
           <button 
             onClick={() => navigateTo('home')}
             className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
           >
             ← Back to Home
           </button>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Settings</h1>
-          <p className="text-gray-300">Customize your experience</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Settings</h1>
+          <p className="text-gray-300 text-sm sm:text-base">Customize your experience</p>
         </header>
 
-        <div className="max-w-md mx-auto space-y-6">
-          {/* Theme Toggle */}
-          <div className="card">
+        <div className="max-w-sm sm:max-w-md mx-auto space-y-4 sm:space-y-6">          {/* Theme Toggle */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-lg">Dark Mode</h3>
@@ -103,11 +121,10 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 />
               </button>
             </div>
-          </div>
-
-          {/* Study Preferences */}
-          <div className="card">
-            <h3 className="font-semibold text-lg mb-4">Study Preferences</h3>            <div className="space-y-3">
+          </div>          {/* Study Preferences */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
+            <h3 className="font-semibold text-lg mb-4">Study Preferences</h3>
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span>Auto-flip cards</span>
                 <input 
@@ -136,11 +153,10 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 />
               </div>
             </div>
-          </div>
-
-          {/* Session Settings */}
-          <div className="card">
-            <h3 className="font-semibold text-lg mb-4">Session Settings</h3>            <div className="space-y-3">
+          </div>          {/* Session Settings */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
+            <h3 className="font-semibold text-lg mb-4">Session Settings</h3>
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span>Cards per session</span>
                 <select 
@@ -164,8 +180,68 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 />
               </div>
             </div>
+          </div>
+
+          {/* PWA Installation */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
+            <h3 className="font-semibold text-lg mb-4 text-yellow-400">📱 Install App</h3>
+            
+            {pwaStatus.isStandalone ? (
+              <div className="bg-green-900/20 border border-green-600 rounded-lg p-3 sm:p-4">
+                <div className="flex items-center text-green-400 mb-2">
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  App Installed!
+                </div>
+                <p className="text-sm text-gray-300">
+                  You're using the installed version. Enjoy offline access to all your pressure point knowledge!
+                </p>
+              </div>
+            ) : pwaStatus.canInstall ? (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-300">
+                  Install this app for offline access and a better experience.
+                </p>
+                <button 
+                  onClick={handleInstallPWA}
+                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-3 px-4 rounded-lg transition-all duration-200"
+                >
+                  Install Meridian Mastery
+                </button>
+                <p className="text-xs text-gray-400 text-center">
+                  Works offline • No app store needed • Instant access
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-300">
+                  Install instructions for {pwaStatus.platform}:
+                </p>
+                <div className="bg-gray-700 rounded-lg p-3">
+                  {pwaInstaller.getInstallInstructions().steps.map((step, index) => (
+                    <p key={index} className="text-xs text-gray-300 mb-1 last:mb-0">
+                      {step}
+                    </p>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 text-center">
+                  Installing gives you offline access and faster loading
+                </p>
+              </div>
+            )}
+            
+            {/* Offline Status */}
+            <div className="mt-4 pt-4 border-t border-gray-600">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-400">Connection Status:</span>
+                <span className={`font-medium ${pwaStatus.isOnline ? 'text-green-400' : 'text-red-400'}`}>
+                  {pwaStatus.isOnline ? '🟢 Online' : '🔴 Offline'}
+                </span>
+              </div>
+            </div>
           </div>          {/* About Section */}
-          <div className="card">
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">About</h3>
             <div className="text-sm text-gray-300 space-y-2">
               <p><strong>Meridian Mastery v1.0</strong></p>
@@ -175,10 +251,8 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 © 2025 Meridian Mastery. For educational purposes.
               </p>
             </div>
-          </div>
-
-          {/* Safety Disclaimer */}
-          <div className="card">
+          </div>          {/* Safety Disclaimer */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4 text-red-400">⚠️ Safety Disclaimer</h3>
             <div className="bg-red-900/20 border border-red-600 rounded-lg p-4 mb-4">
               <p className="text-sm text-gray-300 mb-3">
@@ -189,15 +263,15 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 can be dangerous if applied incorrectly. <strong>Never practice these techniques 
                 without proper training and supervision from a qualified martial arts instructor.</strong>
               </p>
-            </div>
-            <div className="space-y-2 text-xs text-gray-400">
+            </div>            <div className="space-y-2 text-xs text-gray-400">
               <p><strong>Requirements for practice:</strong></p>
               <ul className="list-disc list-inside space-y-1 ml-2">
                 <li>Certified martial arts instructor supervision</li>
                 <li>Proper training in pressure point application</li>
                 <li>Understanding of safety protocols and contraindications</li>
                 <li>Knowledge of potential risks and proper techniques</li>
-              </ul>              <p className="mt-3 pt-2 border-t border-gray-700">
+              </ul>
+              <p className="mt-3 pt-2 border-t border-gray-700">
                 Disclaimer accepted on: {(() => {
                   const date = localStorage.getItem('meridian-mastery-disclaimer-date')
                   return date ? new Date(date).toLocaleDateString() : 'Not recorded'
@@ -208,27 +282,37 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
             <button
               onClick={() => setShowDisclaimer(true)}
               className="w-full mt-4 bg-yellow-800/30 hover:bg-yellow-700/40 border border-yellow-600 text-yellow-400 py-2 px-4 rounded-lg text-sm transition-all duration-200"
-            >
-              📋 View Full Disclaimer
+            >              📋 View Full Disclaimer
             </button>
-          </div>{/* Data Management */}
-          <div className="card">
+          </div>
+          
+          {/* Data Management */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">Data Management</h3>
             <div className="space-y-3">
-              <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-xl">
+              <button 
+                onClick={exportProgress}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+              >
                 Export Progress
               </button>
-              <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-xl">
+              <button 
+                onClick={importData}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+              >
                 Import Data
               </button>
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-xl">
+              <button 
+                onClick={resetAllData}
+                className="w-full bg-red-700 hover:bg-red-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+              >
                 Reset All Data
               </button>
             </div>
           </div>
 
           {/* Developer Tools */}
-          <div className="card">
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">Developer Tools</h3>
             <div className="space-y-3">
               <button 
@@ -247,7 +331,8 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 })()}
               </div>
             </div>
-          </div>        </div>
+          </div>
+        </div>
       </div>
       
       {/* Disclaimer Modal */}

@@ -13,43 +13,190 @@
 }
 
 @layer components {
+  /* Korean Traditional Color Palette */
+  :root {
+    --korean-red: #c41e3a;      /* 단청 빨강 (Dancheong Red) */
+    --korean-blue: #003865;     /* 단청 파랑 (Dancheong Blue) */
+    --korean-yellow: #ffd700;   /* 단청 노랑 (Dancheong Yellow) */
+    --korean-green: #00a14b;    /* 단청 초록 (Dancheong Green) */
+    --korean-white: #fefefe;    /* 백색 (Baeksaek) */
+    --korean-black: #1a1a1a;    /* 흑색 (Heuksaek) */
+    --hanbok-jeogori: #8b0000;  /* 저고리 깊은 빨강 */
+    --hanbok-chima: #000080;    /* 치마 감청색 */
+  }
+
   .btn-primary {
-    @apply bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-bold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105 border border-yellow-600;
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, var(--korean-yellow) 0%, #ffc107 100%);
+    border: 2px solid var(--korean-red);
+    @apply text-black font-bold py-3 px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
   }
   
   .btn-secondary {
-    @apply bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105 border border-red-800;
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, var(--korean-red) 0%, #8b0000 100%);
+    border: 2px solid var(--korean-yellow);
+    @apply text-white font-bold py-3 px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105;
   }
   
   .card {
-    @apply bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-6 backdrop-blur-sm;
+    @apply relative overflow-hidden;
+    background: linear-gradient(145deg, rgba(26,26,26,0.95) 0%, rgba(75,75,75,0.9) 100%);
+    border: 1px solid var(--korean-yellow);
+    box-shadow: 0 8px 32px rgba(255,215,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+    @apply rounded-2xl p-6 backdrop-blur-sm;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      var(--korean-red) 0%, 
+      var(--korean-yellow) 25%, 
+      var(--korean-green) 50%, 
+      var(--korean-blue) 75%, 
+      var(--korean-red) 100%
+    );
   }
   
   .kuk-sool-gradient {
-    @apply bg-gradient-to-br from-gray-900 via-black to-red-900;
+    background: linear-gradient(135deg, 
+      var(--korean-black) 0%,
+      #2d1b1b 25%,
+      var(--hanbok-jeogori) 50%,
+      #1a1a1a 75%,
+      var(--korean-black) 100%
+    );
   }
-  
+
+  /* Korean Five Elements (오행/Ohaeng) with traditional colors */
   .element-wood {
-    @apply bg-green-500 border-green-400 text-white;
+    background: linear-gradient(135deg, var(--korean-green) 0%, #228b22 100%);
+    border: 2px solid #90ee90;
+    @apply text-white shadow-lg;
+    box-shadow: 0 4px 15px rgba(0,161,75,0.3);
   }
   
   .element-fire {
-    @apply bg-red-500 border-red-400 text-white;
+    background: linear-gradient(135deg, var(--korean-red) 0%, #dc143c 100%);
+    border: 2px solid #ff6b6b;
+    @apply text-white shadow-lg;
+    box-shadow: 0 4px 15px rgba(196,30,58,0.3);
   }
   
   .element-earth {
-    @apply bg-yellow-500 border-yellow-400 text-black;
+    background: linear-gradient(135deg, var(--korean-yellow) 0%, #daa520 100%);
+    border: 2px solid #ffec8b;
+    @apply text-black shadow-lg;
+    box-shadow: 0 4px 15px rgba(255,215,0,0.3);
   }
   
   .element-metal {
-    @apply bg-gray-300 border-gray-200 text-black;
+    background: linear-gradient(135deg, #c0c0c0 0%, #808080 100%);
+    border: 2px solid #e5e5e5;
+    @apply text-black shadow-lg;
+    box-shadow: 0 4px 15px rgba(192,192,192,0.3);
   }
   
   .element-water {
-    @apply bg-blue-500 border-blue-400 text-white;
+    background: linear-gradient(135deg, var(--korean-blue) 0%, #1e3a8a 100%);
+    border: 2px solid #60a5fa;
+    @apply text-white shadow-lg;
+    box-shadow: 0 4px 15px rgba(0,56,101,0.3);
   }
   
   .element-violet {
-    @apply bg-purple-500 border-purple-400 text-white;
+    background: linear-gradient(135deg, #6b46c1 0%, #4c1d95 100%);
+    border: 2px solid #a78bfa;
+    @apply text-white shadow-lg;
+    box-shadow: 0 4px 15px rgba(107,70,193,0.3);
+  }
+
+  /* Korean Traditional Patterns and Animations */
+  .korean-flow-pattern {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .korean-flow-pattern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255,215,0,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(196,30,58,0.1) 0%, transparent 50%);
+    pointer-events: none;
+    animation: korean-energy-flow 8s ease-in-out infinite;
+  }
+  
+  @keyframes korean-energy-flow {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+      opacity: 0.6;
+    }
+  }
+
+  /* Yin-Yang inspired flowing animation */
+  .yin-yang-flow {
+    position: relative;
+  }
+  
+  .yin-yang-flow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin: -50px 0 0 -50px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--korean-black) 50%, var(--korean-white) 50%);
+    opacity: 0.05;
+    animation: yin-yang-rotate 12s linear infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes yin-yang-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Traditional Korean border patterns */
+  .dancheong-border {
+    border-image: linear-gradient(90deg, 
+      var(--korean-red) 0%, 
+      var(--korean-yellow) 25%, 
+      var(--korean-green) 50%, 
+      var(--korean-blue) 75%, 
+      var(--korean-red) 100%
+    ) 1;
+    border-width: 3px;
+    border-style: solid;
   }
 }

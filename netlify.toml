@@ -1,0 +1,12 @@
+# Netlify build configuration for Meridian Mastery
+[build]
+  # Build command
+  command = "npm run build"
+  # Directory to publish (build output)
+  publish = "dist"
+
+# SPA redirect rules for React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

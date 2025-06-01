@@ -2,13 +2,19 @@ import React from 'react'
 
 const Home = ({ navigateTo }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <header className="text-center mb-12">
-          <div className="mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        {/* Header with Korean Aesthetic */}
+        <header className="text-center mb-8 sm:mb-12 relative">
+          <div className="mb-4 sm:mb-6 relative">
+            {/* Energy Circles around Logo */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-yellow-400/20 animate-pulse"></div>
+              <div className="absolute w-40 h-40 sm:w-48 sm:h-48 rounded-full border border-red-400/10 animate-ping"></div>
+            </div>
+            
             {/* SVG Logo */}
-            <div className="w-32 h-32 mx-auto">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto relative z-10">
               <img 
                 src="/meridian_mastery_logo.svg" 
                 alt="Meridian Mastery Logo" 
@@ -16,63 +22,89 @@ const Home = ({ navigateTo }) => {
               />
             </div>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+          
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-600 bg-clip-text text-transparent">
             Meridian Mastery
           </h1>
-          <p className="text-lg text-yellow-400 font-medium">
+          <p className="text-base sm:text-lg text-yellow-400 font-medium mb-2">
             국술원 • Kuk Sool Won Pressure Points
           </p>
+          <div className="w-24 h-1 mx-auto bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"></div>
         </header>
 
-        {/* Main Navigation */}
-        <div className="max-w-md mx-auto space-y-6">
+        {/* Main Navigation with Five Elements Flow */}
+        <div className="max-w-sm sm:max-w-md mx-auto space-y-4 sm:space-y-6">
           <button 
             onClick={() => navigateTo('session')}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105 text-xl"
+            className="w-full btn-primary text-lg sm:text-xl relative overflow-hidden group"
           >
-            Start Session
-          </button>          <div className="grid grid-cols-1 gap-4">
+            <span className="relative z-10">🥋 Start Daily Session</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-red-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+          </button>          <div className="grid grid-cols-1 gap-3 sm:gap-4">
+            {/* Wood Element - Growth & Learning */}
             <button 
               onClick={() => navigateTo('flashcards')}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="w-full element-wood font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
-              Flashcards
-            </button>
-              <button 
-              onClick={() => navigateTo('quiz-selection')}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
-            >
-              🧠 Quiz Mode
-            </button>
-              <button 
-              onClick={() => navigateTo('bodymap')}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
-            >
-              Body Map
+              <span className="relative z-10">🌿 Flashcards</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
             </button>
             
+            {/* Fire Element - Energy & Testing */}
+            <button 
+              onClick={() => navigateTo('quiz-selection')}
+              className="w-full element-fire font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
+            >
+              <span className="relative z-10">🔥 Quiz Mode</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-red-300/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+            </button>
+            
+            {/* Water Element - Flow & Mapping */}
+            <button 
+              onClick={() => navigateTo('bodymap')}
+              className="w-full element-water font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
+            >
+              <span className="relative z-10">💧 Body Map</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-300/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+            </button>
+            
+            {/* Earth Element - Foundation & Progress */}
             <button 
               onClick={() => navigateTo('progress')}
-              className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200 transform hover:scale-105"
+              className="w-full element-earth font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
-              Progress
+              <span className="relative z-10">🌍 Progress</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
             </button>
             
+            {/* Metal Element - Structure & Settings */}
             <button 
               onClick={() => navigateTo('settings')}
-              className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg transition-all duration-200"
+              className="w-full element-metal font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
-              Settings
+              <span className="relative z-10">⚙️ Settings</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-300/20 to-gray-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
             </button>
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-16 text-center text-gray-400">
-          <p className="text-xl md:text-2xl text-gray-300 font-light mb-4">
+        {/* Korean Traditional Footer with Five Elements Flow */}
+        <footer className="mt-12 sm:mt-16 text-center text-gray-400 px-4 relative">
+          {/* Traditional Korean Decoration */}
+          <div className="flex justify-center mb-4">
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+              <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+            </div>
+          </div>
+          
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-light mb-2 sm:mb-4">
             Master your meridians.
           </p>
-          <p className="text-sm">
+          <p className="text-xs sm:text-sm">
             Based on traditional Korean/TCM principles<br />
             Master R. Barry Harmon's pressure point manual
           </p>
