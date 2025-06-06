@@ -380,12 +380,10 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
              'Study Session'}
           </div>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)] p-3 sm:p-4">        {/* Flashcard - enlarged for better mobile experience */}
-        <div className="w-full max-w-sm sm:max-w-md mx-auto mb-4 sm:mb-0">
-          <div className={`relative w-full h-80 sm:h-96 md:h-[26rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>{/* Front Side - mobile optimized */}
+      </div>      {/* Main Content - moved up closer to study session bar */}
+      <div className="flex flex-col items-center justify-start min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)] px-2 sm:px-3 pt-0">        {/* Flashcard - optimized positioning for mobile */}
+        <div className="w-full max-w-sm sm:max-w-md mx-auto mt-1 sm:mt-2">
+          <div className={`relative w-full h-[25rem] sm:h-[30rem] md:h-[32rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>{/* Front Side - mobile optimized */}
             <div className="absolute inset-0 w-full h-full backface-hidden">
               <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-4 sm:p-6 relative">
                 
@@ -430,7 +428,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
               <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-2.5 text-xs flex flex-col overflow-hidden">
                 
                 {/* Header with point info - readable but compact */}
-                <div className="text-center mb-2 border-b border-gray-700 pb-1.5 flex-shrink-0">
+                <div className="text-center mb-1.5 border-b border-gray-700 pb-1 flex-shrink-0">
                   <h2 className="text-sm font-bold text-yellow-400 mb-0.5 leading-tight">
                     {nameRomanized || nameEnglish}
                   </h2>
@@ -486,10 +484,8 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
             </div>
             
           </div>
-        </div>
-
-        {/* Control Buttons */}
-        <div className="flex items-center justify-center space-x-4 mt-6">
+        </div>        {/* Control Buttons */}
+        <div className="flex items-center justify-center space-x-4 mt-3 sm:mt-4">
           
           {/* Audio button */}
           {pronunciation && (
