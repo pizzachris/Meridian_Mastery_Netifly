@@ -149,8 +149,28 @@ export class ProgressTracker {
   static RETENTION_THRESHOLD = 0.7 // 70% retention score required to consider a point mastered
 
   static getProgress() {
-    const progress = localStorage.getItem(this.STORAGE_KEY)
-    return progress ? JSON.parse(progress) : this.initializeProgress()
+    try {
+      const progress = localStorage.getItem(this.STORAGE_KEY)
+      const parsed = progress ? JSON.parse(progress) : this.initializeProgress()
+      
+      // Ensure backward compatibility - add missing fields
+      if (!parsed.sessionHistory) {
+        parsed.sessionHistory = []
+      }
+      if (!parsed.studiedPoints) {
+        parsed.studiedPoints = {}
+      }
+      if (!parsed.meridianProgress) {
+        parsed.meridianProgress = {}
+      }
+      
+      return parsed
+    } catch (error) {
+      console.error('Error loading progress, resetting:', error)
+      // If there's an error, reset and return fresh progress
+      localStorage.removeItem(this.STORAGE_KEY)
+      return this.initializeProgress()
+    }
   }
 
   static initializeProgress() {
@@ -340,7 +360,13 @@ export class ProgressTracker {
     const progress = this.getProgress()
     progress.totalSessions = (progress.totalSessions || 0) + 1
     progress.lastSessionDate = new Date().toISOString()
-    // Optionally record session details in sessionHistory
+    
+    // Ensure sessionHistory exists (backward compatibility)
+    if (!progress.sessionHistory) {
+      progress.sessionHistory = []
+    }
+    
+    // Record session details in sessionHistory
     progress.sessionHistory.push({
       type: sessionType,
       timestamp: new Date().toISOString(),

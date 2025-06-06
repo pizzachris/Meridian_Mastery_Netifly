@@ -56,8 +56,8 @@ const Home = ({ navigateTo }) => {
               <span className="relative z-10">🔥 Quiz Mode</span>
               <div className="absolute inset-0 bg-gradient-to-r from-red-300/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
             </button>
-            
-            {/* Water Element - Flow & Mapping */}
+              {/* Water Element - Flow & Mapping - TEMPORARILY HIDDEN */}
+            {/* 
             <button 
               onClick={() => navigateTo('bodymap')}
               className="w-full element-water font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
@@ -65,6 +65,7 @@ const Home = ({ navigateTo }) => {
               <span className="relative z-10">💧 Body Map</span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-300/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
             </button>
+            */}
             
             {/* Earth Element - Foundation & Progress */}
             <button 
