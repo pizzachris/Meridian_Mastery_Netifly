@@ -425,63 +425,63 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
                 </div>
 
               </div>
-            </div>            {/* Back Side - expanded layout with better spacing */}
+            </div>            {/* Back Side - full content with proper mobile layout */}
             <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-3 text-xs flex flex-col justify-between overflow-hidden">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-2.5 text-xs flex flex-col overflow-hidden">
                 
-                {/* Header with point info - compact */}
-                <div className="text-center mb-3 border-b border-gray-700 pb-2 flex-shrink-0">
-                  <h2 className="text-sm font-bold text-yellow-400 mb-1 leading-tight">
+                {/* Header with point info - readable but compact */}
+                <div className="text-center mb-2 border-b border-gray-700 pb-1.5 flex-shrink-0">
+                  <h2 className="text-sm font-bold text-yellow-400 mb-0.5 leading-tight">
                     {nameRomanized || nameEnglish}
                   </h2>
                   <p className="text-gray-300 text-xs">{nameHangul}</p>
                   <p className="text-gray-400 text-xs">{pointNumber} {meridianName} Meridian</p>
                 </div>
 
-                {/* Information sections - expanded with better spacing */}
-                <div className="flex-1 space-y-2">
+                {/* Information sections - full content with scroll if needed */}
+                <div className="flex-1 space-y-1.5 overflow-y-auto min-h-0">
                   
-                  {/* Location - First box if available, taller */}
+                  {/* Location - Full content */}
                   {location && (
-                    <div className="bg-yellow-600 text-black p-2.5 rounded">
+                    <div className="bg-yellow-600 text-black p-2 rounded">
                       <h3 className="font-bold text-xs mb-1">LOCATION:</h3>
                       <p className="text-xs leading-relaxed">{location}</p>
                     </div>
                   )}
 
-                  {/* Striking Effect - taller box */}
-                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                  {/* Striking Effect - Full content */}
+                  <div className="bg-yellow-600 text-black p-2 rounded">
                     <h3 className="font-bold text-xs mb-1">STRIKING EFFECT:</h3>
                     <p className="text-xs leading-relaxed">
-                      {(martialApplication || "The point is usually struck to an upward direction with a blunt edge.").substring(0, 100) + 
-                       ((martialApplication || "").length > 100 ? "..." : "")}
+                      {martialApplication || "The point is usually struck to an upward direction with a blunt edge."}
                     </p>
                   </div>
 
-                  {/* Observed Effects - taller box */}
-                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                  {/* Observed Effects - Full content */}
+                  <div className="bg-yellow-600 text-black p-2 rounded">
                     <h3 className="font-bold text-xs mb-1">OBSERVED EFFECTS:</h3>
                     <p className="text-xs leading-relaxed">
-                      {(healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible.").substring(0, 100) + 
-                       ((healingFunction || "").length > 100 ? "..." : "")}
+                      {healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible."}
                     </p>
                   </div>
 
-                  {/* Insight - with expand option, taller box */}
-                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                  {/* Insight - with expand option for very long content */}
+                  <div className="bg-yellow-600 text-black p-2 rounded">
                     <h3 className="font-bold text-xs mb-1">INSIGHT:</h3>
                     <p className="text-xs leading-relaxed">
-                      {(insightText || "This point has the potential to affect the associated meridian. Be responsible.").substring(0, 80) + "..."}
+                      {insightText && insightText.length > 150 
+                        ? insightText.substring(0, 150) + "..." 
+                        : (insightText || "This point has the potential to affect the associated meridian. Be responsible.")}
                     </p>
-                    <button 
-                      className="text-xs underline mt-1 hover:text-gray-800"
-                      onClick={() => setShowInsightModal(true)}
-                    >
-                      Read more
-                    </button>
-                  </div>
-
-                </div>
+                    {insightText && insightText.length > 150 && (
+                      <button 
+                        className="text-xs underline mt-1 hover:text-gray-800"
+                        onClick={() => setShowInsightModal(true)}
+                      >
+                        Read more
+                      </button>
+                    )}
+                  </div>                </div>
               </div>
             </div>
             
