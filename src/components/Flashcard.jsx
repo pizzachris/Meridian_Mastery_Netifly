@@ -59,6 +59,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const [showFlagModal, setShowFlagModal] = useState(false)
   const [flagReason, setFlagReason] = useState('')
   const [flagSubmitted, setFlagSubmitted] = useState(false)
+  const [showInsightModal, setShowInsightModal] = useState(false)
   const [pronunciation, setPronunciation] = useState(null)
   const [progress, setProgress] = useState(null)
   const [error, setError] = useState(null)
@@ -337,142 +338,141 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const martialApplication = currentCardData.martialApplication || currentCardData["Martial Application"];
   const insightText = currentCardData.insight;
   const isBilateral = currentCardData.bilateral === true || currentCardData.bilateral === "Yes";
-
   return (
     <div className="min-h-screen bg-black text-white relative">
-      {/* Header - matching mockup */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800">
+      {/* Header - mobile optimized */}
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800">
         {/* Logo and title - clickable to go home */}
         <button 
           onClick={() => navigateTo('home')}
-          className="flex items-center space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
+          className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
         >
-          <TriskelionLogo size={32} />
+          <TriskelionLogo size={28} className="sm:w-8 sm:h-8" />
           <div className="text-left">
-            <h1 className="text-lg font-bold">MERIDIAN</h1>
-            <p className="text-sm opacity-80">MASTERY COACH</p>
+            <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
+            <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>
           </div>
         </button>
         
         {/* Progress counter */}
-        <div className="text-yellow-400 text-sm">
+        <div className="text-yellow-400 text-xs sm:text-sm font-medium">
           {currentCard + 1} / {flashcards.length}
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-4">
+      </div>      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-80px)] p-3 sm:p-4">
         
         {/* Progress Bar */}
-        <div className="w-full max-w-md mb-6">
-          <div className="bg-gray-800 rounded-full h-2">
+        <div className="w-full max-w-sm sm:max-w-md mb-4 sm:mb-6">
+          <div className="bg-gray-800 rounded-full h-1.5 sm:h-2">
             <div 
-              className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+              className="bg-yellow-400 h-1.5 sm:h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentCard + 1) / flashcards.length) * 100}%` }}
             ></div>
           </div>
-          <div className="text-center text-gray-400 text-sm mt-2">
+          <div className="text-center text-gray-400 text-xs sm:text-sm mt-2">
             {sessionMode.includes('meridian') ? 'Meridian Study' : 
              sessionMode.includes('maek') ? sessionMode.replace('-', ' ').toUpperCase() : 
              'Study Session'}
           </div>
         </div>
 
-        {/* Flashcard */}
-        <div className="w-full max-w-md mx-auto">
-          <div className={`relative w-full h-96 transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>            {/* Front Side - matching mockup design exactly */}
+        {/* Flashcard - mobile optimized sizing */}
+        <div className="w-full max-w-sm sm:max-w-md mx-auto mb-4 sm:mb-0">
+          <div className={`relative w-full h-72 sm:h-80 md:h-96 transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>            {/* Front Side - mobile optimized */}
             <div className="absolute inset-0 w-full h-full backface-hidden">
-              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-6 relative">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-4 sm:p-6 relative">
                 
-                {/* Meridian badge in red box at top - with element and bilateral */}
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg border-2 border-red-400">
-                  <span className="text-sm font-bold">
+                {/* Meridian badge in red box at top - mobile responsive */}
+                <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 border-red-400">
+                  <span className="text-xs sm:text-sm font-bold">
                     {meridianAbbrev} • {element.toUpperCase()}{isBilateral ? ' ⇔' : ''}
                   </span>
                 </div>
 
-                {/* Pronunciation button - top right */}
+                {/* Pronunciation button - mobile optimized */}
                 {pronunciation && (
                   <button
                     onClick={() => handlePronunciation(nameHangul || nameRomanized, true)}
-                    className="absolute top-4 right-4 bg-yellow-600 hover:bg-yellow-700 text-black p-2 rounded-full transition-colors"
+                    className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-yellow-600 hover:bg-yellow-700 text-black p-1.5 sm:p-2 rounded-full transition-colors"
                     aria-label="Play pronunciation"
                   >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.797L4.828 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.828l3.555-3.797A1 1 0 019.383 3.076zM12 5a1 1 0 011.414 0C14.495 6.081 15 7.448 15 9s-.505 2.919-1.586 4a1 1 0 01-1.414-1.414C12.63 10.927 13 10.017 13 9s-.37-1.927-1-2.586A1 1 0 0112 5z" clipRule="evenodd" />
                     </svg>
                   </button>
                 )}
 
-                {/* Korean characters - large and prominent */}
-                <div className="text-6xl font-bold text-yellow-400 mb-4 text-center mt-16">
+                {/* Korean characters - responsive sizing */}
+                <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-yellow-400 mb-3 sm:mb-4 text-center mt-8 sm:mt-12 md:mt-16">
                   {nameHangul}
                 </div>
 
-                {/* English translation */}
-                <div className="text-xl text-white text-center font-medium">
+                {/* English translation - responsive */}
+                <div className="text-lg sm:text-xl text-white text-center font-medium px-2">
                   {nameEnglish}
                 </div>
 
-                {/* Romanized Korean - smaller, subtle */}
-                <div className="text-base text-gray-300 text-center mt-2">
+                {/* Romanized Korean - responsive */}
+                <div className="text-sm sm:text-base text-gray-300 text-center mt-1 sm:mt-2 px-2">
                   {nameRomanized}
                 </div>
 
               </div>
-            </div>{/* Back Side - matching detailed mockup */}
+            </div>            {/* Back Side - mobile-optimized to fit in one frame */}
             <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-4 text-sm overflow-y-auto">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-2 text-xs flex flex-col justify-between overflow-hidden">
                 
-                {/* Header with point info */}
-                <div className="text-center mb-4 border-b border-gray-700 pb-2">
-                  <h2 className="text-xl font-bold text-yellow-400 mb-1">
+                {/* Header with point info - compact */}
+                <div className="text-center mb-2 border-b border-gray-700 pb-1 flex-shrink-0">
+                  <h2 className="text-sm font-bold text-yellow-400 mb-0.5 leading-tight">
                     {nameRomanized || nameEnglish}
                   </h2>
-                  <p className="text-gray-300 text-sm">{nameHangul}</p>
+                  <p className="text-gray-300 text-xs">{nameHangul}</p>
                   <p className="text-gray-400 text-xs">{pointNumber} {meridianName} Meridian</p>
                 </div>
 
-                {/* Information sections - matching mockup layout */}
-                <div className="space-y-3">
+                {/* Information sections - very compact grid layout */}
+                <div className="flex-1 space-y-1">
                   
-                  {/* Striking Effect */}
-                  <div className="bg-yellow-600 text-black p-3 rounded">
-                    <h3 className="font-bold text-xs mb-2">STRIKING EFFECT:</h3>
-                    <p className="text-xs leading-relaxed">
-                      {martialApplication || "The point is usually struck to an upward direction with a blunt edge."}
-                    </p>
-                  </div>
-
-                  {/* Observed Effects of Strike */}
-                  <div className="bg-yellow-600 text-black p-3 rounded">
-                    <h3 className="font-bold text-xs mb-2">OBSERVED EFFECTS OF STRIKE:</h3>
-                    <p className="text-xs leading-relaxed">
-                      {healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible."}
-                    </p>
-                  </div>
-
-                  {/* Theoretical Effects */}
-                  <div className="bg-yellow-600 text-black p-3 rounded">
-                    <h3 className="font-bold text-xs mb-2">THEORETICAL EFFECTS:</h3>
-                    <p className="text-xs leading-relaxed">May cause a knockout.</p>
-                  </div>
-
-                  {/* CPT Guided Insight */}
-                  <div className="bg-yellow-600 text-black p-3 rounded">
-                    <h3 className="font-bold text-xs mb-2">GPT GUIDED INSIGHT:</h3>
-                    <p className="text-xs leading-relaxed">
-                      {insightText || "This point, located beneath the chin, has the potential to affect the stomach meridian which is theory. Be responsible."}
-                    </p>
-                  </div>
-
-                  {/* Location - if available */}
+                  {/* Location - First box if available */}
                   {location && (
-                    <div className="text-gray-300 mt-4">
-                      <h3 className="font-bold text-yellow-400 text-xs mb-1">LOCATION:</h3>
-                      <p className="text-xs leading-relaxed">{location}</p>
+                    <div className="bg-yellow-600 text-black p-1.5 rounded">
+                      <h3 className="font-bold text-xs mb-0.5">LOCATION:</h3>
+                      <p className="text-xs leading-snug">{location}</p>
                     </div>
                   )}
+
+                  {/* Striking Effect */}
+                  <div className="bg-yellow-600 text-black p-1.5 rounded">
+                    <h3 className="font-bold text-xs mb-0.5">STRIKING EFFECT:</h3>
+                    <p className="text-xs leading-snug">
+                      {(martialApplication || "The point is usually struck to an upward direction with a blunt edge.").substring(0, 80) + 
+                       ((martialApplication || "").length > 80 ? "..." : "")}
+                    </p>
+                  </div>
+
+                  {/* Observed Effects */}
+                  <div className="bg-yellow-600 text-black p-1.5 rounded">
+                    <h3 className="font-bold text-xs mb-0.5">OBSERVED EFFECTS:</h3>
+                    <p className="text-xs leading-snug">
+                      {(healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible.").substring(0, 80) + 
+                       ((healingFunction || "").length > 80 ? "..." : "")}
+                    </p>
+                  </div>
+
+                  {/* Insight - with expand option */}
+                  <div className="bg-yellow-600 text-black p-1.5 rounded">
+                    <h3 className="font-bold text-xs mb-0.5">INSIGHT:</h3>
+                    <p className="text-xs leading-snug">
+                      {(insightText || "This point has the potential to affect the associated meridian. Be responsible.").substring(0, 60) + "..."}
+                    </p>
+                    <button 
+                      className="text-xs underline mt-0.5 hover:text-gray-800"
+                      onClick={() => setShowInsightModal(true)}
+                    >
+                      Read more
+                    </button>
+                  </div>
 
                 </div>
               </div>
@@ -576,6 +576,30 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
                 </div>
               </div>
             )}
+          </div>
+        </div>      )}
+
+      {/* Insight Modal */}
+      {showInsightModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-4 border-b border-gray-700">
+              <h3 className="text-lg font-bold text-yellow-400">Point Insight</h3>
+              <p className="text-sm text-gray-300 mt-1">{nameRomanized || nameEnglish}</p>
+            </div>
+            <div className="p-4">
+              <p className="text-gray-300 text-sm leading-relaxed">
+                {insightText || "This point has the potential to affect the associated meridian. Be responsible."}
+              </p>
+            </div>
+            <div className="p-4 border-t border-gray-700 flex justify-end">
+              <button
+                onClick={() => setShowInsightModal(false)}
+                className="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-lg text-sm"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
