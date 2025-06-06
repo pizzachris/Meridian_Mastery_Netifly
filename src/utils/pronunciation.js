@@ -376,9 +376,8 @@ class PronunciationManager {
       pronunciation: this.getSyllablePronunciationGuide(syllable),
       index: index
     }))
-  }
-  /**
-   * Get pronunciation guide for a single syllable
+  }  /**
+   * Get pronunciation guide for a single syllable - Enhanced for Korean medicine terms
    * @param {string} syllable - Single syllable to get pronunciation guide for
    * @returns {string} Pronunciation guide text
    */
@@ -387,44 +386,126 @@ class PronunciationManager {
     
     const cleanSyllable = syllable.trim().toLowerCase()
     
-    // Comprehensive pronunciation guides for Korean romanization
+    // Comprehensive pronunciation guides for Korean medical terms
     const exactMatches = {
-      // Vowels
-      'a': 'ah (like "father")',
-      'ae': 'eh (like "bed")',
-      'e': 'eh (like "pet")',
-      'eo': 'uh (like "cut")',
-      'eu': 'oo (like "book")',
-      'i': 'ee (like "see")',
-      'o': 'oh (like "low")',
-      'u': 'oo (like "moon")',
-      'ya': 'yah',
-      'yae': 'yeh',
-      'ye': 'yeh',
-      'yeo': 'yuh',
-      'yo': 'yoh',
-      'yu': 'yoo',
-      // Common syllables
-      'sang': 'sahng',
-      'hap': 'hahp',
-      'gok': 'gohk',
-      'geum': 'goom',
-      'mun': 'moon',
-      'jung': 'joong',
-      'won': 'wohn',
-      'tae': 'teh',
-      'yang': 'yahng',
-      'eum': 'oom',
-      'gwan': 'gwahn',
-      'hyang': 'hyahng',
-      'ryeo': 'ryuh',
-      'nae': 'neh',
-      'wi': 'wee',
-      'su': 'soo',
-      'ji': 'jee',
-      'nim': 'neem',
-      'bu': 'boo',
-      'ok': 'ohk'
+      // Single vowels
+      'a': 'AH (like "father")',
+      'ae': 'EH (like "red")',
+      'e': 'EH (like "pet")',
+      'eo': 'UH (like "cut")',
+      'eu': 'OO (like "book")',
+      'i': 'EE (like "see")',
+      'o': 'OH (like "go")',
+      'u': 'OO (like "moon")',
+      'ui': 'WEE (like "we")',
+      'wi': 'WEE',
+      
+      // Y vowels
+      'ya': 'YAH',
+      'yae': 'YEH',
+      'ye': 'YEH',
+      'yeo': 'YUH',
+      'yo': 'YOH',
+      'yu': 'YOO',
+      
+      // Common Korean medical syllables (actual data from the JSON)
+      'joong': 'JOONG (jung)',
+      'jung': 'JUNG (like "young" but with J)',
+      'boo': 'BOO (like "book")',
+      'bu': 'BOO',
+      'oon': 'OON (like "moon")',
+      'moon': 'MOON',
+      'mun': 'MOON',
+      'won': 'WOHN (like "one" with W)',
+      'woon': 'WOON',
+      'tae': 'TEH (like "ten")',
+      'te': 'TEH',
+      'dae': 'DEH',
+      'de': 'DEH',
+      'yang': 'YAHNG',
+      'jang': 'JAHNG',
+      'chang': 'CHAHNG',
+      'sang': 'SAHNG',
+      'gang': 'GAHNG',
+      'kang': 'KAHNG',
+      'hang': 'HAHNG',
+      'rang': 'RAHNG',
+      'lang': 'LAHNG',
+      'bang': 'BAHNG',
+      'pang': 'PAHNG',
+      'tang': 'TAHNG',
+      'dang': 'DAHNG',
+      'nang': 'NAHNG',
+      'mang': 'MAHNG',
+      
+      // Common endings
+      'gok': 'GOHK (sharp K)',
+      'guk': 'GOOK',
+      'geum': 'GOOM',
+      'gum': 'GOOM',
+      'hap': 'HAHP (sharp P)',
+      'hab': 'HAHB',
+      'hyeol': 'HYUHL',
+      'hyul': 'HYOOL',
+      'jeom': 'JUHM',
+      'jom': 'JUHM',
+      'point': 'POINT',
+      
+      // Body parts and directions
+      'sang': 'SAHNG (upper)',
+      'ha': 'HAH (lower)',
+      'jung': 'JUNG (middle)',
+      'jwa': 'JWAH (left)',
+      'u': 'OO (right)',
+      'jeon': 'JUHN (front)',
+      'hu': 'HOO (back)',
+      
+      // Common anatomical terms
+      'gwan': 'GWAHN',
+      'mun': 'MOON (door/gate)',
+      'hoe': 'HWE',
+      'hwe': 'HWEH',
+      'rim': 'REEM',
+      'lim': 'LEEM',
+      'su': 'SOO',
+      'soo': 'SOO',
+      'ji': 'JEE',
+      'chi': 'CHEE',
+      'gi': 'GEE',
+      'ki': 'KEE',
+      'si': 'SHEE',
+      'ni': 'NEE',
+      'li': 'LEE',
+      'ri': 'REE',
+      'mi': 'MEE',
+      'pi': 'PEE',
+      'bi': 'BEE',
+      'ti': 'TEE',
+      'di': 'DEE',
+      'hi': 'HEE',
+      'wi': 'WEE',
+      'yi': 'YEE',
+      'zi': 'ZHEE',
+      
+      // Korean-specific sounds
+      'ng': 'NG (like in "sing")',
+      'nk': 'NK',
+      'nt': 'NT',
+      'np': 'NP',
+      'nm': 'NM',
+      'll': 'LL (rolling L)',
+      'rr': 'RR (rolling R)',
+      'kk': 'KK (strong K)',
+      'tt': 'TT (strong T)',
+      'pp': 'PP (strong P)',
+      'ss': 'SS (strong S)',
+      'jj': 'JJ (strong J)',
+      'ch': 'CH (like "church")',
+      'th': 'TH (soft)',
+      'ph': 'PH (soft)',
+      'kh': 'KH (soft)',
+      'gh': 'GH (soft)',
+      'bh': 'BH (soft)'
     }
 
     // Check for exact matches first
@@ -432,78 +513,111 @@ class PronunciationManager {
       return exactMatches[cleanSyllable]
     }
 
-    // Analyze syllable components for more specific guidance
+    // Pattern-based analysis for complex syllables
     let guide = ''
     
-    // Check for consonant clusters at the beginning
+    // Handle initial consonant clusters
     if (cleanSyllable.startsWith('ch')) {
-      guide += 'ch (like "chair") + '
+      guide += 'CH (like "chair") + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('th')) {
-      guide += 'soft t + '
+      guide += 'TH (soft T) + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('ph')) {
-      guide += 'soft p + '
+      guide += 'PH (soft P) + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('kh')) {
-      guide += 'soft k + '
+      guide += 'KH (soft K) + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('ng')) {
-      guide += 'ng (like "sing") + '
+      guide += 'NG (like "sing") + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('hy')) {
-      guide += 'hy (soft h-y) + '
+      guide += 'HY (h-yuh) + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('ry')) {
-      guide += 'ry (soft r-y) + '
+      guide += 'RY (r-yuh) + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('gw')) {
-      guide += 'gw (like "Gwen") + '
+      guide += 'GW (like "Gwen") + '
+      cleanSyllable = cleanSyllable.substring(2)
     } else if (cleanSyllable.startsWith('sw')) {
-      guide += 'sw (like "swim") + '
+      guide += 'SW (like "swim") + '
+      cleanSyllable = cleanSyllable.substring(2)
+    } else if (cleanSyllable.startsWith('tw')) {
+      guide += 'TW (like "twin") + '
+      cleanSyllable = cleanSyllable.substring(2)
+    } else if (cleanSyllable.startsWith('dw')) {
+      guide += 'DW + '
+      cleanSyllable = cleanSyllable.substring(2)
     }
 
-    // Check for vowel sounds in the middle
+    // Handle vowel sounds
     if (cleanSyllable.includes('eo')) {
-      guide += 'uh (like "cut")'
+      guide += 'UH (like "cut")'
     } else if (cleanSyllable.includes('eu')) {
-      guide += 'oo (like "book")'
+      guide += 'OO (like "book")'
     } else if (cleanSyllable.includes('ae')) {
-      guide += 'eh (like "bed")'
+      guide += 'EH (like "red")'
     } else if (cleanSyllable.includes('ai')) {
-      guide += 'eye'
+      guide += 'EYE'
     } else if (cleanSyllable.includes('au')) {
-      guide += 'ow (like "cow")'
+      guide += 'OW (like "cow")'
+    } else if (cleanSyllable.includes('ei')) {
+      guide += 'EY (like "hey")'
+    } else if (cleanSyllable.includes('oo')) {
+      guide += 'OO (like "moon")'
+    } else if (cleanSyllable.includes('ui')) {
+      guide += 'WEE'
+    } else if (cleanSyllable.includes('wi')) {
+      guide += 'WEE'
     } else if (cleanSyllable.includes('yang')) {
-      guide += 'yahng'
+      guide += 'YAHNG'
     } else if (cleanSyllable.includes('ang')) {
-      guide += 'ahng'
-    } else if (cleanSyllable.includes('ung')) {
-      guide += 'oong'
+      guide += 'AHNG'
+    } else if (cleanSyllable.includes('eng')) {
+      guide += 'EHNG'
     } else if (cleanSyllable.includes('ing')) {
-      guide += 'eeng'
+      guide += 'EENG'
+    } else if (cleanSyllable.includes('ong')) {
+      guide += 'OHNG'
+    } else if (cleanSyllable.includes('ung')) {
+      guide += 'OONG'
     } else if (cleanSyllable.includes('a')) {
-      guide += 'ah (like "father")'
+      guide += 'AH (like "father")'
     } else if (cleanSyllable.includes('e')) {
-      guide += 'eh (like "pet")'
+      guide += 'EH (like "pet")'
     } else if (cleanSyllable.includes('i')) {
-      guide += 'ee (like "see")'
+      guide += 'EE (like "see")'
     } else if (cleanSyllable.includes('o')) {
-      guide += 'oh (like "low")'
+      guide += 'OH (like "go")'
     } else if (cleanSyllable.includes('u')) {
-      guide += 'oo (like "moon")'
+      guide += 'OO (like "moon")'
     }
 
-    // Add ending consonant guidance
+    // Handle ending consonants
     if (cleanSyllable.endsWith('ng')) {
-      guide += ' + ng (like "sing")'
+      guide += ' + NG (like "sing")'
+    } else if (cleanSyllable.endsWith('nk')) {
+      guide += ' + NK'
+    } else if (cleanSyllable.endsWith('nt')) {
+      guide += ' + NT'
     } else if (cleanSyllable.endsWith('k')) {
-      guide += ' + k (sharp stop)'
+      guide += ' + K (sharp stop)'
     } else if (cleanSyllable.endsWith('p')) {
-      guide += ' + p (sharp stop)'
+      guide += ' + P (sharp stop)'
     } else if (cleanSyllable.endsWith('t')) {
-      guide += ' + t (sharp stop)'
+      guide += ' + T (sharp stop)'
     } else if (cleanSyllable.endsWith('m')) {
-      guide += ' + m'
+      guide += ' + M'
     } else if (cleanSyllable.endsWith('n')) {
-      guide += ' + n'
-    }
-
-    // Clean up and return
-    return guide || `"${cleanSyllable}" - sound it out phonetically`
+      guide += ' + N'
+    } else if (cleanSyllable.endsWith('l')) {
+      guide += ' + L'
+    } else if (cleanSyllable.endsWith('r')) {
+      guide += ' + R'
+    }    // Clean up and return
+    return guide || `"${cleanSyllable}" - say it phonetically`
   }
 }
 

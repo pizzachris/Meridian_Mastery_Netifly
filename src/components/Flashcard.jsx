@@ -58,6 +58,44 @@ const getElementFromMeridian = (meridianName) => {
   return elementMap[normalizedName] || 'Metal';
 };
 
+// Helper to get element color classes
+const getElementColors = (element) => {
+  const colorMap = {
+    'Fire': {
+      bg: 'bg-red-600',
+      border: 'border-red-400',
+      text: 'text-white'
+    },
+    'Earth': {
+      bg: 'bg-yellow-600',
+      border: 'border-yellow-400', 
+      text: 'text-black'
+    },
+    'Metal': {
+      bg: 'bg-gray-100',
+      border: 'border-gray-300',
+      text: 'text-black'
+    },
+    'Water': {
+      bg: 'bg-blue-600',
+      border: 'border-blue-400',
+      text: 'text-white'
+    },
+    'Wood': {
+      bg: 'bg-green-600', 
+      border: 'border-green-400',
+      text: 'text-white'
+    },
+    'Extraordinary': {
+      bg: 'bg-purple-600',
+      border: 'border-purple-400',
+      text: 'text-white'
+    }
+  };
+  
+  return colorMap[element] || colorMap['Metal']; // Default to Metal if unknown
+};
+
 const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
   // All state hooks must be at the top level - never conditional
   const [currentCard, setCurrentCard] = useState(0)
@@ -460,9 +498,8 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
           <div className={`relative w-full h-[25rem] sm:h-[30rem] md:h-[32rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>{/* Front Side - mobile optimized */}
             <div className="absolute inset-0 w-full h-full backface-hidden">
               <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-4 sm:p-6 relative">
-                
-                {/* Meridian badge in red box at top - mobile responsive */}
-                <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 border-red-400">
+                  {/* Meridian badge with element colors at top - mobile responsive */}
+                <div className={`absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 ${getElementColors(element).bg} ${getElementColors(element).text} px-2 sm:px-4 py-1 sm:py-2 rounded-lg border-2 ${getElementColors(element).border}`}>
                   <span className="text-xs sm:text-sm font-bold">
                     {meridianAbbrev} • {element.toUpperCase()}{isBilateral ? ' ⇔' : ''}
                   </span>
