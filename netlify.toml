@@ -1,14 +1,13 @@
 # Netlify build configuration for Meridian Mastery
 [build]
-  # Build command - ensure all dependencies are installed with optional deps
-  command = "npm install && npm run build"
+  # Build command - force clean install with optional deps
+  command = "rm -rf node_modules package-lock.json && npm install --include=optional && npm run build"
   # Directory to publish (build output)
   publish = "dist"
 
 # Node.js version (use LTS version)
 [build.environment]
-  NODE_VERSION = "18.18.0"
-  NPM_FLAGS = "--include=optional"
+  NODE_VERSION = "20.11.0"
 
 # SPA redirect rules for React Router
 [[redirects]]
