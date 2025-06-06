@@ -8,6 +8,12 @@ import TriskelionLogo from './TriskelionLogo'
 const getMeridianAbbreviation = (meridianName, pointNumber) => {
   if (!meridianName) return 'UN';
   
+  // If pointNumber already contains the meridian abbreviation (like "LU1"), use it directly
+  if (pointNumber && /^[A-Z]{1,2}\d+/.test(pointNumber.toString())) {
+    return pointNumber.toString();
+  }
+  
+  // Otherwise, create abbreviation from meridian name and combine with point number
   const normalizedName = meridianName.replace(/\s*\([^)]*\)/, '').trim();
   const abbrevMap = {
     'Lung': 'LU',
@@ -31,7 +37,7 @@ const getMeridianAbbreviation = (meridianName, pointNumber) => {
   };
   
   const abbrev = abbrevMap[normalizedName] || 'UN';
-  return pointNumber ? `${abbrev} ${pointNumber}` : abbrev;
+  return pointNumber ? `${abbrev}${pointNumber}` : abbrev;
 };
 
 // Helper to get element from meridian name
@@ -339,8 +345,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const insightText = currentCardData.insight;
   const isBilateral = currentCardData.bilateral === true || currentCardData.bilateral === "Yes";
   return (
-    <div className="min-h-screen bg-black text-white relative">
-      {/* Header - mobile optimized */}
+    <div className="min-h-screen bg-black text-white relative">      {/* Header - mobile optimized */}
       <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800">
         {/* Logo and title - clickable to go home */}
         <button 
@@ -358,11 +363,11 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
         <div className="text-yellow-400 text-xs sm:text-sm font-medium">
           {currentCard + 1} / {flashcards.length}
         </div>
-      </div>      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-80px)] p-3 sm:p-4">
-        
-        {/* Progress Bar */}
-        <div className="w-full max-w-sm sm:max-w-md mb-4 sm:mb-6">
+      </div>
+
+      {/* Study Session Progress Bar - Moved up below header */}
+      <div className="w-full p-3 sm:p-4 border-b border-gray-800">
+        <div className="w-full max-w-sm sm:max-w-md mx-auto">
           <div className="bg-gray-800 rounded-full h-1.5 sm:h-2">
             <div 
               className="bg-yellow-400 h-1.5 sm:h-2 rounded-full transition-all duration-300"
@@ -375,10 +380,12 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
              'Study Session'}
           </div>
         </div>
+      </div>
 
-        {/* Flashcard - mobile optimized sizing */}
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)] p-3 sm:p-4">        {/* Flashcard - enlarged for better mobile experience */}
         <div className="w-full max-w-sm sm:max-w-md mx-auto mb-4 sm:mb-0">
-          <div className={`relative w-full h-72 sm:h-80 md:h-96 transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>            {/* Front Side - mobile optimized */}
+          <div className={`relative w-full h-80 sm:h-96 md:h-[26rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>{/* Front Side - mobile optimized */}
             <div className="absolute inset-0 w-full h-full backface-hidden">
               <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-4 sm:p-6 relative">
                 
@@ -418,56 +425,56 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
                 </div>
 
               </div>
-            </div>            {/* Back Side - mobile-optimized to fit in one frame */}
+            </div>            {/* Back Side - expanded layout with better spacing */}
             <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
-              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-2 text-xs flex flex-col justify-between overflow-hidden">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-3 text-xs flex flex-col justify-between overflow-hidden">
                 
                 {/* Header with point info - compact */}
-                <div className="text-center mb-2 border-b border-gray-700 pb-1 flex-shrink-0">
-                  <h2 className="text-sm font-bold text-yellow-400 mb-0.5 leading-tight">
+                <div className="text-center mb-3 border-b border-gray-700 pb-2 flex-shrink-0">
+                  <h2 className="text-sm font-bold text-yellow-400 mb-1 leading-tight">
                     {nameRomanized || nameEnglish}
                   </h2>
                   <p className="text-gray-300 text-xs">{nameHangul}</p>
                   <p className="text-gray-400 text-xs">{pointNumber} {meridianName} Meridian</p>
                 </div>
 
-                {/* Information sections - very compact grid layout */}
-                <div className="flex-1 space-y-1">
+                {/* Information sections - expanded with better spacing */}
+                <div className="flex-1 space-y-2">
                   
-                  {/* Location - First box if available */}
+                  {/* Location - First box if available, taller */}
                   {location && (
-                    <div className="bg-yellow-600 text-black p-1.5 rounded">
-                      <h3 className="font-bold text-xs mb-0.5">LOCATION:</h3>
-                      <p className="text-xs leading-snug">{location}</p>
+                    <div className="bg-yellow-600 text-black p-2.5 rounded">
+                      <h3 className="font-bold text-xs mb-1">LOCATION:</h3>
+                      <p className="text-xs leading-relaxed">{location}</p>
                     </div>
                   )}
 
-                  {/* Striking Effect */}
-                  <div className="bg-yellow-600 text-black p-1.5 rounded">
-                    <h3 className="font-bold text-xs mb-0.5">STRIKING EFFECT:</h3>
-                    <p className="text-xs leading-snug">
-                      {(martialApplication || "The point is usually struck to an upward direction with a blunt edge.").substring(0, 80) + 
-                       ((martialApplication || "").length > 80 ? "..." : "")}
+                  {/* Striking Effect - taller box */}
+                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                    <h3 className="font-bold text-xs mb-1">STRIKING EFFECT:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {(martialApplication || "The point is usually struck to an upward direction with a blunt edge.").substring(0, 100) + 
+                       ((martialApplication || "").length > 100 ? "..." : "")}
                     </p>
                   </div>
 
-                  {/* Observed Effects */}
-                  <div className="bg-yellow-600 text-black p-1.5 rounded">
-                    <h3 className="font-bold text-xs mb-0.5">OBSERVED EFFECTS:</h3>
-                    <p className="text-xs leading-snug">
-                      {(healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible.").substring(0, 80) + 
-                       ((healingFunction || "").length > 80 ? "..." : "")}
+                  {/* Observed Effects - taller box */}
+                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                    <h3 className="font-bold text-xs mb-1">OBSERVED EFFECTS:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {(healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible.").substring(0, 100) + 
+                       ((healingFunction || "").length > 100 ? "..." : "")}
                     </p>
                   </div>
 
-                  {/* Insight - with expand option */}
-                  <div className="bg-yellow-600 text-black p-1.5 rounded">
-                    <h3 className="font-bold text-xs mb-0.5">INSIGHT:</h3>
-                    <p className="text-xs leading-snug">
-                      {(insightText || "This point has the potential to affect the associated meridian. Be responsible.").substring(0, 60) + "..."}
+                  {/* Insight - with expand option, taller box */}
+                  <div className="bg-yellow-600 text-black p-2.5 rounded">
+                    <h3 className="font-bold text-xs mb-1">INSIGHT:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {(insightText || "This point has the potential to affect the associated meridian. Be responsible.").substring(0, 80) + "..."}
                     </p>
                     <button 
-                      className="text-xs underline mt-0.5 hover:text-gray-800"
+                      className="text-xs underline mt-1 hover:text-gray-800"
                       onClick={() => setShowInsightModal(true)}
                     >
                       Read more
