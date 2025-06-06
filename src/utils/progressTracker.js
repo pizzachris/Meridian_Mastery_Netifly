@@ -284,6 +284,9 @@ export class ProgressTracker {
       progress.meridianProgress[meridian].masteryLevel = meridianMastery
     }
 
+    // Increment total quiz attempts
+    progress.totalQuizAttempts = (progress.totalQuizAttempts || 0) + 1
+
     this.saveProgress(progress)
   }
 
@@ -393,41 +396,6 @@ export class ProgressTracker {
     };
   }
 
-  static recordQuizAttempt(pointId, isCorrect) {
-    const progress = this.getProgress();
-    const now = new Date().toISOString();
-
-    // Initialize point progress if needed
-    if (!progress.studiedPoints[pointId]) {
-      progress.studiedPoints[pointId] = {
-        lastStudied: null,
-        studyCount: 0,
-        quizAttempts: 0,
-        correctAnswers: 0
-      };
-    }
-
-    // Update point progress
-    progress.studiedPoints[pointId].quizAttempts++;
-    if (isCorrect) {
-      progress.studiedPoints[pointId].correctAnswers++;
-    }
-    progress.studiedPoints[pointId].lastQuizAttempt = now; // Track last quiz attempt
-
-    // Recalculate retention and mastery for this point
-    const point = progress.studiedPoints[pointId];
-    const retentionScore = point.quizAttempts > 0 
-      ? point.correctAnswers / point.quizAttempts 
-      : 0;
-    
-    progress.retentionScores[pointId] = retentionScore;
-    progress.masteryLevels[pointId] = this.calculateMasteryLevel(retentionScore, point.studyCount); // Use studyCount here
-
-    // Increment total quiz attempts
-    progress.totalQuizAttempts = (progress.totalQuizAttempts || 0) + 1;
-
-    this.saveProgress(progress);
-  }
 }
 
 export default ProgressTracker
