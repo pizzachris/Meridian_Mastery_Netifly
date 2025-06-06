@@ -87,10 +87,10 @@ export class ProgressTracker {
   static STORAGE_KEY = 'meridian-mastery-progress'
   static RETENTION_THRESHOLD = 0.7 // 70% retention score required to consider a point mastered
 
-  static getProgress() {
+  static async getProgress() {
     try {
       const progress = localStorage.getItem(this.STORAGE_KEY)
-      const parsed = progress ? JSON.parse(progress) : this.initializeProgress()
+      const parsed = progress ? JSON.parse(progress) : await this.initializeProgress()
       
       // Ensure backward compatibility - add missing fields
       if (!parsed.sessionHistory) {
@@ -108,78 +108,111 @@ export class ProgressTracker {
       console.error('Error loading progress, resetting:', error)
       // If there's an error, reset and return fresh progress
       localStorage.removeItem(this.STORAGE_KEY)
-      return this.initializeProgress()
+      return await this.initializeProgress()
     }
   }
 
-  static initializeProgress() {
-    const points = getAllPoints()
-    const initialProgress = {
-      studiedPoints: {},
-      lastSessionDate: null,
-      totalSessions: 0,
-      totalQuizAttempts: 0,
-      meridianProgress: {},
-      retentionScores: {},
-      masteryLevels: {},
-      sessionHistory: []
+  static async initializeProgress() {
+    try {
+      const points = await getAllPoints()
+      
+      // Ensure points is an array
+      if (!Array.isArray(points)) {
+        console.error('getAllPoints() did not return an array:', points)
+        throw new Error('Invalid points data format')
+      }
+      
+      const initialProgress = {
+        studiedPoints: {},
+        lastSessionDate: null,
+        totalSessions: 0,
+        totalQuizAttempts: 0,
+        meridianProgress: {},
+        retentionScores: {},
+        masteryLevels: {},
+        sessionHistory: []
+      }
+
+      // Initialize progress for each point
+      points.forEach(point => {
+        if (point && point.id) {
+          initialProgress.studiedPoints[point.id] = {
+            lastStudied: null,
+            studyCount: 0,
+            quizAttempts: 0,
+            correctAnswers: 0
+          }
+          initialProgress.retentionScores[point.id] = 0
+          initialProgress.masteryLevels[point.id] = 0
+        }
+      })
+
+      // Initialize meridian progress
+      const meridians = [...new Set(points.map(p => p.meridian).filter(Boolean))]
+      meridians.forEach(meridian => {
+        initialProgress.meridianProgress[meridian] = {
+          pointsStudied: 0,
+          totalPoints: points.filter(p => p.meridian === meridian).length,
+          masteryLevel: 0
+        }
+      })
+
+      this.saveProgress(initialProgress)
+      return initialProgress
+    } catch (error) {
+      console.error('Failed to initialize progress:', error)
+      // Return minimal progress structure if everything fails
+      return {
+        studiedPoints: {},
+        lastSessionDate: null,
+        totalSessions: 0,
+        totalQuizAttempts: 0,
+        meridianProgress: {},
+        retentionScores: {},
+        masteryLevels: {},
+        sessionHistory: []
+      }
     }
-
-    // Initialize progress for each point
-    points.forEach(point => {
-      initialProgress.studiedPoints[point.id] = {
-        lastStudied: null,
-        studyCount: 0,
-        quizAttempts: 0,
-        correctAnswers: 0
-      }
-      initialProgress.retentionScores[point.id] = 0
-      initialProgress.masteryLevels[point.id] = 0
-    })
-
-    // Initialize meridian progress
-    const meridians = [...new Set(points.map(p => p.meridian))]
-    meridians.forEach(meridian => {
-      initialProgress.meridianProgress[meridian] = {
-        pointsStudied: 0,
-        totalPoints: points.filter(p => p.meridian === meridian).length,
-        masteryLevel: 0
-      }
-    })
-
-    this.saveProgress(initialProgress)
-    return initialProgress
   }
 
   static saveProgress(progress) {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(progress))
   }
 
-  static studyPoint(pointId, meridian) {
-    const progress = this.getProgress()
-    const now = new Date().toISOString()
+  static async studyPoint(pointId, meridian) {
+    try {
+      const progress = await this.getProgress()
+      const now = new Date().toISOString()
 
-    // Update point progress
-    if (!progress.studiedPoints[pointId]) {
-      progress.studiedPoints[pointId] = {
-        lastStudied: null,
-        studyCount: 0,
-        quizAttempts: 0,
-        correctAnswers: 0
+      // Update point progress
+      if (!progress.studiedPoints[pointId]) {
+        progress.studiedPoints[pointId] = {
+          lastStudied: null,
+          studyCount: 0,
+          quizAttempts: 0,
+          correctAnswers: 0
+        }
       }
+
+      progress.studiedPoints[pointId].lastStudied = now
+      progress.studiedPoints[pointId].studyCount++
+
+      // Update meridian progress
+      if (meridian && progress.meridianProgress[meridian]) {
+        const allPoints = await getAllPoints()
+        if (Array.isArray(allPoints)) {
+          progress.meridianProgress[meridian].pointsStudied = Object.keys(progress.studiedPoints)
+            .filter(pid => {
+              const point = allPoints.find(ap => ap.id === pid)
+              return point && point.meridian === meridian
+            }).length
+        }
+      }
+
+      this.saveProgress(progress)
+    } catch (error) {
+      console.error('Failed to study point:', error)
     }
-
-    progress.studiedPoints[pointId].lastStudied = now
-    progress.studiedPoints[pointId].studyCount++
-
-    // Update meridian progress
-    if (meridian && progress.meridianProgress[meridian]) {
-      progress.meridianProgress[meridian].pointsStudied = Object.values(progress.studiedPoints)
-        .filter(p => getAllPoints().find(ap => ap.id === pointId)?.meridian === meridian)
-        .length
-    }
-
-    this.saveProgress(progress)
   }
 
   static recordQuizAttempt(pointId, isCorrect, meridian) {
@@ -240,31 +273,45 @@ export class ProgressTracker {
     return 0 // New
   }
 
-  static getPointsNeedingReview() {
-    const progress = this.getProgress()
-    const allPoints = getAllPoints()
-    const now = new Date()
+  static async getPointsNeedingReview() {
+    try {
+      const progress = await this.getProgress()
+      const allPoints = await getAllPoints()
+      
+      if (!Array.isArray(allPoints)) {
+        console.error('getAllPoints did not return an array')
+        return []
+      }
+      
+      const now = new Date()
 
-    // Filter points based on review criteria
-    return allPoints.filter(point => {
-      const stats = progress.studiedPoints[point.id]
+      // Filter points based on review criteria
+      return allPoints.filter(point => {
+        if (!point || !point.id) return false
+        
+        const stats = progress.studiedPoints[point.id]
 
-      // If never studied, needs review
-      if (!stats) return true
+        // If never studied, needs review
+        if (!stats) return true
 
-      const lastStudiedDate = stats.lastStudied ? new Date(stats.lastStudied) : null
-      const daysSinceLastStudied = lastStudiedDate ? (now - lastStudiedDate) / (1000 * 60 * 60 * 24) : Infinity
+        const lastStudiedDate = stats.lastStudied ? new Date(stats.lastStudied) : null
+        const daysSinceLastStudied = lastStudiedDate ? (now - lastStudiedDate) / (1000 * 60 * 60 * 24) : Infinity
 
-      // Needs review if:
-      // 1. Hasn't been studied in a while (e.g., 7 days for mastery < 5, 30 days for mastery 5)
-      // 2. Has low mastery level (< 4)
-      const masteryLevel = this.calculateMasteryLevel(stats.correctAnswers / (stats.quizAttempts || 1), stats.studyCount)
+        // Needs review if:
+        // 1. Hasn't been studied in a while (e.g., 7 days for mastery < 5, 30 days for mastery 5)
+        // 2. Has low mastery level (< 4)
+        const masteryLevel = this.calculateMasteryLevel(stats.correctAnswers / (stats.quizAttempts || 1), stats.studyCount)
 
-      if (masteryLevel < 4 && daysSinceLastStudied >= 7) return true
-      if (masteryLevel >= 4 && daysSinceLastStudied >= 30) return true
+        if (masteryLevel < 4 && daysSinceLastStudied >= 7) return true
+        if (masteryLevel >= 4 && daysSinceLastStudied >= 30) return true
 
-      return false
-    })
+        return false
+      })
+    } catch (error) {
+      console.error('Error getting points needing review:', error)
+      return []
+    }
+  }
   }
 
   static getPointStats(pointId) {

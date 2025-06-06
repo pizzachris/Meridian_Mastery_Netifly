@@ -47,51 +47,35 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   const [pronunciation, setPronunciation] = useState(null)
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
-
-  // Initialize pronunciation manager
-  useEffect(() => {
-    try {
-      const manager = new PronunciationManager()
-      setPronunciation(manager)
-    } catch (error) {
-      console.error('Failed to initialize pronunciation manager:', error)
-    }
-  }, [])
-  // Generate quiz questions from flashcards
-  useEffect(() => {
-    const loadQuiz = async () => {
-      try {
-        setIsLoading(true)
-        await generateQuizQuestions()
-      } catch (error) {
-        console.error('Failed to generate quiz questions:', error)
-        setError('Failed to load quiz questions. Please try again.')      } finally {
-        setIsLoading(false)
-      }
-    }
-    loadQuiz()
-  }, [sessionMode, quizOptions, generateQuizQuestions])
-
   // Generate quiz questions from flashcards - memoized for performance
   const generateQuizQuestions = useCallback(async () => {
+    console.log('🎯 Starting to generate quiz questions...')
+    console.log('🎯 Session mode:', sessionMode)
+    console.log('🎯 Quiz options:', quizOptions)
+    
     try {
       let sourceCards = await getAllPoints()
+      console.log('🎯 Got source cards:', sourceCards.length)
+      
       if (!sourceCards || sourceCards.length === 0) {
         throw new Error('No cards available')
       }
-      
-      // Check user progress to determine difficulty level
-      const userProgress = ProgressTracker.getProgress()
+        // Check user progress to determine difficulty level
+      const userProgress = await ProgressTracker.getProgress()
       const totalQuizAttempts = userProgress?.totalQuizAttempts || 0
       const isBeginnerUser = totalQuizAttempts < 20 // First 20 quiz attempts
       
-      // Filter based on session mode or focus on points needing review
-      const pointsNeedingReview = ProgressTracker.getPointsNeedingReview()
+      console.log('🎯 User progress:', { totalQuizAttempts, isBeginnerUser })
+        // Filter based on session mode or focus on points needing review
+      const pointsNeedingReview = await ProgressTracker.getPointsNeedingReview()
+      console.log('🎯 Points needing review:', pointsNeedingReview.length)
+      
       if (pointsNeedingReview?.length > 0 && Math.random() > 0.3 && !isBeginnerUser) {
         // 70% chance to quiz on points needing review (only for experienced users)
         sourceCards = sourceCards.filter(card => 
           pointsNeedingReview.includes(card.id)
         )
+        console.log('🎯 Filtered to review points:', sourceCards.length)
       }
 
       // Apply session mode filters
@@ -112,31 +96,54 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       }
 
       if (!sourceCards || sourceCards.length === 0) {
-        throw new Error('No cards available for selected mode')
-      }
+        throw new Error('No cards available for selected mode')      }
       
       // Generate questions based on quiz type
       const quizType = quizOptions?.type || 'mixed-challenge'
-      const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)      
+      const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)
+      console.log('🎯 Question types for quiz:', questionTypes)
+      
       // Filter valid cards first
       const validCards = sourceCards.filter(card => {
         // Validate card has minimum required properties
-        return card && 
+        const isValid = card && 
                card.id && 
                card.nameEnglish && 
                card.nameHangul && 
                card.nameRomanized && 
                card.meridian
+        
+        if (!isValid && card) {
+          console.log('🎯 Invalid card:', {
+            id: card.id,
+            nameEnglish: card.nameEnglish,
+            nameHangul: card.nameHangul,
+            nameRomanized: card.nameRomanized,
+            meridian: card.meridian
+          })
+        }
+        
+        return isValid
       })
+      
+      console.log('🎯 Valid cards after filtering:', validCards.length, 'out of', sourceCards.length)
+
+      if (validCards.length === 0) {
+        throw new Error('No valid cards available for quiz generation')
+      }
 
       // Generate questions asynchronously
-      const questionPromises = validCards.map(async (card) => {
+      console.log('🎯 Generating questions for', validCards.length, 'cards')
+      const questionPromises = validCards.map(async (card, index) => {
         const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
+        console.log(`🎯 Generating question ${index + 1}/${validCards.length}, type: ${questionType}`)
         return await generateQuestion(card, questionType)
       })
 
       const questions = await Promise.all(questionPromises)
       const validQuestions = questions.filter(Boolean) // Remove any null questions
+      
+      console.log('🎯 Generated questions:', validQuestions.length, 'out of', questions.length)
 
       if (validQuestions.length === 0) {
         throw new Error('Failed to generate valid questions')
@@ -150,9 +157,34 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
     } catch (error) {
       console.error('Error generating quiz questions:', error)
       setError(error.message)
-      setQuizQuestions([])
-    }
+      setQuizQuestions([])    }
   }, [sessionMode, quizOptions])
+
+  // Initialize pronunciation manager
+  useEffect(() => {
+    try {
+      const manager = new PronunciationManager()
+      setPronunciation(manager)
+    } catch (error) {
+      console.error('Failed to initialize pronunciation manager:', error)
+    }
+  }, [])
+
+  // Generate quiz questions from flashcards
+  useEffect(() => {
+    const loadQuiz = async () => {
+      try {
+        setIsLoading(true)
+        await generateQuizQuestions()
+      } catch (error) {
+        console.error('Failed to generate quiz questions:', error)
+        setError('Failed to load quiz questions. Please try again.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    loadQuiz()
+  }, [sessionMode, quizOptions, generateQuizQuestions])
 
   const getQuestionTypesForQuizType = (quizType, isBeginnerUser) => {
     switch (quizType) {
@@ -186,12 +218,13 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
         return ['korean-name-english-choices', 'simple-korean-to-english']
     }
   }
-
   const generateQuestion = async (card, type) => {
+    console.log(`🎯 Generating question for card ${card.id}, type: ${type}`)
+    
     try {
       // Validate card object
       if (!card || !card.id) {
-        console.error('Invalid card object:', card)
+        console.error('🎯 Invalid card object:', card)
         return null
       }
 
@@ -203,9 +236,18 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
 
       // Ensure we have enough options
       if (incorrectOptions.length < 3) {
-        console.warn('Not enough incorrect options available')
+        console.warn('🎯 Not enough incorrect options available')
         return null
       }
+      
+      console.log(`🎯 Card properties:`, {
+        nameHangul: card.nameHangul,
+        nameRomanized: card.nameRomanized,
+        nameEnglish: card.nameEnglish,
+        location: card.location,
+        healingFunction: card.healingFunction,
+        martialApplication: card.martialApplication
+      })
 
       switch (type) {
         case 'korean-name-english-choices':

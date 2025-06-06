@@ -59,6 +59,7 @@ const getElementFromMeridian = (meridianName) => {
 };
 
 const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
+  // All state hooks must be at the top level - never conditional
   const [currentCard, setCurrentCard] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)  // Always start with front side
   const [userStats, setUserStats] = useState({})
@@ -74,14 +75,59 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const [flashcards, setFlashcards] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   
-  // Initialize pronunciation manager and load progress
+  // Current card data - derived from state
+  const currentCardData = flashcards[currentCard] || null
+  
+  // Memoized computed card properties for performance
+  const cardProperties = useMemo(() => {
+    console.log('🔄 Computing card properties for card:', currentCard, 'Data:', currentCardData)
+    if (!currentCardData) {
+      console.log('❌ No currentCardData available')
+      return null;
+    }
+    
+    const pointNumber = currentCardData.point_number || currentCardData.number;
+    const nameHangul = currentCardData.nameHangul || currentCardData.hangul;
+    const nameRomanized = currentCardData.nameRomanized || currentCardData.romanized;
+    const nameEnglish = currentCardData.nameEnglish || currentCardData.english;
+    const meridianName = currentCardData.meridian;
+    const meridianAbbrev = getMeridianAbbreviation(meridianName, pointNumber);
+    const element = getElementFromMeridian(meridianName);
+    const location = currentCardData.location || currentCardData["Anatomical Location"];
+    const healingFunction = currentCardData.healingFunction || currentCardData["Healing Function"];
+    const martialApplication = currentCardData.martialApplication || currentCardData["Martial Application"];
+    const insightText = currentCardData.insight;
+    const isBilateral = currentCardData.bilateral === true || currentCardData.bilateral === "Yes";
+    
+    console.log('✅ Card properties computed:', {
+      pointNumber, nameHangul, nameRomanized, nameEnglish, 
+      meridianName, location, healingFunction, martialApplication
+    })
+    
+    return {
+      pointNumber,
+      nameHangul,
+      nameRomanized, 
+      nameEnglish,
+      meridianName,
+      meridianAbbrev,
+      element,
+      location,
+      healingFunction,
+      martialApplication,
+      insightText,
+      isBilateral
+    };
+  }, [currentCardData, currentCard])
+    // Initialize pronunciation manager and load progress
   useEffect(() => {
     const initialize = async () => {
       try {
         const manager = new PronunciationManager()
         await manager.loadVoices()
         setPronunciation(manager)
-        setProgress(ProgressTracker.getProgress())
+        const progressData = await ProgressTracker.getProgress()
+        setProgress(progressData)
         setError(null)
       } catch (error) {
         console.error('Failed to initialize:', error)
@@ -90,15 +136,17 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
     }
     initialize()
   }, [])
-
   // Load flashcards based on session mode
   useEffect(() => {
     const loadCards = async () => {
       setIsLoading(true)
       setError(null)
+      console.log('🔄 Loading cards for sessionMode:', sessionMode)
+      console.log('🔄 Current flashcards state:', flashcards.length)
       try {
         let cards = []
-          // Default behavior: show all pressure points (no Hohn Soo) unless specific session mode
+        
+        // Default behavior: show all pressure points (no Hohn Soo) unless specific session mode
         if (!sessionMode || sessionMode === 'all' || sessionMode === 'flashcards') {
           cards = await getAllPoints()
           // Filter out Hohn Soo points - they should only appear in Maek sessions
@@ -130,12 +178,14 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
           cards = cards.filter(card => {
             const pointName = (card.nameEnglish || card.english || '').toLowerCase()
             return !pointName.includes('hohn soo') && !pointName.includes('hoan su')
-          })
-        }
-        
-        if (!cards || cards.length === 0) {
+          })        }
+          if (!cards || cards.length === 0) {
           throw new Error('No cards available for selected mode.')
         }
+
+        console.log('✅ Cards loaded successfully:', cards.length)
+        console.log('✅ First card sample:', cards[0])
+        console.log('✅ First card keys:', Object.keys(cards[0] || {}))
 
         if (!Array.isArray(cards)) {
           console.error('Cards is not an array:', cards)
@@ -143,18 +193,19 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
         }
 
         // Only shuffle if shuffleMode is explicitly enabled
-        if (shuffleMode) {          for (let i = cards.length - 1; i > 0; i--) {
+        if (shuffleMode) {
+          for (let i = cards.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [cards[i], cards[j]] = [cards[j], cards[i]];
           }
         }
-        
-        setFlashcards(cards)
+          setFlashcards(cards)
         setCurrentCard(0)
         setIsFlipped(false)  // Always start with front side
         setError(null)
+        console.log('✅ Flashcards state updated, total cards:', cards.length)
       } catch (error) {
-        console.error('Failed to load flashcards:', error)
+        console.error('❌ Failed to load flashcards:', error)
         setError(error.message || 'Failed to load flashcards.')
         setFlashcards([])
       } finally {
@@ -190,10 +241,10 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
         setCurrentCard(pointIndex)
         setIsFlipped(false)
       }
-    }  }, [selectedPointId, flashcards])
-  
-  // Memoized navigation functions for better performance
-  const nextCard = useCallback(() => {
+    }
+  }, [selectedPointId, flashcards])
+    // Memoized navigation functions for better performance
+  const nextCard = useCallback(async () => {
     if (flashcards.length === 0) return;
     
     // Record study event
@@ -201,8 +252,10 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
       const card = flashcards[currentCard]
       if (card) {
         try {
-          ProgressTracker.studyPoint(card.id, card.meridian)
-          setProgress(ProgressTracker.getProgress())
+          await ProgressTracker.studyPoint(card.id, card.meridian)
+          // Update progress asynchronously
+          const progressData = await ProgressTracker.getProgress()
+          setProgress(progressData)
         } catch (error) {
           console.error('Failed to update progress:', error)
         }
@@ -236,9 +289,11 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
       console.error('Pronunciation failed:', error)
     }
   }, [pronunciation])
-
   const handlePronunciationBreakdown = useCallback(() => {
-    if (!pronunciation || !currentCardData) return;
+    if (!pronunciation || !flashcards.length || currentCard >= flashcards.length) return;
+    
+    const currentCardData = flashcards[currentCard];
+    if (!currentCardData) return;
     
     const romanized = currentCardData.romanized || currentCardData.nameRomanized;
     if (!romanized) return;
@@ -250,7 +305,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
     } catch (error) {
       console.error('Failed to create pronunciation breakdown:', error);
     }
-  }, [pronunciation, currentCardData])
+  }, [pronunciation, flashcards, currentCard])
 
   const handleFlag = useCallback(() => {
     setShowFlagModal(true)
@@ -328,44 +383,9 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
             className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg"
           >
             Choose Another Session
-          </button>
-        </div>
-      </div>
-    )
+          </button>        </div>
+      </div>    )
   }
-  const currentCardData = flashcards[currentCard]
-  
-  // Memoized computed card properties for performance
-  const cardProperties = useMemo(() => {
-    if (!currentCardData) return null;
-      const pointNumber = currentCardData.point_number || currentCardData.number;
-    const nameHangul = currentCardData.nameHangul || currentCardData.hangul;
-    const nameRomanized = currentCardData.nameRomanized || currentCardData.romanized;
-    const nameEnglish = currentCardData.nameEnglish || currentCardData.english;
-    const meridianName = currentCardData.meridian;
-    const meridianAbbrev = getMeridianAbbreviation(meridianName, pointNumber);
-    const element = getElementFromMeridian(meridianName);
-    const location = currentCardData.location || currentCardData["Anatomical Location"];
-    const healingFunction = currentCardData.healingFunction || currentCardData["Healing Function"];
-    const martialApplication = currentCardData.martialApplication || currentCardData["Martial Application"];
-    const insightText = currentCardData.insight;
-    const isBilateral = currentCardData.bilateral === true || currentCardData.bilateral === "Yes";
-    
-    return {
-      pointNumber,
-      nameHangul,
-      nameRomanized, 
-      nameEnglish,
-      meridianName,
-      meridianAbbrev,
-      element,
-      location,
-      healingFunction,
-      martialApplication,
-      insightText,
-      isBilateral
-    };
-  }, [currentCardData])
   
   if (!currentCardData || !cardProperties) {
     return (
@@ -377,10 +397,12 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
             className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg"
           >
             Choose Another Session
-          </button>
-        </div>
-      </div>    )
-  }  // Extract properties from memoized object
+          </button>        </div>
+      </div>
+    )
+  }
+  
+  // Extract properties from memoized object
   const {
     pointNumber,
     nameHangul,
@@ -725,4 +747,4 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   );
 };
 
-export default Flashcard
+export default Flashcard;
