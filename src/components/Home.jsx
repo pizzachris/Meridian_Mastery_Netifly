@@ -24,10 +24,22 @@ const Home = ({ navigateTo }) => {
           
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-4 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-600 bg-clip-text text-transparent leading-tight">
             Meridian Mastery
-          </h1>
-          <p className="text-sm sm:text-lg text-yellow-400 font-medium mb-2 px-2">
-            국술원 • Kuk Sool Won Pressure Points
+          </h1>          <p className="text-sm sm:text-lg text-yellow-400 font-medium mb-2 px-2">
+            국술원 • Pressure Points
           </p>
+          
+          {/* Short Dedication */}
+          <p className="text-xs sm:text-sm text-center text-gray-400 mt-2 mb-4 px-4 italic leading-relaxed">
+            With gratitude to <strong className="text-yellow-300">Grandmaster In-Hyuk Suh (Kuk Sa Nym)</strong>, Master Barry Harmon,<br />
+            and my teachers for lighting the way.{' '}
+            <button 
+              onClick={() => navigateTo('settings', { scrollTo: 'about' })}
+              className="underline cursor-pointer hover:text-yellow-300 transition-colors"
+            >
+              Read full dedication
+            </button>
+          </p>
+          
           <div className="w-20 sm:w-24 h-1 mx-auto bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full"></div>
         </header>        {/* Main Navigation with Five Elements Flow - Better Mobile Layout */}
         <div className="max-w-xs sm:max-w-md mx-auto space-y-3 sm:space-y-6 px-2">

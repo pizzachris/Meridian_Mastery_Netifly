@@ -445,10 +445,8 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* About Section */}
-          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
+          </div>          {/* About Section */}
+          <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6" id="about">
             <h3 className="font-semibold text-lg mb-4">About</h3>
             <div className="text-sm text-gray-300 space-y-2">
               <p><strong>Meridian Mastery v1.0</strong></p>
@@ -456,6 +454,28 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
               <p>Content verified from Master R. Barry Harmon's pressure point manual.</p>
               <p className="mt-4 pt-4 border-t border-gray-600">
                 © 2025 Meridian Mastery. For educational purposes.
+              </p>
+            </div>
+            
+            {/* Full Dedication */}
+            <div className="prose prose-sm text-gray-300 max-w-xl mx-auto mt-6 pt-6 border-t border-gray-600">
+              <h4 className="text-lg font-semibold text-center text-yellow-400 mb-4">Dedication</h4>
+              <p className="text-sm leading-relaxed mb-4">
+                This app is humbly dedicated to those who have shaped my journey in Kuk Sool Won® and made this work possible.
+              </p>
+              <p className="text-sm leading-relaxed mb-4">
+                <strong className="text-yellow-300">Grandmaster In-Hyuk Suh (Kuk Sa Nym)</strong> – founder of Kuk Sool Won®, whose vision, dedication, and transmission of traditional Korean martial knowledge laid the foundation for all of us who follow. It is with deep respect and gratitude that this app is offered in his honor.
+              </p>              <p className="text-sm leading-relaxed mb-4">
+                <strong className="text-yellow-300">Master Barry Harmon</strong> – for his invaluable work in documenting the meridian and pressure point systems, ensuring this knowledge is preserved and made accessible for dedicated students.
+              </p>
+              <p className="text-sm leading-relaxed mb-4">
+                <strong className="text-yellow-300">Master Gary Evarts</strong> – my first instructor, whose teaching and leadership introduced me to this path and provided the strong roots I continue to grow from.
+              </p>
+              <p className="text-sm leading-relaxed mb-4">
+                <strong className="text-yellow-300">Master Jason Lee</strong> – both mentor and friend, whose example continues to guide me not only in martial practice, but in becoming a more compassionate and balanced human being.
+              </p>
+              <p className="italic mt-6 text-center text-yellow-400 text-sm">
+                Thank you for lighting the way.
               </p>
             </div>
           </div>

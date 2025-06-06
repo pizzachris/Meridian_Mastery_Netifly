@@ -46,6 +46,21 @@ function App() {
     if (options.quizType) {
       setQuizOptions(options)
     }
+    
+    // Handle scrollTo option for smooth navigation to specific sections
+    if (options.scrollTo) {
+      // Use setTimeout to ensure the page has rendered before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(options.scrollTo)
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          })
+        }
+      }, 100)
+    }
   }
   // Render current page component
   const renderCurrentPage = () => {
