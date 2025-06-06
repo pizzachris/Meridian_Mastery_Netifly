@@ -3,7 +3,7 @@
 ## Project Overview
 **Meridian Mastery Coach** - A Korean/TCM pressure point learning application with flashcards, body map exploration, quiz system, and comprehensive progress tracking.
 
-## Build Date: May 31, 2025
+## Build Date: June 6, 2025
 
 ---
 
@@ -11,43 +11,50 @@
 
 ### ✅ Core Application Structure
 - **Framework**: React + Vite
-- **Styling**: Tailwind CSS with custom gradients
+- **Styling**: Tailwind CSS with custom gradients and 3D flip animations
 - **Navigation**: State-based navigation system (no React Router)
 - **Theme**: Professional black background with yellow/red accents
-- **Logo**: Triple spiral design with gradient backgrounds
+- **Logo**: Triskelion (triple spiral) design with gradient backgrounds
+- **Mobile-First**: Responsive design optimized for mobile devices
 
 ### ✅ Components Implemented
 
 #### 1. **Home Component** (`src/components/Home.jsx`)
 - Main dashboard with Meridian Mastery Coach branding
 - Quick access buttons to all major features
+- **Fixed Navigation**: Flashcards now properly defaults to 'all' session mode
 - Progress button integration
 - Settings access
 - Professional UI matching mockup design
 
 #### 2. **Daily Session Component** (`src/components/DailySession.jsx`) 
-- Fixed navigation issues (was showing blank pages)
+- **Session Mode Logic**: Fixed navigation issues
 - Three study modes: By Region, By Meridian, By Theme
-- Hidden mode indicators: Maek Chi Ki (left), Maek Cha Ki (right)
+- **Maek Sessions**: Maek Chi Ki and Maek Cha Ki with special content
+- **Shuffle Mode**: Toggle for randomizing card order
 - Logo circles with fist/foot icons
 - Session completion tracking for progress
 
-#### 3. **Flashcard Component** (`src/components/Flashcard.jsx`)
-- **COMPLETE REDESIGN** to match professional mockup
-- Front: Large Korean characters in yellow on black background
-- Back: Professional information boxes (Striking Effect, Observed Effects, Theoretical Effects, GPT-Guided Insight)
-- Red gradient "FLIP" button
-- Sound button with speaker icon
-- **NEW**: Flag button for reporting issues
-- **NEW**: Quiz integration button
-- **NEW**: Enhanced GPT insights based on user performance
-- **NEW**: Progress tracking integration
-- **NEW**: Mastery status indicators
-
-#### 4. **Body Map Component** (`src/components/BodyMap.jsx`)
-- Fixed syntax errors and completed redesign
-- "EXPLORE BODY MAP" header with logo
-- Body region selection (HEAD & NECK, ARMS, TRUNK, LEGS, FEET)
+#### 3. **Flashcard Component** (`src/components/Flashcard.jsx`) - **COMPLETELY REBUILT**
+- **MATCHES APPROVED MOCKUPS EXACTLY**
+- **Front Side**: 
+  - Red banner with point info: "LV 7 • METAL ⇔" (point, element, bilateral)
+  - Large Korean characters (Hangul) in yellow
+  - English translation in white
+  - Romanized Korean in gray
+  - **Pronunciation button** (top-right yellow speaker icon)
+- **Back Side**:
+  - Structured information sections with yellow backgrounds
+  - STRIKING EFFECT, OBSERVED EFFECTS, THEORETICAL EFFECTS
+  - GPT GUIDED INSIGHT section
+  - Location details when available
+- **3D Flip Animation**: Smooth card transitions with proper CSS
+- **Session Logic**: 
+  - General flashcards show all pressure points by meridian
+  - **Hohn Soo filtering**: Only appears in Maek Chi Ki/Cha Ki sessions
+  - Maek sessions show complete ordered sequences
+- **Progress Integration**: Tracks study sessions and mastery
+- **Flag System**: Report issues with individual cards
 - Individual region views with anatomical diagrams
 - Color-coded meridian selection
 - One meridian display at a time

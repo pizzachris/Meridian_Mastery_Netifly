@@ -1,0 +1,110 @@
+[
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC1",
+    "korean_name": "천지",
+    "romanized_korean": "Chuhn Jee",
+    "english_translation": "Heaven's Pool",
+    "anatomical_location": "1 cun lateral to the nipple, in the 4th intercostal space.",
+    "healing_function": "Opens chest, benefits breast and disperses stagnation.",
+    "martial_application": "Striking affects breath or heart rhythm.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC2",
+    "korean_name": "천천",
+    "romanized_korean": "Chuhn Chuhn",
+    "english_translation": "Heaven's Spring",
+    "anatomical_location": "2 cun below anterior axillary fold, between biceps and humerus.",
+    "healing_function": "Unblocks Qi in chest and calms the spirit.",
+    "martial_application": "Strike can disrupt arm movement or cause breath loss.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC3",
+    "korean_name": "곡택",
+    "romanized_korean": "Gohk Taek",
+    "english_translation": "Crooked Marsh",
+    "anatomical_location": "On transverse cubital crease, ulnar side of biceps tendon.",
+    "healing_function": "Clears heat from Qi, Ying, and blood levels.",
+    "martial_application": "Affects heart rhythm; may numb or paralyze arm.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC4",
+    "korean_name": "극문",
+    "romanized_korean": "Geuk Moon",
+    "english_translation": "Slit Gate",
+    "anatomical_location": "5 cun above the transverse wrist crease between tendons.",
+    "healing_function": "Invigorates blood and relieves pain.",
+    "martial_application": "Causes nerve pain or weakness in forearm.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC5",
+    "korean_name": "간사",
+    "romanized_korean": "Kahn Sah",
+    "english_translation": "Emissary",
+    "anatomical_location": "3 cun above transverse wrist crease, between tendons.",
+    "healing_function": "Calms spirit and harmonizes stomach.",
+    "martial_application": "Can disrupt mental clarity or digestion.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC6",
+    "korean_name": "내관",
+    "romanized_korean": "Nae Gwahn",
+    "english_translation": "Internal Gate",
+    "anatomical_location": "2 cun above transverse wrist crease, between tendons.",
+    "healing_function": "Opens chest, regulates Heart, and calms spirit.",
+    "martial_application": "Stunning point; disrupts breath or Qi flow.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC7",
+    "korean_name": "대릉",
+    "romanized_korean": "Tae Neung",
+    "english_translation": "Great Burial Mound",
+    "anatomical_location": "On transverse wrist crease between tendons of palmaris longus and flexor carpi radialis.",
+    "healing_function": "Yuan-source point; calms spirit and regulates Heart.",
+    "martial_application": "Painful striking area affects hand control.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC8",
+    "korean_name": "노궁",
+    "romanized_korean": "Noh Goong",
+    "english_translation": "Labor Palace",
+    "anatomical_location": "Center of palm between 2nd and 3rd metacarpals.",
+    "healing_function": "Clears Heart fire and revives consciousness.",
+    "martial_application": "Sensitive point; can paralyze or shock hand.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Pericardium (PC)",
+    "point_number": "PC9",
+    "korean_name": "중충",
+    "romanized_korean": "Joong Choong",
+    "english_translation": "Middle Pouring",
+    "anatomical_location": "Tip of the middle finger.",
+    "healing_function": "Clears heat, restores consciousness, and benefits tongue.",
+    "martial_application": "Revives or shocks system in emergencies.",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  }
+]

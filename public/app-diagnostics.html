@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian Mastery App Diagnostics</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #f5f5f5;
+    }
+    
+    h1, h2 {
+      color: #7B2D26;
+    }
+    
+    .diagnostic-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .issue {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    
+    th {
+      background-color: #f2f2f2;
+      padding: 10px;
+      text-align: left;
+    }
+    
+    td {
+      padding: 8px;
+    }
+    
+    .file-status {
+      font-weight: bold;
+    }
+    
+    .file-missing {
+      color: #dc3545;
+    }
+    
+    .file-exists {
+      color: #28a745;
+    }
+    
+    .action-button {
+      display: inline-block;
+      background-color: #7B2D26;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 5px;
+      text-decoration: none;
+    }
+    
+    .action-button:hover {
+      background-color: #5a1f1b;
+    }
+    
+    pre {
+      background-color: #f7f7f7;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+    
+    .file-tree {
+      font-family: monospace;
+      white-space: pre;
+      line-height: 1.5;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Meridian Mastery App Diagnostics</h1>
+  
+  <div class="diagnostic-section">
+    <h2>Icon Files Check</h2>
+    <p>Checking if all required icon files are present:</p>
+    
+    <table id="iconTable">
+      <tr>
+        <th>File</th>
+        <th>Status</th>
+        <th>Purpose</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>/icons/triskelion.svg</td>
+        <td class="file-status" id="triskelion-svg-status">Checking...</td>
+        <td>Main SVG icon</td>
+        <td><a href="/icons/triskelion.svg" target="_blank" class="action-button">View</a></td>
+      </tr>
+      <tr>
+        <td>/icons/apple-touch-icon.svg</td>
+        <td class="file-status" id="apple-touch-icon-svg-status">Checking...</td>
+        <td>iOS SVG icon</td>
+        <td><a href="/icons/apple-touch-icon.svg" target="_blank" class="action-button">View</a></td>
+      </tr>
+      <tr>
+        <td>/icons/triskelion-192.png</td>
+        <td class="file-status" id="triskelion-192-png-status">Checking...</td>
+        <td>Android icon</td>
+        <td><a href="/icons/generate-icons.html" target="_blank" class="action-button">Generate</a></td>
+      </tr>
+      <tr>
+        <td>/icons/triskelion-512.png</td>
+        <td class="file-status" id="triskelion-512-png-status">Checking...</td>
+        <td>Android icon</td>
+        <td><a href="/icons/generate-icons.html" target="_blank" class="action-button">Generate</a></td>
+      </tr>
+      <tr>
+        <td>/icons/apple-touch-icon.png</td>
+        <td class="file-status" id="apple-touch-icon-png-status">Checking...</td>
+        <td>iOS icon</td>
+        <td><a href="/icons/generate-icons.html" target="_blank" class="action-button">Generate</a></td>
+      </tr>
+      <tr>
+        <td>/icons/favicon-32x32.png</td>
+        <td class="file-status" id="favicon-32x32-png-status">Checking...</td>
+        <td>Favicon</td>
+        <td><a href="/icons/generate-icons.html" target="_blank" class="action-button">Generate</a></td>
+      </tr>
+      <tr>
+        <td>/icons/favicon-16x16.png</td>
+        <td class="file-status" id="favicon-16x16-png-status">Checking...</td>
+        <td>Favicon</td>
+        <td><a href="/icons/generate-icons.html" target="_blank" class="action-button">Generate</a></td>
+      </tr>
+    </table>
+    
+    <div id="iconIssues"></div>
+  </div>
+  
+  <div class="diagnostic-section">
+    <h2>Configuration Files Check</h2>
+    <p>Checking if configuration files are properly set up:</p>
+    
+    <table>
+      <tr>
+        <th>File</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>/manifest.json</td>
+        <td class="file-status file-exists">✓ Configured</td>
+        <td><a href="/manifest.json" target="_blank" class="action-button">View</a></td>
+      </tr>
+      <tr>
+        <td>/index.html</td>
+        <td class="file-status file-exists">✓ Configured</td>
+        <td><a href="/index.html" target="_blank" class="action-button">View</a></td>
+      </tr>
+      <tr>
+        <td>/service-worker.js</td>
+        <td class="file-status file-exists">✓ Configured</td>
+        <td><a href="/service-worker.js" target="_blank" class="action-button">View</a></td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="diagnostic-section">
+    <h2>PWA Features Check</h2>
+    <div id="pwaStatus" class="info">
+      Checking PWA status...
+    </div>
+    
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>Service Worker</td>
+        <td id="serviceWorkerStatus">Checking...</td>
+        <td>Required for offline support</td>
+      </tr>
+      <tr>
+        <td>Manifest</td>
+        <td id="manifestStatus">Checking...</td>
+        <td>Required for "Add to Home Screen"</td>
+      </tr>
+      <tr>
+        <td>HTTPS</td>
+        <td id="httpsStatus">Checking...</td>
+        <td>Required for PWA features</td>
+      </tr>
+    </table>
+  </div>
+  
+  <div class="diagnostic-section">
+    <h2>Recommendations</h2>
+    <div id="recommendations">
+      <p>Based on the diagnostic results:</p>
+      <ol id="recommendationsList">
+        <li class="warning">Generate all required PNG icon files using the Icon Generator</li>
+        <li class="info">Deploy the app to a hosting provider with HTTPS support</li>
+        <li class="info">Test the app on mobile devices to verify icon appearance</li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="diagnostic-section">
+    <h2>Development Tools</h2>
+    <p>Helpful tools for testing and debugging:</p>
+    
+    <div>
+      <a href="/icon-tools.html" class="action-button">Icon Tools Dashboard</a>
+      <a href="/mobile-preview.html" class="action-button">Mobile Preview</a>
+      <a href="/icon-status.html" class="action-button">Icon Status</a>
+      <a href="/" class="action-button">App Home</a>
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <h3>To Generate PNG Icons:</h3>
+      <ol>
+        <li>Click the "Generate" button next to each missing PNG file</li>
+        <li>On the generator page, click "Generate All Icons"</li>
+        <li>Download each PNG file and save it to the /public/icons/ directory</li>
+        <li>Refresh this page to verify the files are properly saved</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    // Check if files exist
+    async function checkFileExists(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        return response.ok;
+      } catch (error) {
+        return false;
+      }
+    }
+    
+    // Update file status in the table
+    async function updateFileStatus(fileId, url) {
+      const statusElement = document.getElementById(fileId + '-status');
+      const exists = await checkFileExists(url);
+      
+      if (exists) {
+        statusElement.textContent = '✓ Present';
+        statusElement.className = 'file-status file-exists';
+      } else {
+        statusElement.textContent = '✗ Missing';
+        statusElement.className = 'file-status file-missing';
+      }
+      
+      return exists;
+    }
+    
+    // Check all icon files
+    async function checkIconFiles() {
+      const iconIssuesElement = document.getElementById('iconIssues');
+      let missingFiles = [];
+      
+      // Check SVG files
+      const triskelionSvgExists = await updateFileStatus('triskelion-svg', '/icons/triskelion.svg');
+      const appleTouchIconSvgExists = await updateFileStatus('apple-touch-icon-svg', '/icons/apple-touch-icon.svg');
+      
+      // Check PNG files
+      const triskelion192PngExists = await updateFileStatus('triskelion-192-png', '/icons/triskelion-192.png');
+      const triskelion512PngExists = await updateFileStatus('triskelion-512-png', '/icons/triskelion-512.png');
+      const appleTouchIconPngExists = await updateFileStatus('apple-touch-icon-png', '/icons/apple-touch-icon.png');
+      const favicon32PngExists = await updateFileStatus('favicon-32x32-png', '/icons/favicon-32x32.png');
+      const favicon16PngExists = await updateFileStatus('favicon-16x16-png', '/icons/favicon-16x16.png');
+      
+      // Build list of missing files
+      if (!triskelionSvgExists) missingFiles.push('/icons/triskelion.svg');
+      if (!appleTouchIconSvgExists) missingFiles.push('/icons/apple-touch-icon.svg');
+      if (!triskelion192PngExists) missingFiles.push('/icons/triskelion-192.png');
+      if (!triskelion512PngExists) missingFiles.push('/icons/triskelion-512.png');
+      if (!appleTouchIconPngExists) missingFiles.push('/icons/apple-touch-icon.png');
+      if (!favicon32PngExists) missingFiles.push('/icons/favicon-32x32.png');
+      if (!favicon16PngExists) missingFiles.push('/icons/favicon-16x16.png');
+      
+      // Show issues if any files are missing
+      if (missingFiles.length > 0) {
+        let issueHtml = `
+          <div class="issue warning">
+            <strong>Missing Files:</strong> ${missingFiles.length} required icon files are missing.
+            <p>Missing: ${missingFiles.join(', ')}</p>
+            <p>Use the Icon Generator to create these files: <a href="/icons/generate-icons.html" class="action-button">Open Generator</a></p>
+          </div>
+        `;
+        iconIssuesElement.innerHTML = issueHtml;
+      } else {
+        iconIssuesElement.innerHTML = `
+          <div class="issue success">
+            <strong>All Icon Files Present:</strong> Your icon implementation is complete!
+          </div>
+        `;
+      }
+    }
+    
+    // Check PWA features
+    function checkPwaFeatures() {
+      const serviceWorkerStatus = document.getElementById('serviceWorkerStatus');
+      const manifestStatus = document.getElementById('manifestStatus');
+      const httpsStatus = document.getElementById('httpsStatus');
+      const pwaStatus = document.getElementById('pwaStatus');
+      
+      // Check service worker
+      if ('serviceWorker' in navigator) {
+        serviceWorkerStatus.textContent = '✓ Supported';
+        serviceWorkerStatus.className = 'file-exists';
+      } else {
+        serviceWorkerStatus.textContent = '✗ Not Supported';
+        serviceWorkerStatus.className = 'file-missing';
+      }
+      
+      // Check manifest
+      fetch('/manifest.json')
+        .then(response => {
+          if (response.ok) {
+            manifestStatus.textContent = '✓ Available';
+            manifestStatus.className = 'file-exists';
+          } else {
+            manifestStatus.textContent = '✗ Not Available';
+            manifestStatus.className = 'file-missing';
+          }
+        })
+        .catch(() => {
+          manifestStatus.textContent = '✗ Error Loading';
+          manifestStatus.className = 'file-missing';
+        });
+      
+      // Check HTTPS
+      if (window.location.protocol === 'https:') {
+        httpsStatus.textContent = '✓ Using HTTPS';
+        httpsStatus.className = 'file-exists';
+      } else {
+        httpsStatus.textContent = '⚠ Using HTTP';
+        httpsStatus.className = 'file-missing';
+      }
+      
+      // Update overall PWA status
+      if (window.location.protocol === 'https:' && 'serviceWorker' in navigator) {
+        pwaStatus.textContent = 'Your app has the necessary features to function as a PWA.';
+        pwaStatus.className = 'info success';
+      } else {
+        pwaStatus.textContent = 'Your app is missing some features required for a complete PWA experience.';
+        pwaStatus.className = 'info warning';
+      }
+    }
+    
+    // Run checks when page loads
+    window.addEventListener('load', () => {
+      checkIconFiles();
+      checkPwaFeatures();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+[
+  {
+    "point_number": "SP6",
+    "hangul": "삼음교",
+    "romanized": "Sahm Um Kyo",
+    "english": "Three Yin Intersection",
+    "meridian": "Spleen",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Major point for women's health and digestion. Harmonizes Spleen, Liver, and Kidney. Strengthens blood and regulates menstruation."
+  },
+  {
+    "point_number": "ST35",
+    "hangul": "독비",
+    "romanized": "Dohk Bi",
+    "english": "Calf's Nose",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Relieves knee pain and swelling. Invigorates qi and blood in the joint. Often used for arthritis or trauma."
+  },
+  {
+    "point_number": "BL40",
+    "hangul": "위중",
+    "romanized": "Wee Joong",
+    "english": "Central Middle",
+    "meridian": "Urinary Bladder",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Heavenly Star point. Clears heat, benefits lumbar pain, and treats acute back strain. Also good for skin conditions."
+  },
+  {
+    "point_number": "SP10",
+    "hangul": "혈해",
+    "romanized": "Hyul Hae",
+    "english": "Sea of Blood",
+    "meridian": "Spleen",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Invigorates and cools blood. Used for rashes, eczema, and gynecological issues due to blood heat or stasis."
+  },
+  {
+    "point_number": "LV13",
+    "hangul": "장문",
+    "romanized": "Jahng Moon",
+    "english": "Completion Gate",
+    "meridian": "Liver",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Front-Mu of Spleen. Harmonizes Liver and Spleen. Useful for abdominal distension and flank tension."
+  },
+  {
+    "point_number": "HT1",
+    "hangul": "극천",
+    "romanized": "Geuk Chuhn",
+    "english": "Utmost Spring",
+    "meridian": "Heart",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Opens chest and moves blood in the shoulder and arm. Used to treat upper limb numbness and tension."
+  },
+  {
+    "point_number": "CV8",
+    "hangul": "기해",
+    "romanized": "Ki Hae",
+    "english": "Sea of Ki",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Revives collapsed yang and warms the center. Used with moxibustion for digestive collapse or shock. Do not needle."
+  },
+  {
+    "point_number": "CV15",
+    "hangul": "구미",
+    "romanized": "Goo Mi",
+    "english": "Turtledove Tail",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Regulates the Heart and calms spirit. Treats chest tightness, palpitations, and emotional stress."
+  },
+  {
+    "point_number": "CV23",
+    "hangul": "염천",
+    "romanized": "Yuhm Chuhn",
+    "english": "Gliding Spring",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Affects the tongue and throat. Used to assist speech recovery and moisten dryness."
+  },
+  {
+    "point_number": "ST18",
+    "hangul": "유근",
+    "romanized": "Yoo Geun",
+    "english": "Root of the Breast",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Clears dampness from chest and disperses swelling. Helps with mastitis, breast pain, and chest congestion."
+  },
+  {
+    "point_number": "GV15",
+    "hangul": "아문",
+    "romanized": "Ah Moon",
+    "english": "Mute Gate",
+    "meridian": "Governing Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Improves speech and neck flexibility. Treats muteness, stiffness, and occipital tension. Use caution near brain stem."
+  },
+  {
+    "point_number": "GB3",
+    "hangul": "객주인",
+    "romanized": "Gaek Joo In",
+    "english": "Guest of the Head",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Good for jaw tension, facial paralysis, and tinnitus. Relieves headache in temple region."
+  },
+  {
+    "point_number": "GV14",
+    "hangul": "대추",
+    "romanized": "Dae Choo",
+    "english": "Great Vertebra",
+    "meridian": "Governing Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Tonifies yang, clears heat, and expels wind. Major point for immunity and febrile conditions."
+  },
+  {
+    "point_number": "GB34",
+    "hangul": "능천",
+    "romanized": "Neung Chuhn",
+    "english": "Yang Mound Spring",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Influential point of tendons. Treats muscle stiffness, leg pain, and sciatica. Strengthens sinews and joints."
+  }
+]

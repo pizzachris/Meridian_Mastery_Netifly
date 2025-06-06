@@ -41,7 +41,7 @@ const Home = ({ navigateTo }) => {
 
           <div className="grid grid-cols-1 gap-2 sm:gap-4">            {/* Wood Element - Growth & Learning */}
             <button 
-              onClick={() => navigateTo('flashcards')}
+              onClick={() => navigateTo('flashcards', { sessionMode: 'all' })}
               className="w-full element-wood font-semibold py-4 px-3 sm:px-6 rounded-xl sm:rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
               <span className="relative z-10">🌿 Flashcards</span>

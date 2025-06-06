@@ -1,0 +1,152 @@
+[
+  {
+    "point_number": "LU1",
+    "hangul": "중부",
+    "romanized": "Joong Boo",
+    "english": "Central Treasury",
+    "meridian": "Lung",
+    "element": "Metal",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Regulates Lung Qi, clears heat, benefits chest"
+  },
+  {
+    "point_number": "HT1",
+    "hangul": "극천",
+    "romanized": "Geuk Chuhn",
+    "english": "Summit's Spring",
+    "meridian": "Heart",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Picture this point as a breathing control switch. Nourishes heart yin, clears empty heat"
+  },
+  {
+    "point_number": "KI1",
+    "hangul": "용천",
+    "romanized": "Yong Chuhn",
+    "english": "Gushing Spring",
+    "meridian": "Kidney",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Think of this point as a mental clarity reset button. Nourishes Kidney yin, clears heat, calms spirit"
+  },
+  {
+    "point_number": "PC1",
+    "hangul": "천지",
+    "romanized": "Chuhn Jee",
+    "english": "Heaven's Pool",
+    "meridian": "Pericardium",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Envision this as a divine reservoir of energy. Clears heat, calms spirit, regulates Qi"
+  },
+  {
+    "point_number": "TB1",
+    "hangul": "관충",
+    "romanized": "Gwahn Choong",
+    "english": "Rushing Pass",
+    "meridian": "Triple Heater",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Visualize this as an energy gateway. Clears heat, benefits ears, calms spirit"
+  },
+  {
+    "point_number": "SP1",
+    "hangul": "은백",
+    "romanized": "Eun Baek",
+    "english": "Hidden White",
+    "meridian": "Spleen",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Think of this point as a mental clarity reset button. Stops bleeding, regulates spleen, calms mind"
+  },
+  {
+    "point_number": "LR1",
+    "hangul": "대돈",
+    "romanized": "Dae Don",
+    "english": "Large Pile",
+    "meridian": "Liver",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Picture this point as a breathing control switch. Regulates Liver Qi and emotion flow"
+  },
+  {
+    "point_number": "CV1",
+    "hangul": "회음",
+    "romanized": "Hoe Eum",
+    "english": "Meeting of Yin",
+    "meridian": "Conception Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Imagine this point as a collapse trigger when struck. Warms lower burner, regulates menstruation"
+  },
+  {
+    "point_number": "GV1",
+    "hangul": "장강",
+    "romanized": "Jahng Gahng",
+    "english": "Long Strong",
+    "meridian": "Governing Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Regulates lower Jiao and reproductive system"
+  },
+  {
+    "point_number": "CV24",
+    "hangul": "승장",
+    "romanized": "Seung Jahng",
+    "english": "Receiving Fluid",
+    "meridian": "Conception Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Picture this point as a breathing control switch. Benefits throat and voice, disperses stagnation in neck"
+  },
+  {
+    "point_number": "GV28",
+    "hangul": "은교",
+    "romanized": "Eun Gyoh",
+    "english": "Gum Intersection",
+    "meridian": "Governing Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Benefits throat, clears heat"
+  },
+  {
+    "point_number": "CV23",
+    "hangul": "염천",
+    "romanized": "Yuhm Chuhn",
+    "english": "Ridge Spring",
+    "meridian": "Conception Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Picture this point as a breathing control switch. Benefits voice, alleviates cough"
+  },
+  {
+    "point_number": "GV27",
+    "hangul": "태단",
+    "romanized": "Tae Dahn",
+    "english": "Extreme End",
+    "meridian": "Governing Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Opens nasal passages"
+  },
+  {
+    "point_number": "CV22",
+    "hangul": "천돌",
+    "romanized": "Chuhn Dol",
+    "english": "Heaven's Prominence",
+    "meridian": "Conception Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Picture this point as a breathing control switch. Regulates Qi, benefits throat and chest"
+  },
+  {
+    "point_number": "GV26",
+    "hangul": "인중",
+    "romanized": "In Joong",
+    "english": "Middle of the Person",
+    "meridian": "Governing Vessel",
+    "element": "Extraordinary",
+    "bilateral": "No",
+    "insight": "Imagine this point as a collapse trigger when struck. Disperses and descends lung Qi, clears heat from chest"
+  }
+]

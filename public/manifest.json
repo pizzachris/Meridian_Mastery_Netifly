@@ -1,1 +1,27 @@
-// Functional content for public/manifest.json
+{  "short_name": "MeridianCoach",
+  "name": "Meridian Mastery Coach",
+  "icons": [
+    {
+      "src": "/icons/triskelion.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icons/triskelion-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/triskelion-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#7B2D26",
+  "theme_color": "#7B2D26",
+  "description": "Martial arts and healing pressure point trainer.",
+  "orientation": "portrait"
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT1",
+    "korean_name": "극천",
+    "romanized_korean": "Geuk Chuhn",
+    "english_translation": "Summit's Spring",
+    "anatomical_location": "In center of axilla on medial side of axillary artery",
+    "healing_function": "Nourishes heart yin, clears empty heat",
+    "martial_application": "Strike causes pain or paralysis in arm and chest",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT2",
+    "korean_name": "청령",
+    "romanized_korean": "Chuhng Yuhng",
+    "english_translation": "Youthful Spirit",
+    "anatomical_location": "3 cun above medial end of transverse cubital crease",
+    "healing_function": "Activates channel, alleviates pain",
+    "martial_application": "Can disrupt arm movement and cause local trauma",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT3",
+    "korean_name": "소해",
+    "romanized_korean": "Soh Hae",
+    "english_translation": "Lesser Sea",
+    "anatomical_location": "Midway between medial epicondyle and olecranon",
+    "healing_function": "Clears heat, calms spirit",
+    "martial_application": "Elbow point that weakens grip and forearm",
+    "shared_name_indicator": "Shares name 소해 (Soh Hae) with SI8",
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT4",
+    "korean_name": "영도",
+    "romanized_korean": "Yuhng Doh",
+    "english_translation": "Spirit Path",
+    "anatomical_location": "1.5 cun above transverse wrist crease on radial side of flexor carpi ulnaris",
+    "healing_function": "Calms spirit, benefits voice",
+    "martial_application": "Controls tension and grip strength",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT5",
+    "korean_name": "통리",
+    "romanized_korean": "Tohng Nee",
+    "english_translation": "Commune with Interior",
+    "anatomical_location": "1 cun above wrist crease on radial side of flexor carpi ulnaris",
+    "healing_function": "Benefits tongue and speech, calms mind",
+    "martial_application": "Pain point, affects inner wrist and control",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT6",
+    "korean_name": "음극",
+    "romanized_korean": "Eum Geuk",
+    "english_translation": "Um Slit",
+    "anatomical_location": "0.5 cun above wrist crease on radial side of flexor carpi ulnaris",
+    "healing_function": "Regulates heart blood and night sweating",
+    "martial_application": "Affects wrist control and palm strike recovery",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT7",
+    "korean_name": "신문",
+    "romanized_korean": "Shin Moon",
+    "english_translation": "Spirit Gate",
+    "anatomical_location": "At wrist crease, radial side of flexor carpi ulnaris",
+    "healing_function": "Tonifies heart, calms mind",
+    "martial_application": "Striking here affects grip and energy control",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT8",
+    "korean_name": "소부",
+    "romanized_korean": "Soh Boo",
+    "english_translation": "Lesser Residence",
+    "anatomical_location": "Between 4th and 5th metacarpal bones when fist is made",
+    "healing_function": "Clears heart fire, benefits palm",
+    "martial_application": "Strike disrupts palm integrity and nerve response",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  },
+  {
+    "meridian_name": "Heart (HT)",
+    "point_number": "HT9",
+    "korean_name": "소충",
+    "romanized_korean": "Soh Choong",
+    "english_translation": "Lesser Pouring",
+    "anatomical_location": "Radial side of little finger, 0.1 cun from corner of nail",
+    "healing_function": "Revives consciousness, clears heat",
+    "martial_application": "Used in emergency revival or acupuncture resets",
+    "shared_name_indicator": null,
+    "bilateral": "Yes"
+  }
+]

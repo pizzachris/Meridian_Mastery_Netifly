@@ -1,0 +1,152 @@
+[
+  {
+    "point_number": "LI1",
+    "hangul": "상양",
+    "romanized": "Sahng Yahng",
+    "english": "Trade Yang",
+    "meridian": "Large Intestine",
+    "element": "Metal",
+    "bilateral": "Yes",
+    "insight": "Imagine this point as a collapse trigger when struck. Clears heat, reduces swelling, revives consciousness"
+  },
+  {
+    "point_number": "SI1",
+    "hangul": "소택",
+    "romanized": "Soh Taek",
+    "english": "Lesser Marsh",
+    "meridian": "Small Intestine",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Consider this as a pressure sensitive point. Clears heat, reduces fever, calms spirit"
+  },
+  {
+    "point_number": "ST1",
+    "hangul": "승읍",
+    "romanized": "Seung Eup",
+    "english": "Receiving Tears",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Benefits eyes, stops lacrimation, treats redness/swelling"
+  },
+  {
+    "point_number": "BL1",
+    "hangul": "정명",
+    "romanized": "Jeong Myeong",
+    "english": "Bright Eyes",
+    "meridian": "Bladder",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Clears vision, relieves facial pain and twitching"
+  },
+  {
+    "point_number": "GB1",
+    "hangul": "동자료",
+    "romanized": "Dong Ja Ryo",
+    "english": "Pupil Bone-Hole",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Benefits the eyes and clears heat from the head"
+  },
+  {
+    "point_number": "ST36",
+    "hangul": "족삼리",
+    "romanized": "Jok Sam Ri",
+    "english": "Leg Three Miles",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Boosts immunity, regulates digestion and Qi"
+  },
+  {
+    "point_number": "SP6",
+    "hangul": "삼음교",
+    "romanized": "Sam Eum Gyo",
+    "english": "Three Yin Intersection",
+    "meridian": "Spleen",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Regulates menstruation, tonifies spleen and kidney"
+  },
+  {
+    "point_number": "BL60",
+    "hangul": "곤륜",
+    "romanized": "Gon Ryun",
+    "english": "Kunlun Mountains",
+    "meridian": "Bladder",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Main point for back pain and headaches"
+  },
+  {
+    "point_number": "GB34",
+    "hangul": "양릉천",
+    "romanized": "Yang Reung Chuhn",
+    "english": "Yang Mound Spring",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Imagine this point as a collapse trigger when struck. Dispels wind damp, relaxes tendons"
+  },
+  {
+    "point_number": "LR3",
+    "hangul": "태충",
+    "romanized": "Tae Choong",
+    "english": "Great Rushing",
+    "meridian": "Liver",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Regulates Liver Qi and emotion flow"
+  },
+  {
+    "point_number": "KI3",
+    "hangul": "태계",
+    "romanized": "Tae Gye",
+    "english": "Great Stream",
+    "meridian": "Kidney",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Yuan-source point; strengthens Kidney, benefits lungs and uterus"
+  },
+  {
+    "point_number": "ST45",
+    "hangul": "여태",
+    "romanized": "Yeo Tae",
+    "english": "Severe Mouth",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Imagine this point as a collapse trigger when struck. Clears stomach heat, relieves toothache"
+  },
+  {
+    "point_number": "BL67",
+    "hangul": "지음",
+    "romanized": "Ji Eum",
+    "english": "Reaching Yin",
+    "meridian": "Bladder",
+    "element": "Water",
+    "bilateral": "Yes",
+    "insight": "Imagine this point as a collapse trigger when struck. Clears head, revives consciousness, turns fetus"
+  },
+  {
+    "point_number": "GB44",
+    "hangul": "족규음",
+    "romanized": "Jok Gyu Eum",
+    "english": "Foot Portal Yin",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Associate this point with restoring balance and internal Ki flow. Clears heat and calms spirit"
+  },
+  {
+    "point_number": "LR2",
+    "hangul": "행간",
+    "romanized": "Haeng Gan",
+    "english": "Moving Between",
+    "meridian": "Liver",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Think of this point as a mental clarity reset button. Clears heart heat, calms the mind"
+  }
+]

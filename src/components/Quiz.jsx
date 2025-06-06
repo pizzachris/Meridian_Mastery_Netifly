@@ -1,7 +1,40 @@
-import React, { useState, useEffect } from 'react'
-import flashcardsData from '../data/flashcards.json'
+import React, { useState, useEffect, useCallback } from 'react'
+import { getAllPoints, getPointsByMeridian, getPointsByRegion, getPointsByTheme } from '../utils/dataLoader'
 import { ProgressTracker } from '../utils/progressTracker'
-import pronunciationManager from '../utils/pronunciation'
+import PronunciationManager from '../utils/pronunciation'
+import "../styles/Quiz.css"
+import TriskelionLogo from './TriskelionLogo'
+
+// Helper function to shuffle array
+const shuffleArray = (array) => {
+  if (!Array.isArray(array)) return []
+  const newArray = [...array]
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]]
+  }
+  return newArray
+}
+
+// Helper function to generate options for multiple choice
+const generateOptions = (card, allCards) => {
+  if (!card || !Array.isArray(allCards)) return []
+  
+  const otherCards = allCards.filter(c => c.id !== card.id)
+  const options = [card.nameEnglish]
+  
+  // Get 3 random incorrect options
+  while (options.length < 4 && otherCards.length > 0) {
+    const randomIndex = Math.floor(Math.random() * otherCards.length)
+    const option = otherCards[randomIndex].nameEnglish
+    if (!options.includes(option)) {
+      options.push(option)
+    }
+    otherCards.splice(randomIndex, 1)
+  }
+  
+  return shuffleArray(options)
+}
 
 const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -11,106 +44,127 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   const [sessionComplete, setSessionComplete] = useState(false)
   const [sessionResults, setSessionResults] = useState([])
   const [quizQuestions, setQuizQuestions] = useState([])
+  const [pronunciation, setPronunciation] = useState(null)
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Initialize pronunciation manager
+  useEffect(() => {
+    try {
+      const manager = new PronunciationManager()
+      setPronunciation(manager)
+    } catch (error) {
+      console.error('Failed to initialize pronunciation manager:', error)
+    }
+  }, [])
 
   // Generate quiz questions from flashcards
   useEffect(() => {
-    generateQuizQuestions()
-  }, [sessionMode, quizOptions])
-  const generateQuizQuestions = () => {
-    let sourceCards = flashcardsData.flashcards
-    
-    // Check user progress to determine difficulty level
-    const userProgress = ProgressTracker.getProgress()
-    const totalQuizAttempts = userProgress.totalQuizAttempts || 0
-    const isBeginnerUser = totalQuizAttempts < 20 // First 20 quiz attempts
-    
-    // Filter based on session mode or focus on points needing review
-    const pointsNeedingReview = ProgressTracker.getPointsNeedingReview()
-    if (pointsNeedingReview.length > 0 && Math.random() > 0.3 && !isBeginnerUser) {
-      // 70% chance to quiz on points needing review (only for experienced users)
-      sourceCards = flashcardsData.flashcards.filter(card => 
-        pointsNeedingReview.includes(card.id)
-      )
+    try {
+      setIsLoading(true)
+      generateQuizQuestions()
+    } catch (error) {
+      console.error('Failed to generate quiz questions:', error)
+      setError('Failed to load quiz questions. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
+  }, [sessionMode, quizOptions])
 
-    // Shuffle and take 10 cards for quiz
-    const shuffled = [...sourceCards].sort(() => Math.random() - 0.5)
-    const selectedCards = shuffled.slice(0, Math.min(10, shuffled.length))
-    
-    // Generate different types of questions based on quiz type selection
-    const questions = selectedCards.map(card => {
-      let questionTypes
-      
-      // Check if specific quiz type is selected
-      if (quizOptions && quizOptions.quizType) {
-        questionTypes = getQuestionTypesForQuizType(quizOptions.quizType, isBeginnerUser)
-      } else {
-        // Default mixed quiz types based on user level
-        if (isBeginnerUser) {
-          // Easier questions for beginners - focus on basic learning
-          questionTypes = [
-            'broken-sequence',
-            'korean-name-english-choices',
-            'simple-korean-to-english',
-            'english-to-korean-spelling',
-            'point-number-match',
-            'meridian-basic',
-            'healing-properties-basic',
-            'martial-effects-intro'
-          ]
-        } else {
-          // Standard questions for experienced users
-          questionTypes = [
-            'korean-to-english',
-            'english-to-korean', 
-            'english-to-korean-spelling',
-            'location',
-            'function',
-            'meridian',
-            'healing-properties-advanced',
-            'martial-effects-detailed',
-            'translation-mastery',
-            'broken-sequence', // Keep some easy ones mixed in
-            'korean-name-english-choices'
-          ]
-        }
+  const generateQuizQuestions = () => {
+    try {
+      let sourceCards = getAllPoints()
+      if (!sourceCards || sourceCards.length === 0) {
+        throw new Error('No cards available')
       }
       
-      const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
-      return generateQuestion(card, questionType)
-    })
-    
-    setQuizQuestions(questions)
+      // Check user progress to determine difficulty level
+      const userProgress = ProgressTracker.getProgress()
+      const totalQuizAttempts = userProgress?.totalQuizAttempts || 0
+      const isBeginnerUser = totalQuizAttempts < 20 // First 20 quiz attempts
+      
+      // Filter based on session mode or focus on points needing review
+      const pointsNeedingReview = ProgressTracker.getPointsNeedingReview()
+      if (pointsNeedingReview?.length > 0 && Math.random() > 0.3 && !isBeginnerUser) {
+        // 70% chance to quiz on points needing review (only for experienced users)
+        sourceCards = sourceCards.filter(card => 
+          pointsNeedingReview.includes(card.id)
+        )
+      }
+
+      // Apply session mode filters
+      if (sessionMode) {
+        switch (sessionMode.type) {
+          case 'meridian':
+            sourceCards = getPointsByMeridian(sessionMode.meridian)
+            break
+          case 'region':
+            sourceCards = getPointsByRegion(sessionMode.region)
+            break
+          case 'theme':
+            sourceCards = getPointsByTheme(sessionMode.theme)
+            break
+          default:
+            break
+        }
+      }
+
+      if (!sourceCards || sourceCards.length === 0) {
+        throw new Error('No cards available for selected mode')
+      }
+
+      // Generate questions based on quiz type
+      const quizType = quizOptions?.type || 'mixed-challenge'
+      const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)
+      
+      const questions = sourceCards.map(card => {
+        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
+        return generateQuestion(card, questionType)
+      }).filter(Boolean) // Remove any null questions
+
+      if (questions.length === 0) {
+        throw new Error('Failed to generate valid questions')
+      }
+
+      // Shuffle and limit number of questions
+      const numberOfQuestions = quizOptions?.numberOfQuestions || 10
+      const shuffledQuestions = shuffleArray(questions).slice(0, numberOfQuestions)
+      setQuizQuestions(shuffledQuestions)
+      setError(null)
+    } catch (error) {
+      console.error('Error generating quiz questions:', error)
+      setError(error.message)
+      setQuizQuestions([])
+    }
   }
 
   const getQuestionTypesForQuizType = (quizType, isBeginnerUser) => {
     switch (quizType) {
       case 'translations':
         return isBeginnerUser 
-          ? ['broken-sequence', 'korean-name-english-choices', 'simple-korean-to-english', 'english-to-korean-spelling']
-          : ['korean-to-english', 'english-to-korean', 'translation-mastery', 'english-to-korean-spelling']
+          ? ['korean-name-english-choices', 'simple-korean-to-english']
+          : ['korean-to-english', 'english-to-korean', 'english-to-korean-spelling']
       
       case 'healing-properties':
         return isBeginnerUser
-          ? ['healing-properties-basic', 'function']
-          : ['healing-properties-advanced', 'function', 'healing-properties-basic']
+          ? ['healing-properties-basic']
+          : ['healing-properties-advanced', 'function']
       
       case 'martial-effects':
         return isBeginnerUser
           ? ['martial-effects-intro']
-          : ['martial-effects-detailed', 'martial-effects-intro']
+          : ['martial-effects-detailed']
       
       case 'meridian-matching':
-        return ['meridian-matching', 'meridian-basic', 'meridian']
+        return ['meridian-basic', 'meridian']
       
       case 'anatomy-locations':
         return ['location', 'point-number-match']
       
       case 'mixed-challenge':
         return [
-          'korean-to-english', 'english-to-korean', 'location', 'function', 
-          'meridian', 'healing-properties-advanced', 'martial-effects-detailed',
-          'translation-mastery', 'meridian-matching'
+          'korean-name-english-choices', 'simple-korean-to-english', 'location', 
+          'function', 'meridian-basic', 'healing-properties-basic', 'martial-effects-intro'
         ]
       
       default:
@@ -119,268 +173,115 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   }
 
   const generateQuestion = (card, type) => {
-    const allCards = flashcardsData.flashcards
-    const incorrectOptions = allCards
-      .filter(c => c.id !== card.id)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3)
+    try {
+      const allCards = getAllPoints()
+      const incorrectOptions = allCards
+        .filter(c => c.id !== card.id)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
 
-    switch (type) {      case 'broken-sequence':
-        // Show scrambled Korean name, user picks correct order
-        const koreanChars = card.nameHangul.split('')
-        const scrambled = [...koreanChars].sort(() => Math.random() - 0.5)
-        return {
-          question: `Unscramble the Korean name for "${card.nameEnglish}" (${card.nameRomanized}):`,
-          subtext: `Scrambled: ${scrambled.join(' ')} | Point: ${card.number}`,
-          correctAnswer: card.nameHangul,
-          options: [
-            card.nameHangul,
-            ...incorrectOptions.map(c => c.nameHangul)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-      
-      case 'korean-name-english-choices':
-        // Show Korean name, pick English equivalent from choices
-        return {
-          question: `What does "${card.nameHangul}" (${card.nameRomanized}) mean in English?`,
-          subtext: `Point ${card.number} on ${card.meridian} meridian`,
-          correctAnswer: card.nameEnglish,
-          options: [
-            card.nameEnglish,
-            ...incorrectOptions.map(c => c.nameEnglish)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-      
-      case 'simple-korean-to-english':
-        // Basic Korean to English with romanization hint
-        return {
-          question: `What is the English name for "${card.nameHangul}" (${card.nameRomanized})?`,
-          subtext: `Point ${card.number} | Location: ${card.location}`,
-          correctAnswer: card.nameEnglish,
-          options: [
-            card.nameEnglish,
-            ...incorrectOptions.map(c => c.nameEnglish)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-      
-      case 'point-number-match':
-        // Match point number to Korean name
-        return {
-          question: `Which Korean name corresponds to point "${card.number}"?`,
-          subtext: `English: ${card.nameEnglish} | Romanized: ${card.nameRomanized}`,
-          correctAnswer: card.nameHangul,
-          options: [
-            card.nameHangul,
-            ...incorrectOptions.map(c => c.nameHangul)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,          isEasy: true
-        }
-      
-      case 'meridian-basic':
-        // Basic meridian identification with visual hint
-        return {
-          question: `"${card.nameHangul}" (${card.nameRomanized}) belongs to which meridian?`,
-          subtext: `Point ${card.number} | English: ${card.nameEnglish}`,
-          correctAnswer: card.meridian,
-          options: [
-            card.meridian,
-            ...incorrectOptions.map(c => c.meridian)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-
-      case 'english-to-korean-spelling':
-        // Learn Korean spelling from English name
-        return {
-          question: `How do you spell "${card.nameEnglish}" (${card.nameRomanized}) in Korean?`,
-          subtext: `Point ${card.number} on the ${card.meridian} meridian`,
-          correctAnswer: card.nameHangul,
-          options: [
-            card.nameHangul,
-            ...incorrectOptions.map(c => c.nameHangul)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-
-      case 'healing-properties-basic':
-        // Learn basic healing properties
-        return {
-          question: `What is the primary healing function of "${card.nameEnglish}" (${card.nameRomanized})?`,
-          subtext: `Point ${card.number} | Korean: ${card.nameHangul}`,
-          correctAnswer: card.healingFunction,
-          options: [
-            card.healingFunction,
-            ...incorrectOptions.map(c => c.healingFunction)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,
-          isEasy: true
-        }
-
-      case 'martial-effects-intro':
-        // Learn basic martial applications
-        return {
-          question: `What is the martial application of "${card.nameRomanized}" (${card.nameEnglish})?`,
-          subtext: `Korean: ${card.nameHangul} | Healing: ${card.healingFunction}`,
-          correctAnswer: card.martialApplication,
-          options: [
-            card.martialApplication,
-            ...incorrectOptions.map(c => c.martialApplication)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type,          isEasy: true
-        }
-
-      case 'healing-properties-advanced':
-        // Advanced healing properties quiz with romanized Korean help
-        return {
-          question: `Which point has the healing function: "${card.healingFunction}"?`,
-          subtext: `Location: ${card.location} | Answer: ${card.nameRomanized} (${card.nameEnglish})`,
-          correctAnswer: card.nameHangul,
-          options: [
-            card.nameHangul,
-            ...incorrectOptions.map(c => c.nameHangul)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type
-        }
-
-      case 'martial-effects-detailed':
-        // Advanced martial applications
-        return {
-          question: `Which pressure point has the martial application: "${card.martialApplication}"?`,
-          subtext: `Meridian: ${card.meridian} | Number: ${card.number} | Romanized: ${card.nameRomanized}`,
-          correctAnswer: card.nameEnglish,
-          options: [
-            card.nameEnglish,
-            ...incorrectOptions.map(c => c.nameEnglish)
-          ].sort(() => Math.random() - 0.5),
-          card,
-          type
-        }
-
-      case 'translation-mastery':
-        // Complete translation test (both directions)
-        const isKoreanToEnglish = Math.random() > 0.5
-        if (isKoreanToEnglish) {
+      switch (type) {
+        case 'korean-name-english-choices':
           return {
-            question: `Translate "${card.nameHangul}" to English:`,
-            subtext: `Point ${card.number} | Romanized: ${card.nameRomanized}`,
+            question: `What does "${card.nameHangul}" (${card.nameRomanized}) mean in English?`,
+            subtext: `Point ${card.number} on ${card.meridian} meridian`,
             correctAnswer: card.nameEnglish,
             options: [
               card.nameEnglish,
               ...incorrectOptions.map(c => c.nameEnglish)
             ].sort(() => Math.random() - 0.5),
             card,
-            type
+            type,
+            isEasy: true
           }
-        } else {
+        
+        case 'simple-korean-to-english':
           return {
-            question: `Translate "${card.nameEnglish}" to Korean:`,
-            subtext: `Point ${card.number} | Romanized: ${card.nameRomanized} | Location: ${card.location}`,
+            question: `What is the English name for "${card.nameHangul}" (${card.nameRomanized})?`,
+            subtext: `Point ${card.number} | Location: ${card.location}`,
+            correctAnswer: card.nameEnglish,
+            options: [
+              card.nameEnglish,
+              ...incorrectOptions.map(c => c.nameEnglish)
+            ].sort(() => Math.random() - 0.5),
+            card,
+            type,
+            isEasy: true
+          }
+        
+        case 'point-number-match':
+          return {
+            question: `Which Korean name corresponds to point "${card.number}"?`,
+            subtext: `English: ${card.nameEnglish} | Romanized: ${card.nameRomanized}`,
             correctAnswer: card.nameHangul,
             options: [
               card.nameHangul,
               ...incorrectOptions.map(c => c.nameHangul)
             ].sort(() => Math.random() - 0.5),
             card,
-            type
-          }        }
-
-      case 'meridian-matching':
-        // Meridian matching questions with multiple variants
-        const meridianQuestionVariants = [
-          {
-            question: `Which meridian does "${card.nameHangul}" (${card.nameRomanized}) belong to?`,
+            type,
+            isEasy: true
+          }
+        
+        case 'meridian-basic':
+          return {
+            question: `"${card.nameHangul}" (${card.nameRomanized}) belongs to which meridian?`,
             subtext: `Point ${card.number} | English: ${card.nameEnglish}`,
             correctAnswer: card.meridian,
-            options: [card.meridian, ...incorrectOptions.map(c => c.meridian)].sort(() => Math.random() - 0.5)
-          },
-          {
-            question: `Point ${card.number} "${card.nameRomanized}" is on which meridian?`,
-            subtext: `Korean: ${card.nameHangul} | English: ${card.nameEnglish}`,
-            correctAnswer: card.meridian,
-            options: [card.meridian, ...incorrectOptions.map(c => c.meridian)].sort(() => Math.random() - 0.5)
-          },
-          {
-            question: `The pressure point "${card.nameEnglish}" (${card.nameRomanized}) runs along which energy pathway?`,
-            subtext: `Korean: ${card.nameHangul} | Located: ${card.location}`,
-            correctAnswer: card.meridian,
-            options: [card.meridian, ...incorrectOptions.map(c => c.meridian)].sort(() => Math.random() - 0.5)
+            options: [
+              card.meridian,
+              ...incorrectOptions.map(c => c.meridian)
+            ].sort(() => Math.random() - 0.5),
+            card,
+            type,
+            isEasy: true
           }
-        ]
-        const selectedVariant = meridianQuestionVariants[Math.floor(Math.random() * meridianQuestionVariants.length)]
-        return {
-          question: selectedVariant.question,
-          subtext: selectedVariant.subtext,
-          correctAnswer: selectedVariant.correctAnswer,
-          options: selectedVariant.options,
-          card,
-          type        }
-        
-      case 'korean-to-english':
-        return {
-          question: `What is the English name for ${card.nameHangul}?`,
-          subtext: `Point ${card.number} | Romanized: ${card.nameRomanized}`,
-          correctAnswer: card.nameEnglish,
-          options: [card.nameEnglish, ...incorrectOptions.map(c => c.nameEnglish)].sort(() => Math.random() - 0.5),
-          card,
-          type
-        }
-        
-      case 'english-to-korean':
-        return {
-          question: `What is the Korean name for ${card.nameEnglish}?`,
-          subtext: `Point ${card.number} | Romanized: ${card.nameRomanized} | Location: ${card.location}`,
-          correctAnswer: card.nameHangul,
-          options: [card.nameHangul, ...incorrectOptions.map(c => c.nameHangul)].sort(() => Math.random() - 0.5),
-          card,
-          type        }
-        
-      case 'location':
-        return {
-          question: `Where is ${card.nameHangul} (${card.nameRomanized} - ${card.nameEnglish}) located?`,
-          subtext: `${card.meridian} meridian | Point ${card.number}`,
-          correctAnswer: card.location,
-          options: [card.location, ...incorrectOptions.map(c => c.location)].sort(() => Math.random() - 0.5),
-          card,
-          type        }
-        
-      case 'function':
-        return {
-          question: `What is the primary healing function of ${card.nameHangul} (${card.nameRomanized})?`,
-          subtext: `${card.nameEnglish} | Located: ${card.location}`,
-          correctAnswer: card.healingFunction,
-          options: [card.healingFunction, ...incorrectOptions.map(c => c.healingFunction)].sort(() => Math.random() - 0.5),
-          card,
-          type        }
-        
-      case 'meridian':
-        return {
-          question: `${card.nameHangul} (${card.nameRomanized} - ${card.nameEnglish}) belongs to which meridian?`,
-          subtext: `Point ${card.number} | Healing: ${card.healingFunction}`,
-          correctAnswer: card.meridian,
-          options: [card.meridian, ...incorrectOptions.map(c => c.meridian)].sort(() => Math.random() - 0.5),
-          card,
-          type
-        }
-      
-      default:
-        return generateQuestion(card, 'korean-name-english-choices')
+
+        case 'healing-properties-basic':
+          return {
+            question: `What is the main healing function of ${card.nameEnglish} (${card.number})?`,
+            subtext: `Korean: ${card.nameHangul} (${card.nameRomanized})`,
+            correctAnswer: card.healingFunction,
+            options: [
+              card.healingFunction,
+              ...incorrectOptions.map(c => c.healingFunction)
+            ].sort(() => Math.random() - 0.5),
+            card,
+            type,
+            isEasy: true
+          }
+
+        case 'martial-effects-intro':
+          return {
+            question: `What is the martial application of ${card.nameEnglish} (${card.number})?`,
+            subtext: `Korean: ${card.nameHangul} (${card.nameRomanized})`,
+            correctAnswer: card.martialApplication,
+            options: [
+              card.martialApplication,
+              ...incorrectOptions.map(c => c.martialApplication)
+            ].sort(() => Math.random() - 0.5),
+            card,
+            type,
+            isEasy: true
+          }
+
+        default:
+          return {
+            question: `What is the English name for "${card.nameHangul}" (${card.nameRomanized})?`,
+            subtext: `Point ${card.number}`,
+            correctAnswer: card.nameEnglish,
+            options: [
+              card.nameEnglish,
+              ...incorrectOptions.map(c => c.nameEnglish)
+            ].sort(() => Math.random() - 0.5),
+            card,
+            type,
+            isEasy: true
+          }
+      }
+    } catch (error) {
+      console.error('Error generating question:', error)
+      return null
     }
   }
 
@@ -390,86 +291,100 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   }
 
   const handleSubmitAnswer = () => {
-    if (selectedAnswer === null) return
-    
-    const currentQuestion = quizQuestions[currentQuestionIndex]
-    const correct = selectedAnswer === currentQuestion.correctAnswer
-    
-    setIsCorrect(correct)
-    setShowResult(true)
-    
-    // Record the quiz attempt
-    ProgressTracker.recordQuizAttempt(currentQuestion.card.id, correct, currentQuestion.card.meridian)
-    
-    // Add to session results
-    setSessionResults(prev => [...prev, {
-      question: currentQuestion.question,
-      userAnswer: selectedAnswer,
-      correctAnswer: currentQuestion.correctAnswer,
-      isCorrect: correct,
-      card: currentQuestion.card
-    }])
+    if (!selectedAnswer) return
+
+    try {
+      const currentQuestion = quizQuestions[currentQuestionIndex]
+      const correct = selectedAnswer === currentQuestion.correctAnswer
+      
+      setIsCorrect(correct)
+      setShowResult(true)
+      
+      // Record the attempt
+      ProgressTracker.recordQuizAttempt(
+        currentQuestion.card.id,
+        correct,
+        currentQuestion.card.meridian
+      )
+      
+      // Update session results
+      setSessionResults(prev => [...prev, {
+        question: currentQuestion,
+        selectedAnswer,
+        isCorrect: correct
+      }])
+    } catch (error) {
+      console.error('Failed to submit answer:', error)
+      setError('Failed to submit answer. Please try again.')
+    }
   }
 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < quizQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1)
+    try {
       setSelectedAnswer(null)
       setShowResult(false)
-      setIsCorrect(false)
-    } else {
-      setSessionComplete(true)
-      // Mark session as completed
-      ProgressTracker.completeSession('quiz')
+      
+      if (currentQuestionIndex + 1 >= quizQuestions.length) {
+        setSessionComplete(true)
+      } else {
+        setCurrentQuestionIndex(prev => prev + 1)
+      }
+    } catch (error) {
+      console.error('Failed to move to next question:', error)
+      setError('Failed to move to next question. Please try again.')
     }
   }
+
   const restartQuiz = () => {
-    setCurrentQuestionIndex(0)
-    setSelectedAnswer(null)
-    setShowResult(false)
-    setIsCorrect(false)
-    setSessionComplete(false)
-    setSessionResults([])
-    generateQuizQuestions()
+    try {
+      setCurrentQuestionIndex(0)
+      setSelectedAnswer(null)
+      setShowResult(false)
+      setSessionComplete(false)
+      setSessionResults([])
+      generateQuizQuestions()
+    } catch (error) {
+      console.error('Failed to restart quiz:', error)
+      setError('Failed to restart quiz. Please try again.')
+    }
   }
 
   const handlePronunciation = (text, isKorean = false) => {
-    if (isKorean) {
-      pronunciationManager.speakKorean(text)
-    } else {
-      pronunciationManager.speakRomanized(text)
+    if (!pronunciation || !text) return
+    
+    try {
+      if (isKorean) {
+        pronunciation.speakKorean(text)
+      } else {
+        pronunciation.speakRomanized(text)
+      }
+    } catch (error) {
+      console.error('Failed to play pronunciation:', error)
     }
   }
-  if (quizQuestions.length === 0) {
+
+  if (error) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="relative mb-8">
-            {/* Animated Logo */}
-            <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mx-auto animate-pulse">
-              <div className="relative">
-                <div className="w-10 h-10 border-2 border-yellow-400 rounded-full"></div>
-                <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-                <div className="absolute inset-2 border border-yellow-400/30 rounded-full"></div>
-              </div>
-            </div>
-            
-            {/* Spinning indicator */}
-            <div className="absolute -top-2 -right-2">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
-            </div>
-          </div>
-          
-          <h3 className="text-xl font-bold text-yellow-400 mb-2">Preparing Your Quiz</h3>
-          <p className="text-gray-400 text-sm mb-4">Selecting questions based on your progress...</p>
-          
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-600">
-            <div className="text-xs text-gray-300 space-y-1">
-              <div>🎯 Analyzing difficulty level</div>
-              <div>🔄 Generating question variants</div>
-              <div>📚 Including romanized Korean hints</div>
-            </div>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => navigateTo('home')}
+            className="px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading || quizQuestions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+          <p>Loading quiz questions...</p>
         </div>
       </div>
     )
@@ -479,91 +394,59 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
     const correctAnswers = sessionResults.filter(r => r.isCorrect).length
     const totalQuestions = sessionResults.length
     const percentage = Math.round((correctAnswers / totalQuestions) * 100)
-    
+
     return (
-      <div className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8 max-w-md">
-          {/* Header */}
-          <header className="text-center mb-8">
-            <div className="flex items-center justify-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mr-4">
-                <div className="relative">
-                  <div className="w-8 h-8 border-2 border-yellow-400 rounded-full"></div>
-                  <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-                  <div className="absolute inset-2 border border-yellow-400/30 rounded-full"></div>
-                </div>
-              </div>
-              <div className="text-left">
-                <h1 className="text-2xl font-bold text-white">MERIDIAN</h1>
-                <h2 className="text-xl text-gray-300">MASTERY COACH</h2>
-              </div>
-            </div>
-          </header>          {/* Results */}
-          <div className="text-center mb-8">
-            <h3 className="text-3xl font-bold text-yellow-400 mb-4">Quiz Complete!</h3>
-            <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-yellow-600 rounded-lg p-6 mb-6">
-              <div className="text-6xl font-bold text-yellow-400 mb-2">{percentage}%</div>
-              <div className="text-lg text-white">
-                {correctAnswers}/{totalQuestions} Correct
-              </div>
-              <div className="text-sm text-gray-400 mt-2">
-                {percentage >= 80 ? "🏆 Excellent mastery!" :
-                 percentage >= 60 ? "✨ Good progress, keep practicing!" :
-                 "📚 More study needed. Review the material and try again."}
-              </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white p-4">
+        <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-6">Quiz Complete!</h2>
+          
+          <div className="bg-gray-800 rounded-lg p-6 mb-6">
+            <div className="text-center mb-4">
+              <div className="text-4xl font-bold text-yellow-400 mb-2">{percentage}%</div>
+              <p className="text-gray-400">
+                {correctAnswers} correct out of {totalQuestions} questions
+              </p>
             </div>
             
-            {/* Detailed Statistics */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-400">{correctAnswers}</div>
-                <div className="text-xs text-gray-400">Correct</div>
-              </div>
-              <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
-                <div className="text-2xl font-bold text-red-400">{totalQuestions - correctAnswers}</div>
-                <div className="text-xs text-gray-400">Incorrect</div>
-              </div>
-            </div>
-
-            {/* Question Types Summary */}
-            {(() => {
-              const typeCounts = {}
-              sessionResults.forEach(result => {
-                const type = result.card?.meridian || 'Unknown'
-                typeCounts[type] = (typeCounts[type] || 0) + (result.isCorrect ? 1 : 0)
-              })
-              const topMeridian = Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0]
-              
-              return topMeridian && (
-                <div className="bg-blue-900/20 border border-blue-600 rounded-lg p-4 mb-6">
-                  <div className="text-sm text-blue-400 font-medium">Best Performance</div>
-                  <div className="text-lg text-white">{topMeridian[0]}</div>
-                  <div className="text-xs text-gray-400">{topMeridian[1]} correct answers</div>
+            <div className="space-y-4">
+              {sessionResults.map((result, index) => (
+                <div 
+                  key={index}
+                  className={`p-4 rounded-lg ${
+                    result.isCorrect ? 'bg-green-900/50' : 'bg-red-900/50'
+                  }`}
+                >
+                  <p className="font-medium">{result.question.question}</p>
+                  <p className="text-sm text-gray-400">{result.question.subtext}</p>
+                  <div className="mt-2">
+                    <p className="text-sm">
+                      Your answer: <span className={result.isCorrect ? 'text-green-400' : 'text-red-400'}>
+                        {result.selectedAnswer}
+                      </span>
+                    </p>
+                    {!result.isCorrect && (
+                      <p className="text-sm text-green-400">
+                        Correct answer: {result.question.correctAnswer}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              )
-            })()}
+              ))}
+            </div>
           </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-3">
+          
+          <div className="flex justify-center space-x-4">
             <button
               onClick={restartQuiz}
-              className="w-full bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-6 rounded-lg border border-yellow-600"
+              className="px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
             >
-              QUIZ AGAIN
+              Try Again
             </button>
-              <button
-              onClick={() => navigateTo('quiz-selection')}
-              className="w-full bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 hover:from-yellow-800/40 hover:to-yellow-700/40 border border-yellow-600 text-yellow-400 py-3 px-6 rounded-lg"
-            >
-              TRY DIFFERENT QUIZ
-            </button>
-            
             <button
               onClick={() => navigateTo('home')}
-              className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 border border-gray-600 text-gray-400 py-3 px-6 rounded-lg"
+              className="px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
             >
-              BACK TO HOME
+              Back to Home
             </button>
           </div>
         </div>
@@ -572,174 +455,108 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   }
 
   const currentQuestion = quizQuestions[currentQuestionIndex]
-  
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        {/* Header */}
-        <header className="text-center mb-8">          <button 
-            onClick={() => navigateTo('quiz-selection')}
-            className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
-          >
-            ← Back to Quiz Selection
-          </button>
-          
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mr-4">
-              <div className="relative">
-                <div className="w-8 h-8 border-2 border-yellow-400 rounded-full"></div>
-                <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-                <div className="absolute inset-2 border border-yellow-400/30 rounded-full"></div>
-              </div>
-            </div>
-            <div className="text-left">
-              <h1 className="text-2xl font-bold text-white">MERIDIAN</h1>
-              <h2 className="text-xl text-gray-300">MASTERY QUIZ</h2>
-            </div>
-          </div>
-        </header>
 
-        {/* Progress Indicator */}
-        <div className="mb-8">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
+      {/* Header: Logo and Back Button */}
+      <div className="w-full max-w-lg mx-auto mb-8 flex justify-between items-center">
+        {/* Logo Home Button */}
+        <button 
+          onClick={() => navigateTo('home')}
+          className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
+          aria-label="Go to Home"
+        >
+           <TriskelionLogo size={40} /> {/* Adjust size as needed */}
+        </button>
+
+        {/* Back to Daily Sessions Button */}
+        <button
+          onClick={() => navigateTo('daily-session')}
+          className="text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center"
+          aria-label="Back to Daily Sessions"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h14" />
+          </svg>
+          Back
+        </button>
+      </div>
+
+      {/* Quiz Content */}
+      <div className="max-w-md mx-auto">
+        {/* Progress bar */}
+        <div className="mb-6">
           <div className="flex justify-between text-sm text-gray-400 mb-2">
             <span>Question {currentQuestionIndex + 1} of {quizQuestions.length}</span>
             <span>{Math.round(((currentQuestionIndex + 1) / quizQuestions.length) * 100)}%</span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="h-2 bg-gray-700 rounded-full">
             <div 
-              className="bg-gradient-to-r from-yellow-600 to-yellow-500 h-2 rounded-full transition-all duration-300"
+              className="h-full bg-yellow-500 rounded-full transition-all duration-300"
               style={{ width: `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%` }}
             ></div>
           </div>
-        </div>        {/* Question */}
-        <div className="mb-8">
-          <h3 className="text-lg sm:text-xl font-bold text-yellow-400 mb-4 text-center">
-            {currentQuestion.question}
-          </h3>
-          
-          {/* Pronunciation buttons for Korean text in question */}
-          {currentQuestion.card && (currentQuestion.question.includes(currentQuestion.card.nameHangul) || currentQuestion.question.includes(currentQuestion.card.nameRomanized)) && (
-            <div className="flex justify-center gap-2 mb-4">
-              {currentQuestion.question.includes(currentQuestion.card.nameHangul) && (
-                <button 
-                  onClick={() => handlePronunciation(currentQuestion.card.nameHangul, true)}
-                  className="w-8 h-8 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 shadow-lg"
-                  title="Pronounce Korean name"
-                >
-                  🔊
-                </button>
-              )}
-              {currentQuestion.question.includes(currentQuestion.card.nameRomanized) && (
-                <button 
-                  onClick={() => handlePronunciation(currentQuestion.card.nameRomanized, false)}
-                  className="w-8 h-8 bg-green-600 hover:bg-green-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 shadow-lg"
-                  title="Pronounce romanized name"
-                >
-                  🔊
-                </button>
-              )}
-            </div>
-          )}
-          
-          {/* Question subtext if available */}
+        </div>
+
+        {/* Question */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4">{currentQuestion.question}</h2>
           {currentQuestion.subtext && (
-            <p className="text-gray-400 text-xs sm:text-sm text-center mb-6 italic">
-              {currentQuestion.subtext}
-            </p>
+            <p className="text-gray-400 text-sm mb-4">{currentQuestion.subtext}</p>
           )}
           
-          {/* Difficulty indicator for easy questions */}
-          {currentQuestion.isEasy && (
-            <div className="flex justify-center mb-4">
-              <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-medium border border-green-500/30">
-                ⭐ Beginner Level
-              </span>
-            </div>
-          )}
-            {/* Answer Options */}
-          <div className="space-y-2 sm:space-y-3">
+          {/* Answer options */}
+          <div className="space-y-3">
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
-                onClick={() => handleAnswerSelect(option)}
-                disabled={showResult}
-                className={`w-full p-3 sm:p-4 rounded-lg border-2 text-left transition-all duration-200 text-sm sm:text-base ${
+                onClick={() => !showResult && handleAnswerSelect(option)}
+                className={`w-full p-4 text-left rounded-lg transition-colors ${
                   showResult
                     ? option === currentQuestion.correctAnswer
-                      ? 'border-green-500 bg-green-500/20 text-green-400'
-                      : option === selectedAnswer && option !== currentQuestion.correctAnswer
-                      ? 'border-red-500 bg-red-500/20 text-red-400'
-                      : 'border-gray-600 bg-gray-800 text-gray-400'
+                      ? 'bg-green-900/50 border border-green-500'
+                      : option === selectedAnswer
+                      ? 'bg-red-900/50 border border-red-500'
+                      : 'bg-gray-700/50'
                     : selectedAnswer === option
-                    ? 'border-yellow-500 bg-yellow-500/20 text-yellow-400'
-                    : 'border-gray-600 bg-gray-800 text-white hover:border-yellow-600 hover:bg-yellow-600/10'
+                    ? 'bg-yellow-500/20 border border-yellow-500'
+                    : 'bg-gray-700/50 hover:bg-gray-600/50'
                 }`}
+                disabled={showResult}
               >
-                <div className="flex items-center justify-between">
-                  <span>{option}</span>
-                  {/* Add pronunciation button for Korean text in options */}
-                  {option.match(/[\u3131-\uD79D]/) && (
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handlePronunciation(option, true)
-                      }}
-                      className="w-6 h-6 bg-blue-600 hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-xs transition-all duration-200 ml-2"
-                      title="Pronounce Korean text"
-                    >
-                      🔊
-                    </button>
-                  )}
-                </div>
+                {option}
               </button>
             ))}
           </div>
-        </div>        {/* Result Feedback */}
-        {showResult && (
-          <div className={`mb-6 p-4 rounded-lg border-2 ${
-            isCorrect 
-              ? 'border-green-500 bg-green-500/10' 
-              : 'border-red-500 bg-red-500/10'
-          }`}>
-            <div className={`font-bold mb-2 ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-              {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
-            </div>
-            {!isCorrect && (
-              <div className="text-gray-300 text-sm mb-2">
-                The correct answer is: <span className="text-green-400 font-semibold">{currentQuestion.correctAnswer}</span>
-              </div>
-            )}
-            
-            {/* Educational info */}
-            <div className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-600">
-              <div><strong>Point:</strong> {currentQuestion.card.number} - {currentQuestion.card.nameHangul} ({currentQuestion.card.nameEnglish})</div>
-              <div><strong>Location:</strong> {currentQuestion.card.location}</div>
-              <div><strong>Healing:</strong> {currentQuestion.card.healingFunction}</div>
-              <div><strong>Martial:</strong> {currentQuestion.card.martialApplication}</div>
-            </div>
-          </div>
-        )}
+        </div>
 
-        {/* Action Button */}
-        <div className="text-center">
-          {!showResult ? (
+        {/* Action buttons */}
+        <div className="flex justify-between">
+          <button
+            onClick={() => navigateTo('home')}
+            className="px-6 py-3 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
+          >
+            Exit Quiz
+          </button>
+          
+          {showResult ? (
             <button
-              onClick={handleSubmitAnswer}
-              disabled={selectedAnswer === null}
-              className={`w-full font-bold py-3 px-6 rounded-lg border ${
-                selectedAnswer === null
-                  ? 'bg-gray-800 border-gray-600 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 border-yellow-600 text-white'
-              }`}
+              onClick={handleNextQuestion}
+              className="px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
             >
-              SUBMIT ANSWER
+              {currentQuestionIndex + 1 >= quizQuestions.length ? 'Finish' : 'Next Question'}
             </button>
           ) : (
             <button
-              onClick={handleNextQuestion}
-              className="w-full bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-6 rounded-lg border border-yellow-600"
+              onClick={handleSubmitAnswer}
+              disabled={!selectedAnswer}
+              className={`px-6 py-3 font-semibold rounded-lg transition-colors ${
+                selectedAnswer
+                  ? 'bg-yellow-500 text-black hover:bg-yellow-400'
+                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              }`}
             >
-              {currentQuestionIndex < quizQuestions.length - 1 ? 'NEXT QUESTION' : 'FINISH QUIZ'}
+              Submit Answer
             </button>
           )}
         </div>

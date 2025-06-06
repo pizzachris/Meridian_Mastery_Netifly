@@ -1,137 +1,256 @@
 import React, { useState, useEffect } from 'react'
-import flashcardsData from '../data/flashcards.json'
+import { getAllPoints, getPointsByMeridian, getPointsByRegion, getPointsByTheme, getMaekChiKiPoints, getMaekChaKiPoints } from '../utils/dataLoader'
 import { ProgressTracker } from '../utils/progressTracker'
+import PronunciationManager from '../utils/pronunciation'
+import TriskelionLogo from './TriskelionLogo'
 
-const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
+// Helper to get meridian abbreviation for badge
+const getMeridianAbbreviation = (meridianName, pointNumber) => {
+  if (!meridianName) return 'UN';
+  
+  const normalizedName = meridianName.replace(/\s*\([^)]*\)/, '').trim();
+  const abbrevMap = {
+    'Lung': 'LU',
+    'Large Intestine': 'LI', 
+    'Stomach': 'ST',
+    'Spleen': 'SP',
+    'Heart': 'HT',
+    'Small Intestine': 'SI',
+    'Pericardium': 'PC',
+    'Triple Heater': 'TH',
+    'Triple Burner': 'TH',
+    'Kidney': 'KI',
+    'Bladder': 'BL',
+    'Urinary Bladder': 'BL',
+    'Liver': 'LV',
+    'Gallbladder': 'GB',
+    'Governing': 'GV',
+    'Conception': 'CV',
+    'Governing Vessel': 'GV',
+    'Conception Vessel': 'CV'
+  };
+  
+  const abbrev = abbrevMap[normalizedName] || 'UN';
+  return pointNumber ? `${abbrev} ${pointNumber}` : abbrev;
+};
+
+// Helper to get element from meridian name
+const getElementFromMeridian = (meridianName) => {
+  if (!meridianName) return 'Metal';
+  
+  const normalizedName = meridianName.replace(/\s*\([^)]*\)/, '').trim();
+  const elementMap = {
+    'Lung': 'Metal', 'Large Intestine': 'Metal',
+    'Stomach': 'Earth', 'Spleen': 'Earth',
+    'Heart': 'Fire', 'Small Intestine': 'Fire', 'Pericardium': 'Fire', 'Triple Heater': 'Fire', 'Triple Burner': 'Fire',
+    'Kidney': 'Water', 'Bladder': 'Water', 'Urinary Bladder': 'Water',
+    'Liver': 'Wood', 'Gallbladder': 'Wood',
+    'Governing': 'Extraordinary', 'Conception': 'Extraordinary',
+    'Governing Vessel': 'Extraordinary', 'Conception Vessel': 'Extraordinary'
+  };
+  
+  return elementMap[normalizedName] || 'Metal';
+};
+
+const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
   const [currentCard, setCurrentCard] = useState(0)
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [isFlipped, setIsFlipped] = useState(false)  // Always start with front side
   const [userStats, setUserStats] = useState({})
   const [showFlagModal, setShowFlagModal] = useState(false)
   const [flagReason, setFlagReason] = useState('')
   const [flagSubmitted, setFlagSubmitted] = useState(false)
+  const [pronunciation, setPronunciation] = useState(null)
+  const [progress, setProgress] = useState(null)
+  const [error, setError] = useState(null)
+  const [flashcards, setFlashcards] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   
-  const allFlashcards = flashcardsData.flashcards
-  
-  // Filter flashcards based on session mode
-  const getFilteredFlashcards = () => {
-    if (!sessionMode) return allFlashcards
-    
-    switch (sessionMode) {
-      case 'meridian':
-        // For now, return all cards - you can add specific meridian filtering logic here
-        return allFlashcards
-      case 'region':
-        // Filter by body regions - you can add specific region filtering logic here
-        return allFlashcards
-      case 'theme':
-        // Filter by healing themes - you can add specific theme filtering logic here
-        return allFlashcards
-      case 'maek-chi-ki':
-        // Filter cards relevant for fist/hand techniques
-        return allFlashcards.filter(card => 
-          card.martialApplication && 
-          (card.martialApplication.toLowerCase().includes('fist') || 
-           card.martialApplication.toLowerCase().includes('hand') ||
-           card.martialApplication.toLowerCase().includes('arm') ||
-           card.martialApplication.toLowerCase().includes('finger') ||
-           card.martialApplication.toLowerCase().includes('wrist') ||
-           card.martialApplication.toLowerCase().includes('grip') ||
-           card.martialApplication.toLowerCase().includes('strike'))
-        )
-      case 'maek-cha-ki':
-        // Filter cards relevant for foot/leg techniques
-        return allFlashcards.filter(card => 
-          card.martialApplication && 
-          (card.martialApplication.toLowerCase().includes('foot') || 
-           card.martialApplication.toLowerCase().includes('leg') ||
-           card.martialApplication.toLowerCase().includes('ankle') ||
-           card.martialApplication.toLowerCase().includes('knee') ||
-           card.martialApplication.toLowerCase().includes('kick') ||
-           card.martialApplication.toLowerCase().includes('stance') ||
-           card.martialApplication.toLowerCase().includes('balance'))
-        )
-      default:
-        return allFlashcards
+  // Initialize pronunciation manager and load progress
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        const manager = new PronunciationManager()
+        await manager.loadVoices()
+        setPronunciation(manager)
+        setProgress(ProgressTracker.getProgress())
+        setError(null)
+      } catch (error) {
+        console.error('Failed to initialize:', error)
+        setError('Initialization failed. Please try refreshing.')
+      }
     }
-  }
+    initialize()
+  }, [])
+    // Load flashcards based on session mode
+  useEffect(() => {
+    const loadCards = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        let cards = []        // Default behavior: show all pressure points (no Hohn Soo) unless specific session mode
+        if (!sessionMode || sessionMode === 'all' || sessionMode === 'flashcards') {
+          cards = getAllPoints()
+          // Filter out Hohn Soo points - they should only appear in Maek sessions
+          cards = cards.filter(card => {
+            const pointName = (card.nameEnglish || card.english || '').toLowerCase()
+            return !pointName.includes('hohn soo') && !pointName.includes('hoan su')
+          })
+        }else if (sessionMode.startsWith('meridian-')) {
+          const meridian = sessionMode.replace('meridian-', '')
+          cards = getPointsByMeridian(meridian)
+          // Filter out Hohn Soo points from meridian sessions too
+          cards = cards.filter(card => {
+            const pointName = (card.nameEnglish || card.english || '').toLowerCase()
+            return !pointName.includes('hohn soo') && !pointName.includes('hoan su')
+          })
+        } else if (sessionMode.startsWith('region-')) {
+          const region = sessionMode.replace('region-', '')
+          cards = getPointsByRegion(region)
+        } else if (sessionMode.startsWith('theme-')) {
+          const theme = sessionMode.replace('theme-', '')
+          cards = getPointsByTheme(theme)
+        } else if (sessionMode === 'maek-chi-ki') {
+          cards = getMaekChiKiPoints()
+        } else if (sessionMode === 'maek-cha-ki') {
+          cards = getMaekChaKiPoints()
+        } else {
+          // Fallback: all pressure points without Hohn Soo
+          cards = getAllPoints()
+          cards = cards.filter(card => {
+            const pointName = (card.nameEnglish || card.english || '').toLowerCase()
+            return !pointName.includes('hohn soo') && !pointName.includes('hoan su')
+          })
+        }
+        
+        if (!cards || cards.length === 0) {
+          throw new Error('No cards available for selected mode.')
+        }
+
+        if (!Array.isArray(cards)) {
+          console.error('Cards is not an array:', cards)
+          throw new Error('Invalid card data format.')
+        }
+
+        // Only shuffle if shuffleMode is explicitly enabled
+        if (shuffleMode) {
+          for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+          }
+        }        
+        setFlashcards(cards)
+        setCurrentCard(0)
+        setIsFlipped(false)  // Always start with front side
+        setError(null)
+      } catch (error) {
+        console.error('Failed to load flashcards:', error)
+        setError(error.message || 'Failed to load flashcards.')
+        setFlashcards([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    loadCards()
+  }, [sessionMode, shuffleMode])
   
-  const flashcards = getFilteredFlashcards()
-  const card = flashcards[currentCard]
+  // Update progress when card changes and load stats for current card
+  useEffect(() => {
+    if (flashcards.length > 0 && currentCard < flashcards.length) {
+      const card = flashcards[currentCard]
+      if (card) {
+        try {
+          const stats = ProgressTracker.getPointStats(card.id)
+          setUserStats(stats)
+          // Reset flip when card changes
+          setIsFlipped(false)
+        } catch (error) {
+          console.error('Failed to load user stats:', error)
+        }
+      }
+    }
+  }, [currentCard, flashcards])
   
   // Handle navigation from BodyMap with selectedPointId
   useEffect(() => {
-    if (selectedPointId) {
+    if (selectedPointId && flashcards.length > 0) {
       const pointIndex = flashcards.findIndex(card => card.id === selectedPointId)
       if (pointIndex !== -1) {
         setCurrentCard(pointIndex)
+        setIsFlipped(false)
       }
     }
   }, [selectedPointId, flashcards])
   
-  // Load user stats for current card
-  useEffect(() => {
-    if (card) {
-      const stats = ProgressTracker.getQuizStats(card.id)
-      setUserStats(stats)
-    }
-  }, [currentCard, card])
-  
   const nextCard = () => {
-    // Track progress when moving to next card (studying current card)
-    if (card) {
-      ProgressTracker.studyPoint(card.id, card.meridian)
+    if (flashcards.length === 0) return;
+    
+    // Record study event
+    if (flashcards.length > 0 && currentCard < flashcards.length) {
+      const card = flashcards[currentCard]
+      if (card) {
+        try {
+          ProgressTracker.studyPoint(card.id, card.meridian)
+          setProgress(ProgressTracker.getProgress())
+        } catch (error) {
+          console.error('Failed to update progress:', error)
+        }
+      }
     }
+
     setIsFlipped(false)
     setCurrentCard((prev) => (prev + 1) % flashcards.length)
   }
 
   const prevCard = () => {
+    if (flashcards.length === 0) return;
     setIsFlipped(false)
     setCurrentCard((prev) => (prev - 1 + flashcards.length) % flashcards.length)
   }
 
   const flipCard = () => {
-    // Track progress when flipping card (studying point)
-    if (card && !isFlipped) {
-      ProgressTracker.studyPoint(card.id, card.meridian)
-    }
     setIsFlipped(!isFlipped)
   }
-  
-  const startQuiz = () => {
-    navigateTo('quiz', { sessionMode: 'flashcard-review' })
+
+  const handlePronunciation = async (text, isKorean = false) => {
+    if (!pronunciation) return;
+    
+    try {
+      if (isKorean) {
+        await pronunciation.speakKorean(text)
+      } else {
+        await pronunciation.speakEnglish(text)
+      }
+    } catch (error) {
+      console.error('Pronunciation failed:', error)
+    }
   }
 
   const handleFlag = () => {
     setShowFlagModal(true)
+    setFlagSubmitted(false)
+    setFlagReason('')
   }
 
   const submitFlag = () => {
-    if (!flagReason.trim()) return
+    if (!flagReason.trim()) return;
     
-    // Store flag data in localStorage for now (could be sent to a server in production)
-    const flagData = {
-      pointId: card.id,
-      pointNumber: card.number,
-      pointName: card.nameEnglish,
-      reason: flagReason,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
+    try {
+      const flaggedIssues = JSON.parse(localStorage.getItem('flaggedIssues') || '[]')
+      const newFlag = {
+        id: Date.now(),
+        pointId: flashcards[currentCard]?.id,
+        pointNumber: flashcards[currentCard]?.point_number,
+        reason: flagReason,
+        timestamp: new Date().toISOString()
+      }
+      flaggedIssues.push(newFlag)
+      localStorage.setItem('flaggedIssues', JSON.stringify(flaggedIssues))
+      setFlagSubmitted(true)
+      setTimeout(() => setShowFlagModal(false), 2000)
+    } catch (error) {
+      console.error('Failed to save flag:', error)
     }
-    
-    // Get existing flags or initialize array
-    const existingFlags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
-    existingFlags.push(flagData)
-    localStorage.setItem('meridian-mastery-flags', JSON.stringify(existingFlags))
-    
-    setFlagSubmitted(true)
-    setFlagReason('')
-    
-    // Auto-close modal after showing success
-    setTimeout(() => {
-      setShowFlagModal(false)
-      setFlagSubmitted(false)
-    }, 2000)
   }
 
   const closeFlagModal = () => {
@@ -140,259 +259,329 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode }) => {
     setFlagSubmitted(false)
   }
 
-  const getElementColor = (element) => {
-    const colors = {
-      wood: 'border-green-500 bg-green-500/10',
-      fire: 'border-red-500 bg-red-500/10',
-      earth: 'border-yellow-500 bg-yellow-500/10',
-      metal: 'border-gray-400 bg-gray-400/10',
-      water: 'border-blue-500 bg-blue-500/10',
-      violet: 'border-purple-500 bg-purple-500/10'
-    }
-    return colors[element] || 'border-gray-500 bg-gray-500/10'
+  const startQuiz = () => {
+    navigateTo('quiz', { sessionMode })
   }
-  
-  if (flashcards.length === 0) {
+
+  // Loading state
+  if (isLoading) {
     return (
-      <div className="min-h-screen kuk-sool-gradient text-white flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center p-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
-          <p>Loading flashcards...</p>
+          <p className="text-yellow-400">Loading flashcards...</p>
         </div>
       </div>
     )
   }
 
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-8 max-w-md">
-        {/* Header with Logo */}
-        <header className="text-center mb-8">
-          <button 
-            onClick={() => navigateTo(sessionMode ? 'session' : 'home')}
-            className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
-          >
-            ← Back to {sessionMode ? 'Session Selection' : 'Home'}
-          </button>
-          
-          {/* Logo and Title */}
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mr-4">
-              {/* Triple spiral logo */}
-              <div className="relative">
-                <div className="w-8 h-8 border-2 border-yellow-400 rounded-full"></div>
-                <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-                <div className="absolute inset-2 border border-yellow-400/30 rounded-full"></div>
-              </div>
-            </div>
-            <div className="text-left">
-              <h1 className="text-2xl font-bold text-white">MERIDIAN</h1>
-              <h2 className="text-xl text-gray-300">MASTERY COACH</h2>
-            </div>
-          </div>
-        </header>
-
-        {!isFlipped ? (
-          // Front of card - Point Name
-          <div className="text-center mb-8">
-            {/* Point Number */}
-            <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-2 rounded-lg inline-block mb-6 border border-yellow-600">
-              <span className="font-bold">{card.number} ↔</span>
-            </div>
-            
-            {/* Korean Name */}
-            <div className="text-6xl font-bold text-yellow-400 mb-4" style={{ fontFamily: 'serif' }}>
-              {card.nameHangul}
-            </div>
-            
-            {/* English Name */}
-            <div className="text-3xl font-bold text-white mb-8">
-              {card.nameEnglish}
-            </div>
-          </div>
-        ) : (
-          // Back of card - Details
-          <div className="space-y-6 mb-8">
-            {/* Point identifier at top */}
-            <div className="text-center">
-              <div className="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-2 rounded-lg inline-block border border-yellow-600">
-                <span className="font-bold">{card.number} ↔</span>
-              </div>
-              <h3 className="text-2xl font-bold text-yellow-400 mt-2">{card.nameRomanized}</h3>
-              <h4 className="text-xl text-gray-300">{card.nameEnglish}</h4>
-              <p className="text-sm text-gray-400 mt-1">{card.meridian} Meridian</p>
-            </div>
-
-            {/* Striking Effect */}
-            <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
-              <h4 className="font-bold text-yellow-400 mb-2">STRIKING EFFECT:</h4>
-              <p className="text-gray-200 text-sm">{card.martialApplication}</p>
-            </div>
-
-            {/* Observed Effects */}
-            <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
-              <h4 className="font-bold text-yellow-400 mb-2">Observed effects of strike:</h4>
-              <p className="text-gray-200 text-sm">{card.healingFunction}</p>
-            </div>
-
-            {/* Theoretical Effects */}
-            <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
-              <h4 className="font-bold text-yellow-400 mb-2">Theoretical effects:</h4>
-              <p className="text-gray-200 text-sm">{card.martialApplication}</p>
-            </div>
-            
-            {/* GPT Guided Insight */}
-            <div className="bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 border border-yellow-600 rounded-lg p-4">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-bold text-yellow-400">GPT-GUIDED INSIGHT</h4>
-                {userStats.isMastered && (
-                  <span className="text-green-400 text-xs bg-green-500/20 px-2 py-1 rounded border border-green-500">
-                    ✓ MASTERED
-                  </span>
-                )}
-              </div>
-              <p className="text-gray-200 text-sm mb-3">
-                {ProgressTracker.generateInsight(card, userStats)}
-              </p>
-              {userStats.totalAttempts > 0 && (
-                <div className="text-xs text-gray-400 border-t border-gray-600 pt-2">
-                  Quiz Performance: {userStats.retentionScore}% ({userStats.attempts.correct}/{userStats.totalAttempts} correct)
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-        
-        {/* Bottom Controls */}
-        <div className="space-y-4">
-          {/* Navigation and Flip Controls */}
-          <div className="flex justify-between items-center">
-            {/* Sound Button */}
-            <button 
-              className="w-12 h-12 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center border border-gray-600"
-              onClick={() => {/* Add sound functionality */}}
-            >
-              <svg className="w-6 h-6 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-              </svg>
-            </button>
-
-            {/* Navigation buttons */}
-            <button 
-              onClick={prevCard}
-              className="text-gray-400 hover:text-white px-4 py-2"
-            >
-              ←
-            </button>
-
-            {/* Flip Button */}
-            <button 
-              onClick={flipCard}
-              className="bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-8 rounded-lg border border-yellow-600"
-            >
-              FLIP
-            </button>
-
-            <button 
-              onClick={nextCard}
-              className="text-gray-400 hover:text-white px-4 py-2"
-            >
-              →
-            </button>
-
-            {/* Flag Button */}
-            <button 
-              className="w-12 h-12 bg-orange-800 hover:bg-orange-700 rounded-lg flex items-center justify-center border border-orange-600"
-              onClick={handleFlag}
-              title="Report an issue with this card"
-            >
-              <svg className="w-6 h-6 text-orange-300" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
-              </svg>
-            </button>
-          </div>
-
-          {/* Card counter */}
-          <div className="text-center text-gray-400 text-sm mb-4">
-            {currentCard + 1}/{flashcards.length}
-          </div>
-
-          {/* Quiz Button */}
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center p-4">
+          <p className="text-red-400 mb-4">{error}</p>
           <button
-            onClick={startQuiz}
-            className="w-full bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 hover:from-yellow-800/40 hover:to-yellow-700/40 border border-yellow-600 text-yellow-400 py-3 px-6 rounded-lg font-bold"
+            onClick={() => navigateTo('daily-session')}
+            className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg"
           >
-            🧠 TEST YOUR KNOWLEDGE
+            Back to Sessions
           </button>
         </div>
-
-        {/* Flag Modal */}
-        {showFlagModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-900 border border-orange-600 rounded-lg p-6 max-w-md w-full">
-              {!flagSubmitted ? (
-                <>
-                  <h3 className="text-xl font-bold text-orange-400 mb-4">Report Issue</h3>
-                  <p className="text-gray-300 mb-4">
-                    Found a problem with <span className="text-yellow-400 font-semibold">{card.number} - {card.nameEnglish}</span>? 
-                    Let us know so we can improve the content.
-                  </p>
-                  
-                  <div className="mb-4">
-                    <label className="block text-gray-300 text-sm font-bold mb-2">
-                      What's the issue?
-                    </label>
-                    <select
-                      value={flagReason}
-                      onChange={(e) => setFlagReason(e.target.value)}
-                      className="w-full bg-gray-800 border border-gray-600 text-white rounded px-3 py-2 focus:outline-none focus:border-orange-500"
-                    >
-                      <option value="">Select an issue type...</option>
-                      <option value="incorrect-translation">Incorrect Korean translation</option>
-                      <option value="wrong-location">Wrong anatomical location</option>
-                      <option value="incorrect-function">Incorrect healing function</option>
-                      <option value="wrong-meridian">Wrong meridian assignment</option>
-                      <option value="martial-application-error">Martial application error</option>
-                      <option value="spelling-grammar">Spelling or grammar error</option>
-                      <option value="missing-information">Missing important information</option>
-                      <option value="other">Other issue</option>
-                    </select>
-                  </div>
-
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={submitFlag}
-                      disabled={!flagReason.trim()}
-                      className={`flex-1 py-2 px-4 rounded font-bold ${
-                        flagReason.trim()
-                          ? 'bg-orange-800 hover:bg-orange-700 text-white border border-orange-600'
-                          : 'bg-gray-700 text-gray-500 border border-gray-600 cursor-not-allowed'
-                      }`}
-                    >
-                      Submit Report
-                    </button>
-                    
-                    <button
-                      onClick={closeFlagModal}
-                      className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-300 py-2 px-4 rounded border border-gray-600"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="text-center">
-                  <div className="text-green-400 text-4xl mb-4">✓</div>
-                  <h3 className="text-xl font-bold text-green-400 mb-2">Report Submitted</h3>
-                  <p className="text-gray-300">Thank you for helping us improve the content!</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
+    )
+  }
+
+  // No cards state
+  if (flashcards.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center p-4">
+          <p className="text-yellow-400 mb-4">No flashcards found for this selection.</p>
+          <button
+            onClick={() => navigateTo('daily-session')}
+            className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg"
+          >
+            Choose Another Session
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const currentCardData = flashcards[currentCard]
+  if (!currentCardData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+        <div className="text-center p-4">
+          <p className="text-red-400 mb-4">Error displaying card. Please try again.</p>
+          <button
+            onClick={() => navigateTo('daily-session')}
+            className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg"
+          >
+            Choose Another Session
+          </button>
+        </div>
+      </div>
+    )
+  }  // Get card data
+  const pointNumber = currentCardData.point_number || currentCardData.number;
+  const nameHangul = currentCardData.hangul || currentCardData.nameHangul;
+  const nameRomanized = currentCardData.romanized || currentCardData.nameRomanized;
+  const nameEnglish = currentCardData.english || currentCardData.nameEnglish;
+  const meridianName = currentCardData.meridian;
+  const meridianAbbrev = getMeridianAbbreviation(meridianName, pointNumber);
+  const element = getElementFromMeridian(meridianName);
+  const location = currentCardData.location || currentCardData["Anatomical Location"];
+  const healingFunction = currentCardData.healingFunction || currentCardData["Healing Function"];
+  const martialApplication = currentCardData.martialApplication || currentCardData["Martial Application"];
+  const insightText = currentCardData.insight;
+  const isBilateral = currentCardData.bilateral === true || currentCardData.bilateral === "Yes";
+
+  return (
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Header - matching mockup */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-800">
+        {/* Logo and title - clickable to go home */}
+        <button 
+          onClick={() => navigateTo('home')}
+          className="flex items-center space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
+        >
+          <TriskelionLogo size={32} />
+          <div className="text-left">
+            <h1 className="text-lg font-bold">MERIDIAN</h1>
+            <p className="text-sm opacity-80">MASTERY COACH</p>
+          </div>
+        </button>
+        
+        {/* Progress counter */}
+        <div className="text-yellow-400 text-sm">
+          {currentCard + 1} / {flashcards.length}
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] p-4">
+        
+        {/* Progress Bar */}
+        <div className="w-full max-w-md mb-6">
+          <div className="bg-gray-800 rounded-full h-2">
+            <div 
+              className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentCard + 1) / flashcards.length) * 100}%` }}
+            ></div>
+          </div>
+          <div className="text-center text-gray-400 text-sm mt-2">
+            {sessionMode.includes('meridian') ? 'Meridian Study' : 
+             sessionMode.includes('maek') ? sessionMode.replace('-', ' ').toUpperCase() : 
+             'Study Session'}
+          </div>
+        </div>
+
+        {/* Flashcard */}
+        <div className="w-full max-w-md mx-auto">
+          <div className={`relative w-full h-96 transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>            {/* Front Side - matching mockup design exactly */}
+            <div className="absolute inset-0 w-full h-full backface-hidden">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-6 relative">
+                
+                {/* Meridian badge in red box at top - with element and bilateral */}
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg border-2 border-red-400">
+                  <span className="text-sm font-bold">
+                    {meridianAbbrev} • {element.toUpperCase()}{isBilateral ? ' ⇔' : ''}
+                  </span>
+                </div>
+
+                {/* Pronunciation button - top right */}
+                {pronunciation && (
+                  <button
+                    onClick={() => handlePronunciation(nameHangul || nameRomanized, true)}
+                    className="absolute top-4 right-4 bg-yellow-600 hover:bg-yellow-700 text-black p-2 rounded-full transition-colors"
+                    aria-label="Play pronunciation"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.797L4.828 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.828l3.555-3.797A1 1 0 019.383 3.076zM12 5a1 1 0 011.414 0C14.495 6.081 15 7.448 15 9s-.505 2.919-1.586 4a1 1 0 01-1.414-1.414C12.63 10.927 13 10.017 13 9s-.37-1.927-1-2.586A1 1 0 0112 5z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Korean characters - large and prominent */}
+                <div className="text-6xl font-bold text-yellow-400 mb-4 text-center mt-16">
+                  {nameHangul}
+                </div>
+
+                {/* English translation */}
+                <div className="text-xl text-white text-center font-medium">
+                  {nameEnglish}
+                </div>
+
+                {/* Romanized Korean - smaller, subtle */}
+                <div className="text-base text-gray-300 text-center mt-2">
+                  {nameRomanized}
+                </div>
+
+              </div>
+            </div>{/* Back Side - matching detailed mockup */}
+            <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-yellow-400 rounded-xl h-full p-4 text-sm overflow-y-auto">
+                
+                {/* Header with point info */}
+                <div className="text-center mb-4 border-b border-gray-700 pb-2">
+                  <h2 className="text-xl font-bold text-yellow-400 mb-1">
+                    {nameRomanized || nameEnglish}
+                  </h2>
+                  <p className="text-gray-300 text-sm">{nameHangul}</p>
+                  <p className="text-gray-400 text-xs">{pointNumber} {meridianName} Meridian</p>
+                </div>
+
+                {/* Information sections - matching mockup layout */}
+                <div className="space-y-3">
+                  
+                  {/* Striking Effect */}
+                  <div className="bg-yellow-600 text-black p-3 rounded">
+                    <h3 className="font-bold text-xs mb-2">STRIKING EFFECT:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {martialApplication || "The point is usually struck to an upward direction with a blunt edge."}
+                    </p>
+                  </div>
+
+                  {/* Observed Effects of Strike */}
+                  <div className="bg-yellow-600 text-black p-3 rounded">
+                    <h3 className="font-bold text-xs mb-2">OBSERVED EFFECTS OF STRIKE:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {healingFunction || "Light to moderate knockout. Liver dysfunction in theory. Be responsible."}
+                    </p>
+                  </div>
+
+                  {/* Theoretical Effects */}
+                  <div className="bg-yellow-600 text-black p-3 rounded">
+                    <h3 className="font-bold text-xs mb-2">THEORETICAL EFFECTS:</h3>
+                    <p className="text-xs leading-relaxed">May cause a knockout.</p>
+                  </div>
+
+                  {/* CPT Guided Insight */}
+                  <div className="bg-yellow-600 text-black p-3 rounded">
+                    <h3 className="font-bold text-xs mb-2">GPT GUIDED INSIGHT:</h3>
+                    <p className="text-xs leading-relaxed">
+                      {insightText || "This point, located beneath the chin, has the potential to affect the stomach meridian which is theory. Be responsible."}
+                    </p>
+                  </div>
+
+                  {/* Location - if available */}
+                  {location && (
+                    <div className="text-gray-300 mt-4">
+                      <h3 className="font-bold text-yellow-400 text-xs mb-1">LOCATION:</h3>
+                      <p className="text-xs leading-relaxed">{location}</p>
+                    </div>
+                  )}
+
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        {/* Control Buttons */}
+        <div className="flex items-center justify-center space-x-4 mt-6">
+          
+          {/* Audio button */}
+          {pronunciation && (
+            <button
+              onClick={() => handlePronunciation(nameHangul || nameRomanized, true)}
+              className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
+              aria-label="Play pronunciation"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.797L4.828 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.828l3.555-3.797A1 1 0 019.383 3.076zM12 5a1 1 0 011.414 0C14.495 6.081 15 7.448 15 9s-.505 2.919-1.586 4a1 1 0 01-1.414-1.414C12.63 10.927 13 10.017 13 9s-.37-1.927-1-2.586A1 1 0 0112 5z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+
+          {/* Previous button */}
+          <button
+            onClick={prevCard}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
+            aria-label="Previous card"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </button>
+
+          {/* Flip button */}
+          <button
+            onClick={flipCard}
+            className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-lg"
+          >
+            FLIP
+          </button>
+
+          {/* Next button */}
+          <button
+            onClick={nextCard}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
+            aria-label="Next card"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+          </button>
+
+          {/* Flag button */}
+          <button
+            onClick={handleFlag}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
+            aria-label="Flag issue"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 01.707 1.707L13.414 9l3.293 3.293A1 1 0 0116 14H4a1 1 0 01-1-1V5z" clipRule="evenodd" />
+            </svg>
+          </button>
+          
+        </div>
+
+      </div>
+
+      {/* Flag Issue Modal */}
+      {showFlagModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-sm">
+            <h3 className="text-lg font-semibold text-white mb-4">Flag Issue</h3>
+            {flagSubmitted ? (
+              <p className="text-green-400 text-center">Issue reported successfully!</p>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-gray-300 text-sm">Report an issue with this flashcard:</p>
+                <textarea
+                  className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white placeholder-gray-500"
+                  rows="4"
+                  value={flagReason}
+                  onChange={(e) => setFlagReason(e.target.value)}
+                  placeholder="Describe the issue..."
+                ></textarea>
+                <div className="flex justify-end space-x-4">
+                  <button
+                    onClick={closeFlagModal}
+                    className="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-lg text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitFlag}
+                    disabled={!flagReason.trim()}
+                    className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-sm disabled:opacity-50"
+                  >
+                    Submit Flag
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
-  )
-}
+  );
+};
 
 export default Flashcard

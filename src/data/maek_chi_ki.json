@@ -1,0 +1,151 @@
+[
+  {
+    "point_number": "LU7",
+    "hangul": "열결",
+    "romanized": "Yuhl Gyuhl",
+    "english": "Broken Sequence",
+    "meridian": "Lung",
+    "element": "Metal",
+    "bilateral": "Yes",
+    "insight": "Stimulates the flow of defensive ki and opens the surface for releasing external pathogens. Useful for neck stiffness and respiratory issues."
+  },
+  {
+    "point_number": "LI20",
+    "hangul": "소상리혈",
+    "romanized": "So Sahm Ri Hyul",
+    "english": "Small Upper Ridge Point",
+    "meridian": "Large Intestine",
+    "element": "Metal",
+    "bilateral": "Yes",
+    "insight": "Used to open nasal passages and clear heat. Effective in relieving sinus congestion, allergies, and facial swelling."
+  },
+  {
+    "point_number": "LU3",
+    "hangul": "천부혈",
+    "romanized": "Chuhn Boo Hyul",
+    "english": "Celestial Storehouse",
+    "meridian": "Lung",
+    "element": "Metal",
+    "bilateral": "Yes",
+    "insight": "Calms the mind and clears Lung heat. Used for grief, anxiety, and emotional imbalance affecting breath."
+  },
+  {
+    "point_number": "HT1",
+    "hangul": "극천",
+    "romanized": "Geuk Chuhn",
+    "english": "Utmost Spring",
+    "meridian": "Heart",
+    "element": "Fire",
+    "bilateral": "Yes",
+    "insight": "Opens the chest and activates arm circulation. Supports emotional release and relieves shoulder pain."
+  },
+  {
+    "point_number": "HOHN_SOO_1",
+    "hangul": "혼수",
+    "romanized": "Hohn Soo",
+    "english": "Anatomical Strike - Neck Side 1",
+    "meridian": "Anatomical Strike",
+    "element": "N/A",
+    "bilateral": "No",
+    "insight": "Anatomical strike point on the side of the neck. Not a traditional pressure point - used for martial application only."
+  },
+  {
+    "point_number": "GB3",
+    "hangul": "객주인",
+    "romanized": "Gaek Joo In",
+    "english": "Guest of the Head",
+    "meridian": "Gallbladder",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Alleviates temporal headaches, jaw tension, and facial nerve disorders. Useful for TMJ and ear-related pain."
+  },
+  {
+    "point_number": "HOHN_SOO_2",
+    "hangul": "혼수",
+    "romanized": "Hohn Soo",
+    "english": "Anatomical Strike - Neck Side 2",
+    "meridian": "Anatomical Strike",
+    "element": "N/A",
+    "bilateral": "No",
+    "insight": "Anatomical strike point on the other side of the neck. Not a traditional pressure point - used for martial application only."
+  },
+  {
+    "point_number": "SP21",
+    "hangul": "대포",
+    "romanized": "Dae Po",
+    "english": "Great Embrace",
+    "meridian": "Spleen",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Controls the collateral vessels of the body and can relieve whole-body pain, fibromyalgia, or lateral rib tenderness."
+  },  {
+    "point_number": "CV8",
+    "hangul": "기해",
+    "romanized": "Ki Hae",
+    "english": "Sea of Ki",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Strengthens original Qi and benefits urogenital system. Used for reproductive health and lower abdominal issues."
+  },
+  {
+    "point_number": "CV15",
+    "hangul": "구미",
+    "romanized": "Goo Mi",
+    "english": "Turtledove Tail",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Regulates the Heart and calms the spirit. Helpful for emotional distress, anxiety, and upper abdominal discomfort."
+  },
+  {
+    "point_number": "CV23",
+    "hangul": "염천",
+    "romanized": "Yuhm Chuhn",
+    "english": "Gliding Spring",
+    "meridian": "Conception Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Benefits the tongue and throat. Used for speech difficulty, dry mouth, and loss of voice."
+  },
+  {
+    "point_number": "LV13",
+    "hangul": "장문",
+    "romanized": "Jahng Moon",
+    "english": "Completion Gate",
+    "meridian": "Liver",
+    "element": "Wood",
+    "bilateral": "Yes",
+    "insight": "Front-Mu point of the Spleen. Harmonizes Liver and Spleen, relieves abdominal fullness and rib-side tension."
+  },
+  {
+    "point_number": "GV15",
+    "hangul": "아문",
+    "romanized": "Ah Moon",
+    "english": "Mute Gate",
+    "meridian": "Governing Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Treats stiffness of the tongue and neck. Benefits speech and calms the spirit. Caution with deep needling."
+  },
+  {
+    "point_number": "GV24",
+    "hangul": "신정",
+    "romanized": "Shin Juhng",
+    "english": "Spirit Court",
+    "meridian": "Governing Vessel",
+    "element": "Water",
+    "bilateral": "No",
+    "insight": "Calms the mind and benefits the brain. Used in cases of insomnia, anxiety, and frontal headaches."
+  },
+  {
+    "point_number": "ST18",
+    "hangul": "유근",
+    "romanized": "Yoo Geun",
+    "english": "Root of the Breast",
+    "meridian": "Stomach",
+    "element": "Earth",
+    "bilateral": "Yes",
+    "insight": "Disperses breast swelling and clears damp-heat from the chest. Used for mastitis, chest pain, and insufficient lactation."
+  }
+]

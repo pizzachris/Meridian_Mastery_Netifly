@@ -14,6 +14,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(false)
   const [currentPage, setCurrentPage] = useState('home')
   const [sessionMode, setSessionMode] = useState(null)
+  const [shuffleMode, setShuffleMode] = useState(false)
   const [quizOptions, setQuizOptions] = useState(null)
   const [showDisclaimer, setShowDisclaimer] = useState(false)
   
@@ -30,24 +31,31 @@ function App() {
     localStorage.setItem('meridian-mastery-disclaimer-accepted', 'true')
     localStorage.setItem('meridian-mastery-disclaimer-date', new Date().toISOString())
     setShowDisclaimer(false)
-  }
-  
-  // Navigation function
+  }  // Navigation function
   const navigateTo = (page, options = {}) => {
     setCurrentPage(page)
     if (options.sessionMode) {
       setSessionMode(options.sessionMode)
+    } else if (page === 'flashcards' && !options.sessionMode) {
+      // Default flashcards to 'all' mode (pressure points only, no Hohn Soo)
+      setSessionMode('all')
+    }
+    if (options.shuffleMode !== undefined) {
+      setShuffleMode(options.shuffleMode)
     }
     if (options.quizType) {
       setQuizOptions(options)
     }
-  }    // Render current page component
+  }
+  // Render current page component
   const renderCurrentPage = () => {
     switch(currentPage) {
+      case 'home':
+        return <Home navigateTo={navigateTo} />
       case 'session':
         return <DailySession navigateTo={navigateTo} />
       case 'flashcards':
-        return <Flashcard navigateTo={navigateTo} sessionMode={sessionMode} />
+        return <Flashcard navigateTo={navigateTo} sessionMode={sessionMode} shuffleMode={shuffleMode} />
       case 'bodymap':
         return <BodyMap navigateTo={navigateTo} />
       case 'quiz-selection':
@@ -64,6 +72,7 @@ function App() {
         return <Home navigateTo={navigateTo} />
     }
   }
+
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="bg-white dark:bg-gray-900 min-h-screen">

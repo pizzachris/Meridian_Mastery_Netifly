@@ -1,20 +1,110 @@
 import React, { useState, useEffect } from 'react'
 import DisclaimerModal from './DisclaimerModal'
 import pwaInstaller from '../utils/pwaInstaller'
+import { ProgressTracker } from '../utils/progressTracker'
+import TriskelionLogo from './TriskelionLogo'
 
 const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(false)
-  const [autoFlip, setAutoFlip] = useState(false)
-  const [showRomanization, setShowRomanization] = useState(true)
-  const [voicePronunciation, setVoicePronunciation] = useState(false)
-  const [cardsPerSession, setCardsPerSession] = useState('10')
-  const [shuffleCards, setShuffleCards] = useState(true)
+  const [autoFlip, setAutoFlip] = useState(() => {
+    try {
+      return localStorage.getItem('meridian-mastery-auto-flip') === 'true'
+    } catch (error) {
+      console.error('Failed to load auto-flip setting:', error)
+      return false
+    }
+  })
+  const [showRomanization, setShowRomanization] = useState(() => {
+    try {
+      return localStorage.getItem('meridian-mastery-show-romanization') !== 'false'
+    } catch (error) {
+      console.error('Failed to load romanization setting:', error)
+      return true
+    }
+  })
+  const [voicePronunciation, setVoicePronunciation] = useState(() => {
+    try {
+      return localStorage.getItem('meridian-mastery-voice-pronunciation') === 'true'
+    } catch (error) {
+      console.error('Failed to load voice pronunciation setting:', error)
+      return false
+    }
+  })
+  const [cardsPerSession, setCardsPerSession] = useState(() => {
+    try {
+      return localStorage.getItem('meridian-mastery-cards-per-session') || '10'
+    } catch (error) {
+      console.error('Failed to load cards per session setting:', error)
+      return '10'
+    }
+  })
+  const [shuffleCards, setShuffleCards] = useState(() => {
+    try {
+      return localStorage.getItem('meridian-mastery-shuffle-cards') !== 'false'
+    } catch (error) {
+      console.error('Failed to load shuffle cards setting:', error)
+      return true
+    }
+  })
   const [pwaStatus, setPwaStatus] = useState(pwaInstaller.getStatus())
+  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Save settings to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('meridian-mastery-auto-flip', autoFlip)
+    } catch (error) {
+      console.error('Failed to save auto-flip setting:', error)
+      setError('Failed to save auto-flip setting')
+    }
+  }, [autoFlip])
 
   useEffect(() => {
-    // Update PWA status periodically
+    try {
+      localStorage.setItem('meridian-mastery-show-romanization', showRomanization)
+    } catch (error) {
+      console.error('Failed to save romanization setting:', error)
+      setError('Failed to save romanization setting')
+    }
+  }, [showRomanization])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('meridian-mastery-voice-pronunciation', voicePronunciation)
+    } catch (error) {
+      console.error('Failed to save voice pronunciation setting:', error)
+      setError('Failed to save voice pronunciation setting')
+    }
+  }, [voicePronunciation])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('meridian-mastery-cards-per-session', cardsPerSession)
+    } catch (error) {
+      console.error('Failed to save cards per session setting:', error)
+      setError('Failed to save cards per session setting')
+    }
+  }, [cardsPerSession])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('meridian-mastery-shuffle-cards', shuffleCards)
+    } catch (error) {
+      console.error('Failed to save shuffle cards setting:', error)
+      setError('Failed to save shuffle cards setting')
+    }
+  }, [shuffleCards])
+
+  // Update PWA status periodically
+  useEffect(() => {
     const updatePWAStatus = () => {
-      setPwaStatus(pwaInstaller.getStatus())
+      try {
+        setPwaStatus(pwaInstaller.getStatus())
+      } catch (error) {
+        console.error('Failed to update PWA status:', error)
+        setError('Failed to update PWA status')
+      }
     }
     
     const interval = setInterval(updatePWAStatus, 1000)
@@ -22,17 +112,42 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   }, [])
 
   const handleInstallPWA = async () => {
-    const success = await pwaInstaller.install()
-    if (success) {
-      setPwaStatus(pwaInstaller.getStatus())
+    try {
+      setIsLoading(true)
+      setError(null)
+      const success = await pwaInstaller.install()
+      if (success) {
+        setPwaStatus(pwaInstaller.getStatus())
+      } else {
+        throw new Error('Failed to install PWA')
+      }
+    } catch (error) {
+      console.error('Failed to install PWA:', error)
+      setError('Failed to install app. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const exportProgress = () => {
     try {
+      setIsLoading(true)
+      setError(null)
+      
       const progressData = localStorage.getItem('meridian-mastery-progress')
+      const flagsData = localStorage.getItem('meridian-mastery-flags')
+      const settingsData = {
+        autoFlip,
+        showRomanization,
+        voicePronunciation,
+        cardsPerSession,
+        shuffleCards
+      }
+      
       const data = {
         progress: progressData ? JSON.parse(progressData) : {},
+        flags: flagsData ? JSON.parse(flagsData) : [],
+        settings: settingsData,
         exportDate: new Date().toISOString(),
         version: '1.0'
       }
@@ -41,67 +156,150 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `meridian-mastery-progress-${new Date().toISOString().split('T')[0]}.json`
+      a.download = `meridian-mastery-data-${new Date().toISOString().split('T')[0]}.json`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (error) {
-      alert('Failed to export progress data')
+      console.error('Failed to export data:', error)
+      setError('Failed to export data. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const importData = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = '.json'
-    input.onchange = (e) => {
-      const file = e.target.files[0]
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          try {
-            const data = JSON.parse(e.target.result)
-            if (data.progress) {
-                          localStorage.setItem('meridian-mastery-progress', JSON.stringify(data.progress))
-              alert('Progress data imported successfully!')
-            } else {
-              alert('Invalid file format')
+    try {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = '.json'
+      input.onchange = async (e) => {
+        try {
+          setIsLoading(true)
+          setError(null)
+          
+          const file = e.target.files[0]
+          if (!file) return
+          
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            try {
+              const data = JSON.parse(e.target.result)
+              
+              // Validate data structure
+              if (!data.version || !data.exportDate) {
+                throw new Error('Invalid file format')
+              }
+              
+              // Import progress data
+              if (data.progress) {
+                localStorage.setItem('meridian-mastery-progress', JSON.stringify(data.progress))
+              }
+              
+              // Import flags data
+              if (data.flags) {
+                localStorage.setItem('meridian-mastery-flags', JSON.stringify(data.flags))
+              }
+              
+              // Import settings data
+              if (data.settings) {
+                const { autoFlip, showRomanization, voicePronunciation, cardsPerSession, shuffleCards } = data.settings
+                setAutoFlip(autoFlip)
+                setShowRomanization(showRomanization)
+                setVoicePronunciation(voicePronunciation)
+                setCardsPerSession(cardsPerSession)
+                setShuffleCards(shuffleCards)
+              }
+              
+              // Reload app to apply changes
+              window.location.reload()
+            } catch (error) {
+              console.error('Failed to import data:', error)
+              setError('Failed to import data. Invalid file format.')
+            } finally {
+              setIsLoading(false)
             }
-          } catch (error) {
-            alert('Failed to import data')
           }
+          reader.readAsText(file)
+        } catch (error) {
+          console.error('Failed to read file:', error)
+          setError('Failed to read file. Please try again.')
+          setIsLoading(false)
         }
-        reader.readAsText(file)
       }
+      input.click()
+    } catch (error) {
+      console.error('Failed to import data:', error)
+      setError('Failed to import data. Please try again.')
     }
-    input.click()
   }
 
   const resetAllData = () => {
-    if (confirm('Are you sure you want to reset all progress data? This cannot be undone.')) {
-      localStorage.removeItem('meridian-mastery-progress')
-      localStorage.removeItem('meridian-mastery-flags')
-      alert('All data has been reset.')
-      window.location.reload()
+    try {
+      if (confirm('Are you sure you want to reset all progress data? This cannot be undone.')) {
+        setIsLoading(true)
+        setError(null)
+        
+        // Reset progress data
+        localStorage.removeItem('meridian-mastery-progress')
+        localStorage.removeItem('meridian-mastery-flags')
+        
+        // Reset settings to defaults
+        setAutoFlip(false)
+        setShowRomanization(true)
+        setVoicePronunciation(false)
+        setCardsPerSession('10')
+        setShuffleCards(true)
+        
+        // Reset progress tracker
+        ProgressTracker.resetProgress()
+        
+        // Reload app to apply changes
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Failed to reset data:', error)
+      setError('Failed to reset data. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header */}
-        <header className="text-center mb-6 sm:mb-8">
-          <button 
-            onClick={() => navigateTo('home')}
-            className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
-          >
-            ← Back to Home
-          </button>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">Settings</h1>
-          <p className="text-gray-300 text-sm sm:text-base">Customize your experience</p>
-        </header>
 
-        <div className="max-w-sm sm:max-w-md mx-auto space-y-4 sm:space-y-6">          {/* Theme Toggle */}
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+          <p className="text-yellow-400">Loading settings...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
+      {/* Logo Home Button */}
+      <button 
+        onClick={() => navigateTo('home')}
+        className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200 mb-8"
+        aria-label="Go to Home"
+      >
+        <TriskelionLogo size={40} />
+      </button>
+
+      <h1 className="text-3xl md:text-4xl font-bold mb-8">Settings</h1>
+
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        {/* Error Display */}
+        {error && (
+          <div className="max-w-md mx-auto mb-8 p-4 bg-red-900/50 border border-red-500 rounded-lg">
+            <p className="text-red-400 text-center">{error}</p>
+          </div>
+        )}
+
+        <div className="max-w-sm sm:max-w-md mx-auto space-y-4 sm:space-y-6">
+          {/* Theme Toggle */}
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -121,7 +319,9 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 />
               </button>
             </div>
-          </div>          {/* Study Preferences */}
+          </div>
+
+          {/* Study Preferences */}
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">Study Preferences</h3>
             <div className="space-y-3">
@@ -153,7 +353,9 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 />
               </div>
             </div>
-          </div>          {/* Session Settings */}
+          </div>
+
+          {/* Session Settings */}
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">Session Settings</h3>
             <div className="space-y-3">
@@ -205,9 +407,12 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 </p>
                 <button 
                   onClick={handleInstallPWA}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-3 px-4 rounded-lg transition-all duration-200"
+                  disabled={isLoading}
+                  className={`w-full bg-yellow-600 hover:bg-yellow-700 text-black font-semibold py-3 px-4 rounded-lg transition-all duration-200 ${
+                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Install Meridian Mastery
+                  {isLoading ? 'Installing...' : 'Install Meridian Mastery'}
                 </button>
                 <p className="text-xs text-gray-400 text-center">
                   Works offline • No app store needed • Instant access
@@ -240,7 +445,9 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 </span>
               </div>
             </div>
-          </div>          {/* About Section */}
+          </div>
+
+          {/* About Section */}
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4">About</h3>
             <div className="text-sm text-gray-300 space-y-2">
@@ -251,7 +458,9 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 © 2025 Meridian Mastery. For educational purposes.
               </p>
             </div>
-          </div>          {/* Safety Disclaimer */}
+          </div>
+
+          {/* Safety Disclaimer */}
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6">
             <h3 className="font-semibold text-lg mb-4 text-red-400">⚠️ Safety Disclaimer</h3>
             <div className="bg-red-900/20 border border-red-600 rounded-lg p-4 mb-4">
@@ -263,7 +472,8 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                 can be dangerous if applied incorrectly. <strong>Never practice these techniques 
                 without proper training and supervision from a qualified martial arts instructor.</strong>
               </p>
-            </div>            <div className="space-y-2 text-xs text-gray-400">
+            </div>
+            <div className="space-y-2 text-xs text-gray-400">
               <p><strong>Requirements for practice:</strong></p>
               <ul className="list-disc list-inside space-y-1 ml-2">
                 <li>Certified martial arts instructor supervision</li>
@@ -282,7 +492,8 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
             <button
               onClick={() => setShowDisclaimer(true)}
               className="w-full mt-4 bg-yellow-800/30 hover:bg-yellow-700/40 border border-yellow-600 text-yellow-400 py-2 px-4 rounded-lg text-sm transition-all duration-200"
-            >              📋 View Full Disclaimer
+            >
+              📋 View Full Disclaimer
             </button>
           </div>
           
@@ -292,21 +503,30 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
             <div className="space-y-3">
               <button 
                 onClick={exportProgress}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+                disabled={isLoading}
+                className={`w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200 ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                Export Progress
+                {isLoading ? 'Exporting...' : 'Export Progress'}
               </button>
               <button 
                 onClick={importData}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+                disabled={isLoading}
+                className={`w-full bg-gray-700 hover:bg-gray-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200 ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                Import Data
+                {isLoading ? 'Importing...' : 'Import Data'}
               </button>
               <button 
                 onClick={resetAllData}
-                className="w-full bg-red-700 hover:bg-red-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200"
+                disabled={isLoading}
+                className={`w-full bg-red-700 hover:bg-red-600 text-white py-2 sm:py-3 px-4 rounded-xl text-sm sm:text-base transition-all duration-200 ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                Reset All Data
+                {isLoading ? 'Resetting...' : 'Reset All Data'}
               </button>
             </div>
           </div>
@@ -326,8 +546,13 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
               </button>
               <div className="text-xs text-gray-400 text-center">
                 {(() => {
-                  const flags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
-                  return `${flags.length} issues reported`
+                  try {
+                    const flags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
+                    return `${flags.length} issues reported`
+                  } catch (error) {
+                    console.error('Failed to load flags:', error)
+                    return '0 issues reported'
+                  }
                 })()}
               </div>
             </div>

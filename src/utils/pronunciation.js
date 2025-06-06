@@ -4,63 +4,75 @@
 
 class PronunciationManager {
   constructor() {
-    this.isSupported = 'speechSynthesis' in window
     this.voices = []
     this.koreanVoice = null
     this.fallbackVoice = null
-    
-    if (this.isSupported) {
-      this.loadVoices()
-      // Voices might load asynchronously
-      speechSynthesis.addEventListener('voiceschanged', () => {
-        this.loadVoices()
+    this.isInitialized = false
+  }
+
+  async loadVoices() {
+    try {
+      // Wait for voices to be loaded
+      if (typeof speechSynthesis === 'undefined') {
+        console.warn('Speech synthesis not supported in this browser')
+        return
+      }
+
+      // If voices are already loaded
+      if (speechSynthesis.getVoices().length > 0) {
+        this.voices = speechSynthesis.getVoices()
+        this.initializeVoices()
+        return
+      }
+
+      // Wait for voices to be loaded
+      await new Promise((resolve) => {
+        speechSynthesis.onvoiceschanged = () => {
+          this.voices = speechSynthesis.getVoices()
+          this.initializeVoices()
+          resolve()
+        }
       })
+    } catch (error) {
+      console.error('Error loading voices:', error)
+      // Continue without voice support
     }
   }
-  loadVoices() {
-    this.voices = speechSynthesis.getVoices()
-    
-    // Find Korean voice with priority order
-    const koreanVoices = this.voices.filter(voice => 
-      voice.lang.startsWith('ko') || 
-      voice.lang.includes('Korean') ||
-      voice.name.toLowerCase().includes('korean') ||
-      voice.name.toLowerCase().includes('한국') ||
-      voice.lang.includes('ko-KR') ||
-      voice.lang.includes('ko-kr')
+
+  initializeVoices() {
+    if (this.voices.length === 0) {
+      console.warn('No voices available')
+      return
+    }
+
+    // Try to find Korean voice
+    this.koreanVoice = this.voices.find(voice => 
+      voice.lang.includes('ko') || voice.name.includes('Korean')
     )
-    
-    // Prioritize native Korean voices
-    this.koreanVoice = koreanVoices.find(voice => voice.lang === 'ko-KR') ||
-                      koreanVoices.find(voice => voice.lang.startsWith('ko')) ||
-                      koreanVoices[0]
-    
-    // Find English voice as fallback for romanized text
-    this.fallbackVoice = this.voices.find(voice => 
-      voice.lang.startsWith('en') && voice.default
-    ) || this.voices.find(voice => voice.lang.startsWith('en'))
-    
+
+    // If no Korean voice, use any available voice
+    this.fallbackVoice = this.voices[0]
+
     console.log('Available voices:', this.voices.length)
-    console.log('Korean voices found:', koreanVoices.length)
+    console.log('Korean voices found:', this.koreanVoice ? 1 : 0)
     console.log('Selected Korean voice:', this.koreanVoice?.name, this.koreanVoice?.lang)
     console.log('Fallback voice:', this.fallbackVoice?.name)
-    
-    // If no Korean voice found, log available languages for debugging
-    if (!this.koreanVoice) {
-      const availableLangs = [...new Set(this.voices.map(v => v.lang))].sort()
-      console.log('Available languages:', availableLangs)
-    }
+    console.log('Available languages:', this.voices.map(v => v.lang))
   }
+
   /**
    * Speak Korean text (Hangul)
    */
-  speakKorean(text, options = {}) {
-    if (!this.isSupported) {
-      console.warn('Speech synthesis not supported')
+  async speakKorean(text, options = {}) {
+    if (!text) {
+      console.warn('No text provided for pronunciation')
       return false
     }
 
     try {
+      // Ensure voices are loaded
+      await this.loadVoices()
+      
       // Stop any current speech first
       speechSynthesis.cancel()
       
@@ -99,16 +111,20 @@ class PronunciationManager {
       return false
     }
   }
+
   /**
    * Speak romanized Korean text
    */
-  speakRomanized(text, options = {}) {
-    if (!this.isSupported) {
-      console.warn('Speech synthesis not supported')
+  async speakRomanized(text, options = {}) {
+    if (!text) {
+      console.warn('No text provided for pronunciation')
       return false
     }
 
     try {
+      // Ensure voices are loaded
+      await this.loadVoices()
+      
       // Stop any current speech first
       speechSynthesis.cancel()
       
@@ -140,7 +156,7 @@ class PronunciationManager {
    * Stop any current speech
    */
   stop() {
-    if (this.isSupported) {
+    if (typeof speechSynthesis !== 'undefined') {
       speechSynthesis.cancel()
     }
   }
@@ -148,15 +164,19 @@ class PronunciationManager {
   /**
    * Check if pronunciation is supported
    */
-  isAvailable() {
-    return this.isSupported && this.voices.length > 0
+  async isAvailable() {
+    if (typeof speechSynthesis === 'undefined') return false
+    await this.loadVoices()
+    return this.voices.length > 0
   }
+
   /**
    * Get available voice information
    */
-  getVoiceInfo() {
+  async getVoiceInfo() {
+    await this.loadVoices()
     return {
-      isSupported: this.isSupported,
+      isSupported: typeof speechSynthesis !== 'undefined',
       hasKoreanVoice: !!this.koreanVoice,
       hasFallbackVoice: !!this.fallbackVoice,
       totalVoices: this.voices.length,
@@ -173,13 +193,13 @@ class PronunciationManager {
   /**
    * Test Korean pronunciation with a sample word
    */
-  testKoreanVoice() {
+  async testKoreanVoice() {
     console.log('Testing Korean voice with sample text...')
-    const voiceInfo = this.getVoiceInfo()
+    const voiceInfo = await this.getVoiceInfo()
     console.log('Voice info:', voiceInfo)
     
     // Test with a simple Korean word
-    this.speakKorean('안녕하세요')
+    await this.speakKorean('안녕하세요')
     
     return voiceInfo
   }
@@ -187,13 +207,13 @@ class PronunciationManager {
   /**
    * Force reload voices (useful for debugging)
    */
-  reloadVoices() {
-    this.loadVoices()
+  async reloadVoices() {
+    this.voices = []
+    this.koreanVoice = null
+    this.fallbackVoice = null
+    await this.loadVoices()
     return this.getVoiceInfo()
   }
 }
 
-// Create singleton instance
-const pronunciationManager = new PronunciationManager()
-
-export default pronunciationManager
+export default PronunciationManager

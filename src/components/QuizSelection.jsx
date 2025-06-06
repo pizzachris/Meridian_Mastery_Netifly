@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const QuizSelection = ({ navigateTo }) => {
+  const [isNavigating, setIsNavigating] = useState(false)
+  const [selectedQuiz, setSelectedQuiz] = useState(null)
+  
   const quizTypes = [
     {
       id: 'translations',
@@ -9,7 +12,9 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '🈳',
       difficulty: 'Beginner',
       color: 'from-green-800 to-green-900',
-      borderColor: 'border-green-600'
+      borderColor: 'border-green-600',
+      numberOfQuestions: 10,
+      focus: 'translations'
     },
     {
       id: 'healing-properties',
@@ -18,7 +23,9 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '🌿',
       difficulty: 'Intermediate',
       color: 'from-blue-800 to-blue-900',
-      borderColor: 'border-blue-600'
+      borderColor: 'border-blue-600',
+      numberOfQuestions: 15,
+      focus: 'healing'
     },
     {
       id: 'martial-effects',
@@ -27,7 +34,9 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '👊',
       difficulty: 'Advanced',
       color: 'from-red-800 to-red-900',
-      borderColor: 'border-red-600'
+      borderColor: 'border-red-600',
+      numberOfQuestions: 15,
+      focus: 'martial'
     },
     {
       id: 'meridian-matching',
@@ -36,7 +45,9 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '🧘',
       difficulty: 'Intermediate',
       color: 'from-purple-800 to-purple-900',
-      borderColor: 'border-purple-600'
+      borderColor: 'border-purple-600',
+      numberOfQuestions: 12,
+      focus: 'meridians'
     },
     {
       id: 'anatomy-locations',
@@ -45,7 +56,9 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '🫀',
       difficulty: 'Advanced',
       color: 'from-orange-800 to-orange-900',
-      borderColor: 'border-orange-600'
+      borderColor: 'border-orange-600',
+      numberOfQuestions: 15,
+      focus: 'anatomy'
     },
     {
       id: 'mixed-challenge',
@@ -54,12 +67,33 @@ const QuizSelection = ({ navigateTo }) => {
       icon: '🏆',
       difficulty: 'Expert',
       color: 'from-yellow-800 to-yellow-900',
-      borderColor: 'border-yellow-600'
+      borderColor: 'border-yellow-600',
+      numberOfQuestions: 20,
+      focus: 'all'
     }
   ]
 
   const handleQuizStart = (quizType) => {
-    navigateTo('quiz', { quizType })
+    try {
+      setIsNavigating(true)
+      setSelectedQuiz(quizType)
+      
+      const quiz = quizTypes.find(q => q.id === quizType)
+      if (!quiz) {
+        throw new Error('Invalid quiz type')
+      }
+      
+      navigateTo('quiz', {
+        quizType: quiz.id,
+        numberOfQuestions: quiz.numberOfQuestions,
+        difficulty: quiz.difficulty.toLowerCase(),
+        focus: quiz.focus
+      })
+    } catch (error) {
+      console.error('Failed to start quiz:', error)
+      setIsNavigating(false)
+      setSelectedQuiz(null)
+    }
   }
 
   return (
@@ -69,7 +103,8 @@ const QuizSelection = ({ navigateTo }) => {
         <header className="text-center mb-8">
           <button 
             onClick={() => navigateTo('home')}
-            className="inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium"
+            disabled={isNavigating}
+            className={`inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             ← Back to Home
           </button>
@@ -99,7 +134,10 @@ const QuizSelection = ({ navigateTo }) => {
             <button
               key={quiz.id}
               onClick={() => handleQuizStart(quiz.id)}
-              className={`p-6 rounded-lg border-2 ${quiz.borderColor} bg-gradient-to-br ${quiz.color} hover:scale-105 transform transition-all duration-200 text-left`}
+              disabled={isNavigating}
+              className={`p-6 rounded-lg border-2 ${quiz.borderColor} bg-gradient-to-br ${quiz.color} hover:scale-105 transform transition-all duration-200 text-left ${
+                isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+              } ${selectedQuiz === quiz.id ? 'ring-2 ring-yellow-400' : ''}`}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="text-3xl mb-2">{quiz.icon}</div>
