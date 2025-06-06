@@ -1,52 +1,55 @@
-# 🏮 Meridian Mastery - Enhanced Korean Pronunciation Guide
+# Meridian Mastery - Interactive Acupuncture Point Learning PWA
 
-> **Advanced Korean pronunciation learning for English speakers studying acupuncture**
+> **Comprehensive flashcard system for learning Korean meridian pressure points with interactive body maps, quiz systems, and progress tracking**
 
-## 🌟 Enhanced Features (Latest Update)
+## Key Features
 
-### 🎯 Advanced Korean Pronunciation System
-- **Intelligent Syllable Breakdown** - Advanced CV/CVC pattern recognition for accurate pronunciation
-- **25+ Romanization Patterns** - Comprehensive Korean-to-English sound mapping
-- **Visual Learning Guides** - Color-coded syllable boxes with pronunciation tips
-- **Acupuncture-Specific Terms** - Specialized medical vocabulary pronunciation support
+### Interactive Learning System
+- **Smart Flashcards** - 400+ meridian points with Korean names, English translations, and romanized pronunciation
+- **By Meridian Sessions** - Study specific meridian channels (LU, LI, ST, SP, HT, SI, BL, KI, PC, SJ, GB, LV)
+- **Maek Pressure Points** - Specialized Hohn Soo points (Chi Ki and Cha Ki) for advanced practitioners
+- **Shuffle Mode** - Randomized learning for comprehensive review
+- **3D Flip Animation** - Beautiful card transitions with mobile optimization
 
-### 🎨 Enhanced User Interface
-- **Color-Coded Learning** 
-  - 🟡 Yellow syllable boxes for clear word breakdown
-  - 🟢 Green phonetic guides for pronunciation help
-  - 🔵 Blue gradient tips for contextual guidance
-- **Emoji Indicators** - 🎵 nasal sounds, 💨 aspirated sounds, 💪 tense consonants
-- **Mobile-First Design** - Optimized for phones and tablets
+### Visual Body Maps
+- **Interactive SVG Body Maps** - Front and back anatomical views
+- **Point Location System** - Visual identification of pressure points
+- **Meridian Channel Visualization** - Clear pathway mapping
+- **Mobile-Responsive Design** - Optimized for phone and tablet use
 
-### 🎵 Smart Pronunciation Features
-- **Korean Sound Mapping** - ㅓ→uh, ㅡ→eu, ㅢ→wi with English equivalents
-- **Aspirated Consonant Guides** - Air puff indicators for ch, th, kh, ph
-- **Nasal Sound Timing** - Hold timing guidance for ng, m, n sounds
-- **Liquid Sound Tips** - Korean r/l distinction for English speakers
+### Advanced Quiz System
+- **Multiple Quiz Types** - Korean translations, healing properties, martial applications, meridian matching
+- **Adaptive Difficulty** - Beginner-friendly start with progressive complexity
+- **Smart Review System** - Focus on points needing improvement
+- **Progress-Based Questions** - Personalized difficulty based on user performance
 
-### 🏥 Acupuncture Terminology
-Specialized pronunciation support for common terms:
-- **Joong Boo** (中腑) - Central treasury points
-- **Tae Chang** (太衝) - Great surge point  
-- **Eum Baek** (陰白) - Yin white point
-- **Cheon Joo** (天柱) - Heavenly pillar
-- **Seung Reu** (承淚) - Tear receiving point
-- Plus 10+ additional medical terms
+### Progress Tracking & Analytics
+- **Session History** - Track study sessions and quiz performance
+- **Individual Point Progress** - Success rates for each meridian point
+- **Flagging System** - Mark difficult points for focused review
+- **Performance Analytics** - Detailed statistics and improvement tracking
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
+
+1. Clone the repository:
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/meridian-mastery.git
+git clone https://github.com/pizzachris/meridian-mastery.git
+```
 
-# Navigate to project directory
+2. Navigate to project directory:
+```bash
 cd meridian-mastery
+```
 
-# Install dependencies
+3. Install dependencies:
+```bash
 npm install
+```
 
-# Start development server
+4. Start development server:
+```bash
 npm run dev
 ```
 
@@ -59,7 +62,7 @@ npm run build
 npm run preview
 ```
 
-## 📱 Features
+## Features
 
 ### Core Learning Tools
 - **Interactive Flashcards** - Acupuncture points with Korean names
