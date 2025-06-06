@@ -1,9 +1,13 @@
 # Netlify build configuration for Meridian Mastery
 [build]
-  # Build command
-  command = "npm run build"
+  # Build command - ensure all dependencies are installed
+  command = "npm ci && npm run build"
   # Directory to publish (build output)
   publish = "dist"
+
+# Node.js version (use LTS version)
+[build.environment]
+  NODE_VERSION = "18.18.0"
 
 # SPA redirect rules for React Router
 [[redirects]]
