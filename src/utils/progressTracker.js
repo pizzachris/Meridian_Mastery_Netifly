@@ -215,51 +215,58 @@ export class ProgressTracker {
     }
   }
 
-  static recordQuizAttempt(pointId, isCorrect, meridian) {
-    const progress = this.getProgress()
-    const now = new Date().toISOString()
+  static async recordQuizAttempt(pointId, isCorrect, meridian) {
+    try {
+      const progress = await this.getProgress()
+      const now = new Date().toISOString()
 
-    // Initialize point progress if needed
-    if (!progress.studiedPoints[pointId]) {
-      progress.studiedPoints[pointId] = {
-        lastStudied: null,
-        studyCount: 0,
-        quizAttempts: 0,
-        correctAnswers: 0
+      // Initialize point progress if needed
+      if (!progress.studiedPoints[pointId]) {
+        progress.studiedPoints[pointId] = {
+          lastStudied: null,
+          studyCount: 0,
+          quizAttempts: 0,
+          correctAnswers: 0
+        }
       }
+
+      // Update point progress
+      progress.studiedPoints[pointId].quizAttempts++
+      if (isCorrect) {
+        progress.studiedPoints[pointId].correctAnswers++
+      }
+
+      // Update retention score
+      const point = progress.studiedPoints[pointId]
+      const retentionScore = point.quizAttempts > 0 
+        ? point.correctAnswers / point.quizAttempts 
+        : 0
+      progress.retentionScores[pointId] = retentionScore
+
+      // Update mastery level
+      progress.masteryLevels[pointId] = this.calculateMasteryLevel(
+        retentionScore,
+        point.studyCount
+      )
+
+      // Update meridian progress
+      if (meridian && progress.meridianProgress[meridian]) {
+        const allPoints = await getAllPoints()
+        if (Array.isArray(allPoints)) {
+          const meridianPoints = allPoints.filter(p => p.meridian === meridian)
+          const meridianMastery = meridianPoints.reduce((sum, p) => 
+            sum + (progress.masteryLevels[p.id] || 0), 0) / meridianPoints.length
+          progress.meridianProgress[meridian].masteryLevel = meridianMastery
+        }
+      }
+
+      // Increment total quiz attempts
+      progress.totalQuizAttempts = (progress.totalQuizAttempts || 0) + 1
+
+      this.saveProgress(progress)
+    } catch (error) {
+      console.error('Failed to record quiz attempt:', error)
     }
-
-    // Update point progress
-    progress.studiedPoints[pointId].quizAttempts++
-    if (isCorrect) {
-      progress.studiedPoints[pointId].correctAnswers++
-    }
-
-    // Update retention score
-    const point = progress.studiedPoints[pointId]
-    const retentionScore = point.quizAttempts > 0 
-      ? point.correctAnswers / point.quizAttempts 
-      : 0
-    progress.retentionScores[pointId] = retentionScore
-
-    // Update mastery level
-    progress.masteryLevels[pointId] = this.calculateMasteryLevel(
-      retentionScore,
-      point.studyCount
-    )
-
-    // Update meridian progress
-    if (meridian && progress.meridianProgress[meridian]) {
-      const meridianPoints = getAllPoints().filter(p => p.meridian === meridian)
-      const meridianMastery = meridianPoints.reduce((sum, p) => 
-        sum + (progress.masteryLevels[p.id] || 0), 0) / meridianPoints.length
-      progress.meridianProgress[meridian].masteryLevel = meridianMastery
-    }
-
-    // Increment total quiz attempts
-    progress.totalQuizAttempts = (progress.totalQuizAttempts || 0) + 1
-
-    this.saveProgress(progress)
   }
 
   static calculateMasteryLevel(retentionScore, studyCount) {
@@ -312,74 +319,124 @@ export class ProgressTracker {
       return []
     }
   }
-  }
 
-  static getPointStats(pointId) {
-    const progress = this.getProgress()
-    return progress.studiedPoints[pointId] || {
-      lastStudied: null,
-      studyCount: 0,
-      quizAttempts: 0,
-      correctAnswers: 0
+  static async getPointStats(pointId) {
+    try {
+      const progress = await this.getProgress()
+      return progress.studiedPoints[pointId] || {
+        lastStudied: null,
+        studyCount: 0,
+        quizAttempts: 0,
+        correctAnswers: 0
+      }
+    } catch (error) {
+      console.error('Error getting point stats:', error)
+      return {
+        lastStudied: null,
+        studyCount: 0,
+        quizAttempts: 0,
+        correctAnswers: 0
+      }
     }
   }
 
-  static getStats() {
-    const progress = this.getProgress()
-    const allPoints = getAllPoints()
-    const totalPoints = allPoints.length
-    const studiedPointsCount = Object.keys(progress.studiedPoints).length
-    const totalSessions = progress.totalSessions || 0
+  static async getStats() {
+    try {
+      const progress = await this.getProgress()
+      const allPoints = await getAllPoints()
+      
+      if (!Array.isArray(allPoints)) {
+        console.error('getAllPoints did not return an array')
+        return {
+          totalPoints: 0,
+          studiedPointsCount: 0,
+          overallProgressPercentage: 0,
+          totalSessions: 0,
+          averageMastery: 0,
+          totalQuizAttempts: 0
+        }
+      }
+      
+      const totalPoints = allPoints.length
+      const studiedPointsCount = Object.keys(progress.studiedPoints).length
+      const totalSessions = progress.totalSessions || 0
 
-    // Calculate overall mastery level (average of all masteryLevels)
-    const totalMastery = Object.values(progress.masteryLevels).reduce((sum, level) => sum + level, 0)
-    const averageMastery = totalPoints > 0 ? totalMastery / totalPoints : 0
+      // Calculate overall mastery level (average of all masteryLevels)
+      const totalMastery = Object.values(progress.masteryLevels).reduce((sum, level) => sum + level, 0)
+      const averageMastery = totalPoints > 0 ? totalMastery / totalPoints : 0
 
-    return {
-      totalPoints,
-      studiedPointsCount,
-      overallProgressPercentage: totalPoints > 0 ? Math.round((studiedPointsCount / totalPoints) * 100) : 0,
-      totalSessions,
-      averageMastery: Math.round(averageMastery * 10) / 10, // Round to 1 decimal place
-      totalQuizAttempts: progress.totalQuizAttempts || 0
+      return {
+        totalPoints,
+        studiedPointsCount,
+        overallProgressPercentage: totalPoints > 0 ? Math.round((studiedPointsCount / totalPoints) * 100) : 0,
+        totalSessions,
+        averageMastery: Math.round(averageMastery * 10) / 10, // Round to 1 decimal place
+        totalQuizAttempts: progress.totalQuizAttempts || 0
+      }
+    } catch (error) {
+      console.error('Error getting stats:', error)
+      return {
+        totalPoints: 0,
+        studiedPointsCount: 0,
+        overallProgressPercentage: 0,
+        totalSessions: 0,
+        averageMastery: 0,
+        totalQuizAttempts: 0
+      }
     }
   }
 
-  static completeSession(sessionType, cardsViewed = 0) {
-    const progress = this.getProgress()
-    progress.totalSessions = (progress.totalSessions || 0) + 1
-    progress.lastSessionDate = new Date().toISOString()
-    
-    // Ensure sessionHistory exists (backward compatibility)
-    if (!progress.sessionHistory) {
-      progress.sessionHistory = []
+  static async completeSession(sessionType, cardsViewed = 0) {
+    try {
+      const progress = await this.getProgress()
+      progress.totalSessions = (progress.totalSessions || 0) + 1
+      progress.lastSessionDate = new Date().toISOString()
+      
+      // Ensure sessionHistory exists (backward compatibility)
+      if (!progress.sessionHistory) {
+        progress.sessionHistory = []
+      }
+      
+      // Record session details in sessionHistory
+      progress.sessionHistory.push({
+        type: sessionType,
+        timestamp: new Date().toISOString(),
+        cardsViewed: cardsViewed
+        // Add more session details here if needed
+      })
+      this.saveProgress(progress)
+    } catch (error) {
+      console.error('Error completing session:', error)
     }
-    
-    // Record session details in sessionHistory
-    progress.sessionHistory.push({
-      type: sessionType,
-      timestamp: new Date().toISOString(),
-      cardsViewed: cardsViewed
-      // Add more session details here if needed
-    })
-    this.saveProgress(progress)
   }
 
-  static resetProgress() {
-    localStorage.removeItem(this.STORAGE_KEY);
-    // Re-initialize after removal
-    this.initializeProgress();
+  static async resetProgress() {
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+      // Re-initialize after removal
+      await this.initializeProgress();
+    } catch (error) {
+      console.error('Error resetting progress:', error)
+    }
   }
 
   // --- New/Corrected Quiz Functions ---
 
-  static getQuizStats(pointId) {
-    const progress = this.getProgress();
-    const pointStats = progress.studiedPoints[pointId] || {};
-    return {
-      quizAttempts: pointStats.quizAttempts || 0,
-      correctAnswers: pointStats.correctAnswers || 0
-    };
+  static async getQuizStats(pointId) {
+    try {
+      const progress = await this.getProgress();
+      const pointStats = progress.studiedPoints[pointId] || {};
+      return {
+        quizAttempts: pointStats.quizAttempts || 0,
+        correctAnswers: pointStats.correctAnswers || 0
+      };
+    } catch (error) {
+      console.error('Error getting quiz stats:', error)
+      return {
+        quizAttempts: 0,
+        correctAnswers: 0
+      }
+    }
   }
 
 }

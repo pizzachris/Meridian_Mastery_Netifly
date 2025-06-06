@@ -379,12 +379,12 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       return null
     }
   }
-
   const handleAnswerSelect = (answer) => {
     if (showResult) return
     setSelectedAnswer(answer)
   }
-  const handleSubmitAnswer = () => {
+  
+  const handleSubmitAnswer = async () => {
     if (!selectedAnswer) return
 
     try {
@@ -408,7 +408,7 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       setShowResult(true)
       
       // Record the attempt with validation
-      ProgressTracker.recordQuizAttempt(
+      await ProgressTracker.recordQuizAttempt(
         currentQuestion.card.id,
         correct,
         currentQuestion.card.meridian || 'Unknown'
