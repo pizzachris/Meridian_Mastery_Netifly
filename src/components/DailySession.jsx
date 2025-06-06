@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, memo } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
 import TriskelionLogo from './TriskelionLogo'
-import { useNavigate } from 'react-router-dom'
 
-const DailySession = ({ navigateTo }) => {
+const DailySession = memo(({ navigateTo }) => {
   const [selectedMode, setSelectedMode] = useState(null)
   const [shuffleMode, setShuffleMode] = useState(false)
   const [isNavigating, setIsNavigating] = useState(false)
@@ -19,32 +18,42 @@ const DailySession = ({ navigateTo }) => {
     { id: 'maek-cha-ki', name: 'Maek Cha Ki', icon: '🦶', description: 'Foot techniques' }
   ]
 
-  const handleStartSession = (mode) => {
+  // Memoized navigation handlers for better performance
+  const handleStartSession = useCallback((sessionOptions) => {
+    if (isNavigating) return
+    
+    setIsNavigating(true)
+    setError(null)
+    
     try {
-      setIsNavigating(true)
-      setError(null)
-      
       // Validate mode
-      if (!mode) {
+      if (!sessionOptions.type) {
         throw new Error('Please select a study mode')
       }
       
       // Track session completion
-      ProgressTracker.completeSession(mode)
-        // Navigate to flashcards
-      navigateTo('flashcards', { sessionMode: mode, shuffleMode })
+      ProgressTracker.completeSession(sessionOptions.type)
+      
+      // Navigate to flashcards
+      navigateTo('flashcards', {
+        sessionMode: sessionOptions.type,
+        shuffleMode: shuffleMode,
+        ...sessionOptions
+      })
     } catch (error) {
       console.error('Failed to start session:', error)
-      setError(error.message)
+      setError('Failed to start session. Please try again.')
       setIsNavigating(false)
     }
-  }
+  }, [navigateTo, shuffleMode, isNavigating])
 
-  const handleStartQuiz = (mode) => {
+  const handleStartQuiz = useCallback((mode) => {
+    if (isNavigating) return
+    
+    setIsNavigating(true)
+    setError(null)
+    
     try {
-      setIsNavigating(true)
-      setError(null)
-      
       // Validate mode
       if (!mode) {
         throw new Error('Please select a study mode')
@@ -52,14 +61,24 @@ const DailySession = ({ navigateTo }) => {
       
       // Track session completion
       ProgressTracker.completeSession(`quiz-${mode}`)
-        // Navigate to quiz
+      
+      // Navigate to quiz
       navigateTo('quiz', { sessionMode: mode, shuffleMode })
     } catch (error) {
       console.error('Failed to start quiz:', error)
       setError(error.message)
       setIsNavigating(false)
     }
-  }
+  }, [navigateTo, isNavigating])
+
+  const handleModeSelection = useCallback((mode) => {
+    setSelectedMode(mode)
+    setError(null)
+  }, [])
+
+  const toggleShuffleMode = useCallback(() => {
+    setShuffleMode(prev => !prev)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
@@ -280,6 +299,8 @@ const DailySession = ({ navigateTo }) => {
       </div>
     </div>
   )
-}
+})
+
+DailySession.displayName = 'DailySession'
 
 export default DailySession

@@ -1,6 +1,68 @@
-import allPointsData from '../data/meridian_mastery_points_bilateral.json';
-import maekChiKiData from '../data/maek_chi_ki.json';
-import maekChaKiData from '../data/maek_cha_ki.json';
+// Cache for loaded data to avoid re-importing
+let cachedAllPointsData = null;
+let cachedMaekChiKiData = null;
+let cachedMaekChaKiData = null;
+
+// Cache for transformed data to avoid re-processing
+let transformedAllPointsCache = null;
+let transformedMaekChiKiCache = null;
+let transformedMaekChaKiCache = null;
+
+// Cache by meridian to speed up meridian-specific queries
+const meridianCache = new Map();
+const regionCache = new Map();
+
+// Dynamic import functions for better performance
+const loadAllPointsData = async () => {
+  if (!cachedAllPointsData) {
+    try {
+      const module = await import('../data/meridian_mastery_points_bilateral.json');
+      cachedAllPointsData = module.default;
+    } catch (error) {
+      console.error('Failed to load all points data:', error);
+      cachedAllPointsData = [];
+    }
+  }
+  return cachedAllPointsData;
+};
+
+const loadMaekChiKiData = async () => {
+  if (!cachedMaekChiKiData) {
+    try {
+      const module = await import('../data/maek_chi_ki.json');
+      cachedMaekChiKiData = module.default;
+    } catch (error) {
+      console.error('Failed to load Maek Chi Ki data:', error);
+      cachedMaekChiKiData = [];
+    }
+  }
+  return cachedMaekChiKiData;
+};
+
+const loadMaekChaKiData = async () => {
+  if (!cachedMaekChaKiData) {
+    try {
+      const module = await import('../data/maek_cha_ki.json');
+      cachedMaekChaKiData = module.default;
+    } catch (error) {
+      console.error('Failed to load Maek Cha Ki data:', error);
+      cachedMaekChaKiData = [];
+    }
+  }
+  return cachedMaekChaKiData;
+};
+
+// Clear all caches - useful for hot reloading or data refresh
+export const clearDataCaches = () => {
+  cachedAllPointsData = null;
+  cachedMaekChiKiData = null;
+  cachedMaekChaKiData = null;
+  transformedAllPointsCache = null;
+  transformedMaekChiKiCache = null;
+  transformedMaekChaKiCache = null;
+  meridianCache.clear();
+  regionCache.clear();
+};
 
 // Helper function to get element from meridian name
 const getElementFromMeridian = (meridianName) => {
@@ -170,66 +232,141 @@ const regionMap = {
 };
 
 // Function to get points by meridian name
-export const getPointsByMeridian = (meridianName) => {
+export const getPointsByMeridian = async (meridianName) => {
   console.log('getPointsByMeridian called with:', meridianName);
   
-  if (meridianName === 'All') {
-    return transformToFlashcards(allPointsData);
-  }
-  
-  // Filter the raw data first, then transform
-  const filteredData = allPointsData.filter(point => {
-    const pointMeridianName = point['Meridian Name'] || '';
-    // Direct exact match - no processing needed since the meridian names from Daily Session match exactly
-    const isMatch = pointMeridianName === meridianName;
-    if (isMatch) {
-      console.log('Found matching point:', point['Point Number'], 'for meridian:', meridianName);
+  try {
+    const allPointsData = await loadAllPointsData();
+    
+    if (meridianName === 'All') {
+      return transformToFlashcards(allPointsData);
     }
-    return isMatch;
-  });
-  
-  console.log(`Found ${filteredData.length} points for meridian: ${meridianName}`);
-  
-  // Sort by point number to ensure anatomical order (e.g., LU1, LU2, LU3...)
-  filteredData.sort((a, b) => {
-    const aNum = parseInt(a['Point Number']?.match(/\d+/)?.[0] || '0');
-    const bNum = parseInt(b['Point Number']?.match(/\d+/)?.[0] || '0');
-    return aNum - bNum;
-  });
-  
-  return transformToFlashcards(filteredData);
+    
+    // Check cache first
+    if (meridianCache.has(meridianName)) {
+      console.log('Cache hit for meridian:', meridianName);
+      return meridianCache.get(meridianName);
+    }
+    
+    // Filter the raw data first, then transform
+    const filteredData = allPointsData.filter(point => {
+      const pointMeridianName = point['Meridian Name'] || '';
+      // Direct exact match - no processing needed since the meridian names from Daily Session match exactly
+      const isMatch = pointMeridianName === meridianName;
+      if (isMatch) {
+        console.log('Found matching point:', point['Point Number'], 'for meridian:', meridianName);
+      }
+      return isMatch;
+    });
+    
+    console.log(`Found ${filteredData.length} points for meridian: ${meridianName}`);
+    
+    // Sort by point number to ensure anatomical order (e.g., LU1, LU2, LU3...)
+    filteredData.sort((a, b) => {
+      const aNum = parseInt(a['Point Number']?.match(/\d+/)?.[0] || '0');
+      const bNum = parseInt(b['Point Number']?.match(/\d+/)?.[0] || '0');
+      return aNum - bNum;
+    });
+    
+    const transformed = transformToFlashcards(filteredData);
+    
+    // Update cache
+    meridianCache.set(meridianName, transformed);
+    
+    return transformed;
+  } catch (error) {
+    console.error('Error in getPointsByMeridian:', error)
+    return []
+  }
 };
 
 // Function to get points by region
-export const getPointsByRegion = (regionName) => {
-  if (regionName === 'All') {
-    return allPointsData;
+export const getPointsByRegion = async (regionName) => {
+  try {
+    const allPointsData = await loadAllPointsData();
+    if (regionName === 'All') {
+      return transformToFlashcards(allPointsData);
+    }
+    
+    // Check cache first
+    if (regionCache.has(regionName)) {
+      console.log('Cache hit for region:', regionName);
+      return regionCache.get(regionName);
+    }
+    
+    const filteredData = allPointsData.filter(point => regionMap[point.meridian_name] === regionName);
+    const transformed = transformToFlashcards(filteredData);
+    
+    // Update cache
+    regionCache.set(regionName, transformed);
+    
+    return transformed;
+  } catch (error) {
+    console.error('Error in getPointsByRegion:', error)
+    return []
   }
-  return allPointsData.filter(point => regionMap[point.meridian_name] === regionName);
 };
 
 // Function to get points by theme (currently not supported by data structure)
-export const getPointsByTheme = (themeName) => {
-  // Need to determine how themes are defined in the JSON if needed
-  console.warn(`Theme filtering not yet implemented for theme: ${themeName}`);
-  return []; // Return empty array or all data, depending on desired behavior
+export const getPointsByTheme = async (themeName) => {
+  try {
+    // Need to determine how themes are defined in the JSON if needed
+    console.warn(`Theme filtering not yet implemented for theme: ${themeName}`);
+    return []; // Return empty array or all data, depending on desired behavior
+  } catch (error) {
+    console.error('Error in getPointsByTheme:', error)
+    return []
+  }
 };
 
 // Function to get Maek Chi Ki points
-export const getMaekChiKiPoints = () => {
-  // Load data directly from the imported JSON for Maek Chi Ki (already in simplified format)
-  console.log('getMaekChiKiPoints called, data:', maekChiKiData);
-  console.log('maekChiKiData type:', typeof maekChiKiData);
-  console.log('maekChiKiData is array:', Array.isArray(maekChiKiData));
-  const result = transformSimpleToFlashcards(maekChiKiData);
-  console.log('transformSimpleToFlashcards result:', result);
-  return result;
+export const getMaekChiKiPoints = async () => {
+  try {
+    const maekChiKiData = await loadMaekChiKiData();
+    console.log('getMaekChiKiPoints called, data:', maekChiKiData);
+    console.log('maekChiKiData type:', typeof maekChiKiData);
+    console.log('maekChiKiData is array:', Array.isArray(maekChiKiData));
+    
+    // Check cache
+    if (transformedMaekChiKiCache) {
+      console.log('Using cached Maek Chi Ki data');
+      return transformedMaekChiKiCache;
+    }
+    
+    const result = transformSimpleToFlashcards(maekChiKiData);
+    console.log('transformSimpleToFlashcards result:', result);
+    
+    // Update cache
+    transformedMaekChiKiCache = result;
+    
+    return result;
+  } catch (error) {
+    console.error('Error in getMaekChiKiPoints:', error)
+    return []
+  }
 };
 
 // Function to get Maek Cha Ki points
-export const getMaekChaKiPoints = () => {
-    // Load data directly from the imported JSON for Maek Cha Ki (already in simplified format)
-    return transformSimpleToFlashcards(maekChaKiData);
+export const getMaekChaKiPoints = async () => {
+  try {
+    const maekChaKiData = await loadMaekChaKiData();
+    
+    // Check cache
+    if (transformedMaekChaKiCache) {
+      console.log('Using cached Maek Cha Ki data');
+      return transformedMaekChaKiCache;
+    }
+    
+    const result = transformSimpleToFlashcards(maekChaKiData);
+    
+    // Update cache
+    transformedMaekChaKiCache = result;
+    
+    return result;
+  } catch (error) {
+    console.error('Error in getMaekChaKiPoints:', error)
+    return []
+  }
 };
 
 // Placeholder for future functions (e.g., getPointsBySearch)
@@ -240,14 +377,27 @@ export const getPointsBySearch = (query) => {
 };
 
 // Get all points
-export const getAllPoints = () => {
+export const getAllPoints = async () => {
   try {
-    // Load data directly from the imported JSON
+    const allPointsData = await loadAllPointsData();
+    
+    // Check transformed cache
+    if (transformedAllPointsCache) {
+      console.log('Using cached all points data');
+      return transformedAllPointsCache;
+    }
+    
     if (!allPointsData || !Array.isArray(allPointsData)) {
       console.error('allPointsData is not available or not an array:', allPointsData)
       return []
     }
-    return transformToFlashcards(allPointsData);
+    
+    const transformed = transformToFlashcards(allPointsData);
+    
+    // Update cache
+    transformedAllPointsCache = transformed;
+    
+    return transformed;
   } catch (error) {
     console.error('Error in getAllPoints:', error)
     return []
@@ -340,4 +490,4 @@ export const getAllElements = () => {
     console.error('Error getting elements:', error);
     return [];
   }
-}; 
+};

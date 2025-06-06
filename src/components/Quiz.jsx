@@ -57,23 +57,25 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       console.error('Failed to initialize pronunciation manager:', error)
     }
   }, [])
-
   // Generate quiz questions from flashcards
   useEffect(() => {
-    try {
-      setIsLoading(true)
-      generateQuizQuestions()
-    } catch (error) {
-      console.error('Failed to generate quiz questions:', error)
-      setError('Failed to load quiz questions. Please try again.')
-    } finally {
-      setIsLoading(false)
+    const loadQuiz = async () => {
+      try {
+        setIsLoading(true)
+        await generateQuizQuestions()
+      } catch (error) {
+        console.error('Failed to generate quiz questions:', error)
+        setError('Failed to load quiz questions. Please try again.')      } finally {
+        setIsLoading(false)
+      }
     }
-  }, [sessionMode, quizOptions])
+    loadQuiz()
+  }, [sessionMode, quizOptions, generateQuizQuestions])
 
-  const generateQuizQuestions = () => {
+  // Generate quiz questions from flashcards - memoized for performance
+  const generateQuizQuestions = useCallback(async () => {
     try {
-      let sourceCards = getAllPoints()
+      let sourceCards = await getAllPoints()
       if (!sourceCards || sourceCards.length === 0) {
         throw new Error('No cards available')
       }
@@ -96,13 +98,13 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       if (sessionMode) {
         switch (sessionMode.type) {
           case 'meridian':
-            sourceCards = getPointsByMeridian(sessionMode.meridian)
+            sourceCards = await getPointsByMeridian(sessionMode.meridian)
             break
           case 'region':
-            sourceCards = getPointsByRegion(sessionMode.region)
+            sourceCards = await getPointsByRegion(sessionMode.region)
             break
           case 'theme':
-            sourceCards = getPointsByTheme(sessionMode.theme)
+            sourceCards = await getPointsByTheme(sessionMode.theme)
             break
           default:
             break
@@ -111,33 +113,38 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
 
       if (!sourceCards || sourceCards.length === 0) {
         throw new Error('No cards available for selected mode')
-      }      // Generate questions based on quiz type
-      const quizType = quizOptions?.type || 'mixed-challenge'
-      const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)
+      }
       
-      const questions = sourceCards
-        .filter(card => {
-          // Validate card has minimum required properties
-          return card && 
-                 card.id && 
-                 card.nameEnglish && 
-                 card.nameHangul && 
-                 card.nameRomanized && 
-                 card.meridian
-        })
-        .map(card => {
-          const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
-          return generateQuestion(card, questionType)
-        })
-        .filter(Boolean) // Remove any null questions
+      // Generate questions based on quiz type
+      const quizType = quizOptions?.type || 'mixed-challenge'
+      const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)      
+      // Filter valid cards first
+      const validCards = sourceCards.filter(card => {
+        // Validate card has minimum required properties
+        return card && 
+               card.id && 
+               card.nameEnglish && 
+               card.nameHangul && 
+               card.nameRomanized && 
+               card.meridian
+      })
 
-      if (questions.length === 0) {
+      // Generate questions asynchronously
+      const questionPromises = validCards.map(async (card) => {
+        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
+        return await generateQuestion(card, questionType)
+      })
+
+      const questions = await Promise.all(questionPromises)
+      const validQuestions = questions.filter(Boolean) // Remove any null questions
+
+      if (validQuestions.length === 0) {
         throw new Error('Failed to generate valid questions')
       }
 
       // Shuffle and limit number of questions
       const numberOfQuestions = quizOptions?.numberOfQuestions || 10
-      const shuffledQuestions = shuffleArray(questions).slice(0, numberOfQuestions)
+      const shuffledQuestions = shuffleArray(validQuestions).slice(0, numberOfQuestions)
       setQuizQuestions(shuffledQuestions)
       setError(null)
     } catch (error) {
@@ -145,7 +152,7 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       setError(error.message)
       setQuizQuestions([])
     }
-  }
+  }, [sessionMode, quizOptions])
 
   const getQuestionTypesForQuizType = (quizType, isBeginnerUser) => {
     switch (quizType) {
@@ -172,15 +179,15 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
       
       case 'mixed-challenge':
         return [
-          'korean-name-english-choices', 'simple-korean-to-english', 'location', 
-          'function', 'meridian-basic', 'healing-properties-basic', 'martial-effects-intro'
+          'korean-name-english-choices', 'simple-korean-to-english', 'location',          'function', 'meridian-basic', 'healing-properties-basic', 'martial-effects-intro'
         ]
       
       default:
         return ['korean-name-english-choices', 'simple-korean-to-english']
     }
   }
-  const generateQuestion = (card, type) => {
+
+  const generateQuestion = async (card, type) => {
     try {
       // Validate card object
       if (!card || !card.id) {
@@ -188,7 +195,7 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
         return null
       }
 
-      const allCards = getAllPoints()
+      const allCards = await getAllPoints()
       const incorrectOptions = allCards
         .filter(c => c && c.id !== card.id)
         .sort(() => Math.random() - 0.5)

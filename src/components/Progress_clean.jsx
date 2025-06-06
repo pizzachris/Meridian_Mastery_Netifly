@@ -1,29 +1,28 @@
 // filepath: c:\Users\pizza\Desktop\meridian master GPT 2nd attempt\src\components\Progress.jsx
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
 
 const Progress = ({ navigateTo }) => {
   const [progressData, setProgressData] = useState(ProgressTracker.initializeProgress())
   
-  // Load progress from localStorage and refresh when component mounts or becomes visible
-  useEffect(() => {
+  // Optimized progress loading with reduced frequency
+  const loadProgress = useCallback(() => {
     const currentProgress = ProgressTracker.getProgress()
     setProgressData(currentProgress)
-    
-    // Set up an interval to refresh progress every few seconds while on this screen
-    const refreshInterval = setInterval(() => {
-      const updatedProgress = ProgressTracker.getProgress()
-      setProgressData(updatedProgress)
-    }, 2000)
-    
-    return () => clearInterval(refreshInterval)
   }, [])
 
-  // Refresh progress data
-  const refreshProgress = () => {
-    const currentProgress = ProgressTracker.getProgress()
-    setProgressData(currentProgress)
-  }
+  useEffect(() => {
+    loadProgress()
+    
+    // Reduced frequency: every 10 seconds instead of 2
+    const refreshInterval = setInterval(loadProgress, 10000)
+    
+    return () => clearInterval(refreshInterval)
+  }, [loadProgress])
+  // Refresh progress data on demand
+  const refreshProgress = useCallback(() => {
+    loadProgress()
+  }, [loadProgress])
 
   const getProgressPercentage = (current, total) => {
     return Math.round((current / total) * 100)

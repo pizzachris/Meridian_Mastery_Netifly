@@ -1,23 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo, useCallback } from 'react'
 
-const FlaggedIssues = ({ navigateTo }) => {
+const FlaggedIssues = memo(({ navigateTo }) => {
   const [flaggedIssues, setFlaggedIssues] = useState([])
 
   useEffect(() => {
-    const flags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
-    setFlaggedIssues(flags.reverse()) // Show newest first
+    // Use try-catch for localStorage access
+    try {
+      const flags = JSON.parse(localStorage.getItem('meridian-mastery-flags') || '[]')
+      setFlaggedIssues(flags.reverse()) // Show newest first
+    } catch (error) {
+      console.error('Failed to load flagged issues:', error)
+      setFlaggedIssues([])
+    }
   }, [])
 
-  const clearFlags = () => {
-    localStorage.removeItem('meridian-mastery-flags')
-    setFlaggedIssues([])
-  }
+  // Memoized handlers for better performance
+  const clearFlags = useCallback(() => {
+    try {
+      localStorage.removeItem('meridian-mastery-flags')
+      setFlaggedIssues([])
+    } catch (error) {
+      console.error('Failed to clear flags:', error)
+    }
+  }, [])
 
-  const deleteFlag = (index) => {
-    const updatedFlags = flaggedIssues.filter((_, i) => i !== index)
-    localStorage.setItem('meridian-mastery-flags', JSON.stringify(updatedFlags.reverse()))
-    setFlaggedIssues(updatedFlags)
-  }
+  const deleteFlag = useCallback((index) => {
+    try {
+      const updatedFlags = flaggedIssues.filter((_, i) => i !== index)
+      localStorage.setItem('meridian-mastery-flags', JSON.stringify(updatedFlags.reverse()))
+      setFlaggedIssues(updatedFlags)
+    } catch (error) {
+      console.error('Failed to delete flag:', error)
+    }
+  }, [flaggedIssues])
 
   const formatDate = (isoString) => {
     return new Date(isoString).toLocaleString()
@@ -131,6 +146,8 @@ const FlaggedIssues = ({ navigateTo }) => {
       </div>
     </div>
   )
-}
+})
+
+FlaggedIssues.displayName = 'FlaggedIssues'
 
 export default FlaggedIssues

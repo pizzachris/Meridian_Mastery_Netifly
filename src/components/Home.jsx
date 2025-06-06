@@ -1,6 +1,31 @@
-import React from 'react'
+import React, { memo, useCallback } from 'react'
 
-const Home = ({ navigateTo }) => {
+const Home = memo(({ navigateTo }) => {
+  // Memoized navigation handlers for better performance
+  const handleNavigateToSession = useCallback(() => {
+    navigateTo('session')
+  }, [navigateTo])
+
+  const handleNavigateToFlashcards = useCallback(() => {
+    navigateTo('flashcards', { sessionMode: 'all' })
+  }, [navigateTo])
+
+  const handleNavigateToQuiz = useCallback(() => {
+    navigateTo('quiz-selection')
+  }, [navigateTo])
+
+  const handleNavigateToProgress = useCallback(() => {
+    navigateTo('progress')
+  }, [navigateTo])
+
+  const handleNavigateToSettings = useCallback(() => {
+    navigateTo('settings')
+  }, [navigateTo])
+
+  const handleNavigateToFlagged = useCallback(() => {
+    navigateTo('flagged-issues')
+  }, [navigateTo])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
       <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header with Korean Aesthetic - Enhanced Mobile */}
@@ -44,7 +69,7 @@ const Home = ({ navigateTo }) => {
         </header>        {/* Main Navigation with Five Elements Flow - Better Mobile Layout */}
         <div className="max-w-xs sm:max-w-md mx-auto space-y-3 sm:space-y-6 px-2">
           <button 
-            onClick={() => navigateTo('session')}
+            onClick={handleNavigateToSession}
             className="w-full btn-primary text-base sm:text-xl relative overflow-hidden group py-4"
           >
             <span className="relative z-10">🥋 Start Daily Session</span>
@@ -53,7 +78,7 @@ const Home = ({ navigateTo }) => {
 
           <div className="grid grid-cols-1 gap-2 sm:gap-4">            {/* Wood Element - Growth & Learning */}
             <button 
-              onClick={() => navigateTo('flashcards', { sessionMode: 'all' })}
+              onClick={handleNavigateToFlashcards}
               className="w-full element-wood font-semibold py-4 px-3 sm:px-6 rounded-xl sm:rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
               <span className="relative z-10">🌿 Flashcards</span>
@@ -62,7 +87,7 @@ const Home = ({ navigateTo }) => {
             
             {/* Fire Element - Energy & Testing */}
             <button 
-              onClick={() => navigateTo('quiz-selection')}
+              onClick={handleNavigateToQuiz}
               className="w-full element-fire font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
               <span className="relative z-10">🔥 Quiz Mode</span>
@@ -81,7 +106,7 @@ const Home = ({ navigateTo }) => {
             
             {/* Earth Element - Foundation & Progress */}
             <button 
-              onClick={() => navigateTo('progress')}
+              onClick={handleNavigateToProgress}
               className="w-full element-earth font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
               <span className="relative z-10">🌍 Progress</span>
@@ -90,7 +115,7 @@ const Home = ({ navigateTo }) => {
             
             {/* Metal Element - Structure & Settings */}
             <button 
-              onClick={() => navigateTo('settings')}
+              onClick={handleNavigateToSettings}
               className="w-full element-metal font-semibold py-3 px-4 sm:px-6 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base relative group"
             >
               <span className="relative z-10">⚙️ Settings</span>
@@ -123,6 +148,8 @@ const Home = ({ navigateTo }) => {
       </div>
     </div>
   )
-}
+})
+
+Home.displayName = 'Home'
 
 export default Home

@@ -1,148 +1,87 @@
 // Progress tracking utility for Meridian Mastery app
 import { getAllPoints } from './dataLoader'
 
-// Load progress from localStorage
+// In-memory cache to reduce localStorage access
+let progressCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 30000; // 30 seconds
+
+// Debounced save function to batch localStorage writes
+let saveTimeout = null;
+const debouncedSave = (progress) => {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    try {
+      localStorage.setItem('meridianMasteryProgress', JSON.stringify(progress));
+      console.log('Progress saved to localStorage');
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+    }
+  }, 500); // Save after 500ms of inactivity
+};
+
+// Load progress from localStorage with caching
 const loadProgress = () => {
-  const savedProgress = localStorage.getItem('meridianMasteryProgress');
-  return savedProgress ? JSON.parse(savedProgress) : {
-    points: {},
-    sessions: [],
-    mastery: {}
-  };
-};
-
-// Save progress to localStorage
-const saveProgress = (progress) => {
-  localStorage.setItem('meridianMasteryProgress', JSON.stringify(progress));
-};
-
-// Update point progress
-export const updatePointProgress = (pointId, isCorrect) => {
-  const progress = loadProgress();
+  const now = Date.now();
   
-  if (!progress.points[pointId]) {
-    progress.points[pointId] = {
-      correct: 0,
-      incorrect: 0,
-      lastAttempt: null,
-      mastery: 0
+  // Return cached data if it's still fresh
+  if (progressCache && cacheTimestamp && (now - cacheTimestamp) < CACHE_DURATION) {
+    return progressCache;
+  }
+  
+  try {
+    const savedProgress = localStorage.getItem('meridianMasteryProgress');
+    progressCache = savedProgress ? JSON.parse(savedProgress) : {
+      points: {},
+      sessions: [],
+      mastery: {},
+      dailySessions: { current: 0, total: 10 },
+      totalQuizAttempts: 0,
+      retentionScores: {}
+    };
+    cacheTimestamp = now;
+  } catch (error) {
+    console.error('Failed to load progress:', error);
+    progressCache = {
+      points: {},
+      sessions: [],
+      mastery: {},
+      dailySessions: { current: 0, total: 10 },
+      totalQuizAttempts: 0,
+      retentionScores: {}
     };
   }
-
-  const point = progress.points[pointId];
-  point.correct += isCorrect ? 1 : 0;
-  point.incorrect += isCorrect ? 0 : 1;
-  point.lastAttempt = new Date().toISOString();
-  point.mastery = calculateMastery(point.correct, point.incorrect);
-
-  saveProgress(progress);
-  return point;
+  
+  return progressCache;
 };
 
-// Record a training session
-export const recordSession = (sessionData) => {
-  const progress = loadProgress();
-  
-  progress.sessions.push({
-    ...sessionData,
-    timestamp: new Date().toISOString()
-  });
-
-  saveProgress(progress);
-  return progress.sessions;
+// Save progress to localStorage with debouncing
+const saveProgress = (progress) => {
+  progressCache = progress;
+  cacheTimestamp = Date.now();
+  debouncedSave(progress);
 };
 
-// Calculate mastery level (0-100)
-const calculateMastery = (correct, incorrect) => {
-  const total = correct + incorrect;
-  if (total === 0) return 0;
-  
-  // Weight recent attempts more heavily
-  const baseScore = (correct / total) * 100;
-  
-  // Bonus for consistency (more attempts)
-  const consistencyBonus = Math.min(total * 2, 20);
-  
-  return Math.min(baseScore + consistencyBonus, 100);
-};
-
-// Get mastery level for a point
-export const getPointMastery = (pointId) => {
-  const progress = loadProgress();
-  return progress.points[pointId]?.mastery || 0;
-};
-
-// Get mastery level for a meridian
-export const getMeridianMastery = (meridian) => {
-  const progress = loadProgress();
-  const meridianPoints = Object.entries(progress.points)
-    .filter(([_, data]) => data.meridian === meridian);
-  
-  if (meridianPoints.length === 0) return 0;
-  
-  const totalMastery = meridianPoints.reduce((sum, [_, data]) => sum + data.mastery, 0);
-  return totalMastery / meridianPoints.length;
-};
-
-// Get mastery level for a region
-export const getRegionMastery = (region) => {
-  const progress = loadProgress();
-  const regionPoints = Object.entries(progress.points)
-    .filter(([_, data]) => data.region === region);
-  
-  if (regionPoints.length === 0) return 0;
-  
-  const totalMastery = regionPoints.reduce((sum, [_, data]) => sum + data.mastery, 0);
-  return totalMastery / regionPoints.length;
-};
-
-// Get session history
-export const getSessionHistory = () => {
-  const progress = loadProgress();
-  return progress.sessions;
-};
-
-// Get points that need review
-export const getPointsForReview = () => {
-  const progress = loadProgress();
-  const now = new Date();
-  
-  return Object.entries(progress.points)
-    .filter(([_, data]) => {
-      if (!data.lastAttempt) return true;
-      
-      const lastAttempt = new Date(data.lastAttempt);
-      const daysSinceLastAttempt = (now - lastAttempt) / (1000 * 60 * 60 * 24);
-      
-      // Review points that:
-      // 1. Haven't been attempted in 7 days
-      // 2. Have low mastery (< 70%)
-      return daysSinceLastAttempt >= 7 || data.mastery < 70;
-    })
-    .map(([id, data]) => ({
-      id,
-      ...data
-    }));
-};
-
-// Get mastery insights
-export const generateInsight = (point, userStats) => {
-  if (!userStats) return null;
-
-  const mastery = userStats.mastery || 0;
-  const attempts = userStats.attempts || { correct: 0, total: 0 };
-  const accuracy = attempts.total > 0 ? (attempts.correct / attempts.total) * 100 : 0;
-
-  if (mastery >= 90) {
-    return "Mastered! Keep reviewing to maintain your knowledge.";
-  } else if (mastery >= 70) {
-    return "Good progress! Focus on consistency to reach mastery.";
-  } else if (accuracy >= 60) {
-    return "You're improving! Keep practicing to build confidence.";
-  } else {
-    return "This point needs more attention. Review the location and applications.";
+// Force immediate save (for critical operations)
+const saveProgressImmediate = (progress) => {
+  progressCache = progress;
+  cacheTimestamp = Date.now();
+  clearTimeout(saveTimeout);
+  try {
+    localStorage.setItem('meridianMasteryProgress', JSON.stringify(progress));
+  } catch (error) {
+    console.error('Failed to save progress immediately:', error);
   }
 };
+
+// Clear cache (useful for testing or data refresh)
+export const clearProgressCache = () => {
+  progressCache = null;
+  cacheTimestamp = null;
+  clearTimeout(saveTimeout);
+};
+
+// --- Existing ProgressTracker code ---
 
 export class ProgressTracker {
   static STORAGE_KEY = 'meridian-mastery-progress'

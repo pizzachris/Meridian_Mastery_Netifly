@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import Home from './components/Home'
-import DailySession from './components/DailySession'
-import Flashcard from './components/Flashcard'
-import BodyMap from './components/BodyMap'
-import Settings from './components/Settings'
-import Progress from './components/Progress'
-import Quiz from './components/Quiz'
-import QuizSelection from './components/QuizSelection'
-import FlaggedIssues from './components/FlaggedIssues'
 import DisclaimerModal from './components/DisclaimerModal'
+
+// Lazy load components for better performance
+const DailySession = React.lazy(() => import('./components/DailySession'))
+const Flashcard = React.lazy(() => import('./components/Flashcard'))
+const BodyMap = React.lazy(() => import('./components/BodyMap'))
+const Settings = React.lazy(() => import('./components/Settings'))
+const Progress = React.lazy(() => import('./components/Progress'))
+const Quiz = React.lazy(() => import('./components/Quiz'))
+const QuizSelection = React.lazy(() => import('./components/QuizSelection'))
+const FlaggedIssues = React.lazy(() => import('./components/FlaggedIssues'))
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
@@ -87,11 +89,22 @@ function App() {
         return <Home navigateTo={navigateTo} />
     }
   }
+  // Loading component for lazy-loaded routes
+  const LoadingSpinner = () => (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+        <p className="text-yellow-400">Loading...</p>
+      </div>
+    </div>
+  )
 
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <div className="bg-white dark:bg-gray-900 min-h-screen">
-        {renderCurrentPage()}
+        <Suspense fallback={<LoadingSpinner />}>
+          {renderCurrentPage()}
+        </Suspense>
       </div>
       
       {/* Disclaimer Modal */}

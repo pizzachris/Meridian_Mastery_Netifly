@@ -8,13 +8,26 @@ class PronunciationManager {
     this.koreanVoice = null
     this.fallbackVoice = null
     this.isInitialized = false
+    this.initializationPromise = null // Cache initialization promise
   }
 
   async loadVoices() {
+    // Return cached initialization if already in progress
+    if (this.initializationPromise) {
+      return this.initializationPromise;
+    }
+    
+    // Create initialization promise
+    this.initializationPromise = this._initializeVoices();
+    return this.initializationPromise;
+  }
+
+  async _initializeVoices() {
     try {
-      // Wait for voices to be loaded
+      // Check for speech synthesis support
       if (typeof speechSynthesis === 'undefined') {
         console.warn('Speech synthesis not supported in this browser')
+        this.isInitialized = true;
         return
       }
 
@@ -25,16 +38,28 @@ class PronunciationManager {
         return
       }
 
-      // Wait for voices to be loaded
-      await new Promise((resolve) => {
-        speechSynthesis.onvoiceschanged = () => {
-          this.voices = speechSynthesis.getVoices()
-          this.initializeVoices()
-          resolve()
-        }
-      })
+      // Wait for voices to be loaded with timeout
+      await Promise.race([
+        new Promise((resolve) => {
+          speechSynthesis.onvoiceschanged = () => {
+            this.voices = speechSynthesis.getVoices()
+            this.initializeVoices()
+            resolve()
+          }
+        }),
+        new Promise((resolve) => {
+          // Timeout after 3 seconds
+          setTimeout(() => {
+            console.warn('Voice loading timed out')
+            this.voices = speechSynthesis.getVoices() || []
+            this.initializeVoices()
+            resolve()
+          }, 3000)
+        })
+      ])
     } catch (error) {
       console.error('Error loading voices:', error)
+      this.isInitialized = true;
       // Continue without voice support
     }
   }
@@ -42,22 +67,67 @@ class PronunciationManager {
   initializeVoices() {
     if (this.voices.length === 0) {
       console.warn('No voices available')
+      this.isInitialized = true;
       return
     }
 
-    // Try to find Korean voice
+    // Try to find Korean voice (optimized search)
     this.koreanVoice = this.voices.find(voice => 
-      voice.lang.includes('ko') || voice.name.includes('Korean')
-    )
+      voice.lang.includes('ko') || 
+      voice.name.toLowerCase().includes('korean') ||
+      voice.lang.startsWith('ko-')
+    ) || null
 
-    // If no Korean voice, use any available voice
-    this.fallbackVoice = this.voices[0]
+    // Find fallback voice (English or first available)
+    this.fallbackVoice = this.voices.find(voice => 
+      voice.lang.includes('en') || 
+      voice.default
+    ) || this.voices[0] || null
 
-    console.log('Available voices:', this.voices.length)
-    console.log('Korean voices found:', this.koreanVoice ? 1 : 0)
-    console.log('Selected Korean voice:', this.koreanVoice?.name, this.koreanVoice?.lang)
-    console.log('Fallback voice:', this.fallbackVoice?.name)
-    console.log('Available languages:', this.voices.map(v => v.lang))
+    this.isInitialized = true;
+    
+    if (this.koreanVoice) {
+      console.log('Korean voice found:', this.koreanVoice.name)
+    } else {
+      console.warn('No Korean voice found, using fallback:', this.fallbackVoice?.name)
+    }
+  }
+
+  // Optimized speak method with caching
+  speak(text, isKorean = false, options = {}) {
+    if (!this.isInitialized || !text) {
+      return Promise.resolve(); // Return resolved promise if not ready
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        const utterance = new SpeechSynthesisUtterance(text)
+        
+        // Choose voice
+        const voice = isKorean ? (this.koreanVoice || this.fallbackVoice) : this.fallbackVoice
+        if (voice) {
+          utterance.voice = voice
+        }
+
+        // Apply options with defaults
+        utterance.rate = options.rate || 0.8
+        utterance.pitch = options.pitch || 1.0
+        utterance.volume = options.volume || 1.0
+
+        utterance.onend = () => resolve()
+        utterance.onerror = (error) => {
+          console.error('Speech synthesis error:', error)
+          resolve() // Resolve instead of reject to not break the app
+        }
+
+        // Cancel any ongoing speech and speak
+        speechSynthesis.cancel()
+        speechSynthesis.speak(utterance)
+      } catch (error) {
+        console.error('Failed to speak:', error)
+        resolve() // Resolve instead of reject
+      }
+    })
   }
 
   /**

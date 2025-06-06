@@ -1,8 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import DisclaimerModal from './DisclaimerModal'
 import pwaInstaller from '../utils/pwaInstaller'
 import { ProgressTracker } from '../utils/progressTracker'
 import TriskelionLogo from './TriskelionLogo'
+
+// Debounce utility for localStorage saves
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
 
 const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(false)
@@ -44,59 +57,45 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
     } catch (error) {
       console.error('Failed to load shuffle cards setting:', error)
       return true
-    }
-  })
+    }  })
   const [pwaStatus, setPwaStatus] = useState(pwaInstaller.getStatus())
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Save settings to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('meridian-mastery-auto-flip', autoFlip)
-    } catch (error) {
-      console.error('Failed to save auto-flip setting:', error)
-      setError('Failed to save auto-flip setting')
-    }
-  }, [autoFlip])
+  // Consolidated localStorage save function with debouncing
+  const saveSettingsToStorage = useCallback(
+    debounce((settings) => {
+      try {
+        const settingsToSave = {
+          'meridian-mastery-auto-flip': settings.autoFlip,
+          'meridian-mastery-show-romanization': settings.showRomanization,
+          'meridian-mastery-voice-pronunciation': settings.voicePronunciation,
+          'meridian-mastery-cards-per-session': settings.cardsPerSession,
+          'meridian-mastery-shuffle-cards': settings.shuffleCards
+        }
+        
+        Object.entries(settingsToSave).forEach(([key, value]) => {
+          localStorage.setItem(key, value)
+        })
+      } catch (error) {
+        console.error('Failed to save settings:', error)
+        setError('Failed to save settings')
+      }
+    }, 300),
+    []
+  )
 
+  // Save all settings when any setting changes
   useEffect(() => {
-    try {
-      localStorage.setItem('meridian-mastery-show-romanization', showRomanization)
-    } catch (error) {
-      console.error('Failed to save romanization setting:', error)
-      setError('Failed to save romanization setting')
-    }
-  }, [showRomanization])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('meridian-mastery-voice-pronunciation', voicePronunciation)
-    } catch (error) {
-      console.error('Failed to save voice pronunciation setting:', error)
-      setError('Failed to save voice pronunciation setting')
-    }
-  }, [voicePronunciation])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('meridian-mastery-cards-per-session', cardsPerSession)
-    } catch (error) {
-      console.error('Failed to save cards per session setting:', error)
-      setError('Failed to save cards per session setting')
-    }
-  }, [cardsPerSession])
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('meridian-mastery-shuffle-cards', shuffleCards)
-    } catch (error) {
-      console.error('Failed to save shuffle cards setting:', error)
-      setError('Failed to save shuffle cards setting')
-    }
-  }, [shuffleCards])
-
-  // Update PWA status periodically
+    saveSettingsToStorage({
+      autoFlip,
+      showRomanization,
+      voicePronunciation,
+      cardsPerSession,
+      shuffleCards
+    })
+  }, [autoFlip, showRomanization, voicePronunciation, cardsPerSession, shuffleCards, saveSettingsToStorage])
+  // Optimized PWA status monitoring - less frequent updates
   useEffect(() => {
     const updatePWAStatus = () => {
       try {
@@ -107,7 +106,9 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
       }
     }
     
-    const interval = setInterval(updatePWAStatus, 1000)
+    // Check immediately, then every 5 seconds instead of every second
+    updatePWAStatus()
+    const interval = setInterval(updatePWAStatus, 5000)
     return () => clearInterval(interval)
   }, [])
 

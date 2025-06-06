@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
 import TriskelionLogo from './TriskelionLogo'
 
 const Progress = ({ navigateTo }) => {
   const [progressData, setProgressData] = useState(null)
 
-  useEffect(() => {
-    const loadProgress = () => {
-      const currentProgress = ProgressTracker.getProgress()
-      setProgressData(currentProgress)
-    }
+  const loadProgress = useCallback(() => {
+    const currentProgress = ProgressTracker.getProgress()
+    setProgressData(currentProgress)
+  }, [])
 
+  useEffect(() => {
     loadProgress()
     
-    // Set up an interval to refresh progress every few seconds while on this screen
-    const refreshInterval = setInterval(loadProgress, 2000)
+    // Reduced frequency: refresh only every 10 seconds instead of 2
+    // Progress doesn't change that frequently
+    const refreshInterval = setInterval(loadProgress, 10000)
     
     return () => clearInterval(refreshInterval)
-  }, [])
+  }, [loadProgress])
 
   if (!progressData) {
     return (
