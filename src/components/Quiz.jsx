@@ -111,16 +111,25 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
 
       if (!sourceCards || sourceCards.length === 0) {
         throw new Error('No cards available for selected mode')
-      }
-
-      // Generate questions based on quiz type
+      }      // Generate questions based on quiz type
       const quizType = quizOptions?.type || 'mixed-challenge'
       const questionTypes = getQuestionTypesForQuizType(quizType, isBeginnerUser)
       
-      const questions = sourceCards.map(card => {
-        const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
-        return generateQuestion(card, questionType)
-      }).filter(Boolean) // Remove any null questions
+      const questions = sourceCards
+        .filter(card => {
+          // Validate card has minimum required properties
+          return card && 
+                 card.id && 
+                 card.nameEnglish && 
+                 card.nameHangul && 
+                 card.nameRomanized && 
+                 card.meridian
+        })
+        .map(card => {
+          const questionType = questionTypes[Math.floor(Math.random() * questionTypes.length)]
+          return generateQuestion(card, questionType)
+        })
+        .filter(Boolean) // Remove any null questions
 
       if (questions.length === 0) {
         throw new Error('Failed to generate valid questions')
@@ -171,38 +180,56 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
         return ['korean-name-english-choices', 'simple-korean-to-english']
     }
   }
-
   const generateQuestion = (card, type) => {
     try {
+      // Validate card object
+      if (!card || !card.id) {
+        console.error('Invalid card object:', card)
+        return null
+      }
+
       const allCards = getAllPoints()
       const incorrectOptions = allCards
-        .filter(c => c.id !== card.id)
+        .filter(c => c && c.id !== card.id)
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
 
+      // Ensure we have enough options
+      if (incorrectOptions.length < 3) {
+        console.warn('Not enough incorrect options available')
+        return null
+      }
+
       switch (type) {
         case 'korean-name-english-choices':
+          if (!card.nameHangul || !card.nameRomanized || !card.nameEnglish) {
+            console.error('Missing required Korean/English names for card:', card.id)
+            return null
+          }
           return {
             question: `What does "${card.nameHangul}" (${card.nameRomanized}) mean in English?`,
-            subtext: `Point ${card.number} on ${card.meridian} meridian`,
+            subtext: `Point ${card.number || card.point_number} on ${card.meridian} meridian`,
             correctAnswer: card.nameEnglish,
             options: [
               card.nameEnglish,
-              ...incorrectOptions.map(c => c.nameEnglish)
+              ...incorrectOptions.map(c => c.nameEnglish).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
             isEasy: true
-          }
-        
+          }        
         case 'simple-korean-to-english':
+          if (!card.nameHangul || !card.nameRomanized || !card.nameEnglish || !card.location) {
+            console.error('Missing required properties for simple-korean-to-english:', card.id)
+            return null
+          }
           return {
             question: `What is the English name for "${card.nameHangul}" (${card.nameRomanized})?`,
-            subtext: `Point ${card.number} | Location: ${card.location}`,
+            subtext: `Point ${card.number || card.point_number} | Location: ${card.location}`,
             correctAnswer: card.nameEnglish,
             options: [
               card.nameEnglish,
-              ...incorrectOptions.map(c => c.nameEnglish)
+              ...incorrectOptions.map(c => c.nameEnglish).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
@@ -210,13 +237,17 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           }
         
         case 'point-number-match':
+          if (!card.nameHangul || !card.nameEnglish || !card.nameRomanized || !card.number && !card.point_number) {
+            console.error('Missing required properties for point-number-match:', card.id)
+            return null
+          }
           return {
-            question: `Which Korean name corresponds to point "${card.number}"?`,
+            question: `Which Korean name corresponds to point "${card.number || card.point_number}"?`,
             subtext: `English: ${card.nameEnglish} | Romanized: ${card.nameRomanized}`,
             correctAnswer: card.nameHangul,
             options: [
               card.nameHangul,
-              ...incorrectOptions.map(c => c.nameHangul)
+              ...incorrectOptions.map(c => c.nameHangul).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
@@ -224,13 +255,17 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           }
         
         case 'meridian-basic':
+          if (!card.nameHangul || !card.nameRomanized || !card.nameEnglish || !card.meridian) {
+            console.error('Missing required properties for meridian-basic:', card.id)
+            return null
+          }
           return {
             question: `"${card.nameHangul}" (${card.nameRomanized}) belongs to which meridian?`,
-            subtext: `Point ${card.number} | English: ${card.nameEnglish}`,
+            subtext: `Point ${card.number || card.point_number} | English: ${card.nameEnglish}`,
             correctAnswer: card.meridian,
             options: [
               card.meridian,
-              ...incorrectOptions.map(c => c.meridian)
+              ...incorrectOptions.map(c => c.meridian).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
@@ -238,13 +273,16 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           }
 
         case 'healing-properties-basic':
+          if (!card.nameEnglish || !card.healingFunction) {
+            console.error('Missing required properties for healing-properties-basic:', card.id)
+            return null
+          }
           return {
-            question: `What is the main healing function of ${card.nameEnglish} (${card.number})?`,
+            question: `What is the main healing function of ${card.nameEnglish} (${card.number || card.point_number})?`,
             subtext: `Korean: ${card.nameHangul} (${card.nameRomanized})`,
-            correctAnswer: card.healingFunction,
-            options: [
+            correctAnswer: card.healingFunction,            options: [
               card.healingFunction,
-              ...incorrectOptions.map(c => c.healingFunction)
+              ...incorrectOptions.map(c => c.healingFunction).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
@@ -252,13 +290,17 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           }
 
         case 'martial-effects-intro':
+          if (!card.nameEnglish || !card.martialApplication) {
+            console.error('Missing required properties for martial-effects-intro:', card.id)
+            return null
+          }
           return {
-            question: `What is the martial application of ${card.nameEnglish} (${card.number})?`,
+            question: `What is the martial application of ${card.nameEnglish} (${card.number || card.point_number})?`,
             subtext: `Korean: ${card.nameHangul} (${card.nameRomanized})`,
             correctAnswer: card.martialApplication,
             options: [
               card.martialApplication,
-              ...incorrectOptions.map(c => c.martialApplication)
+              ...incorrectOptions.map(c => c.martialApplication).filter(Boolean)
             ].sort(() => Math.random() - 0.5),
             card,
             type,
@@ -266,6 +308,10 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           }
 
         default:
+          if (!card.nameHangul || !card.nameRomanized || !card.nameEnglish) {
+            console.error('Missing required properties for default question:', card.id)
+            return null
+          }
           return {
             question: `What is the English name for "${card.nameHangul}" (${card.nameRomanized})?`,
             subtext: `Point ${card.number}`,
@@ -289,22 +335,34 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
     if (showResult) return
     setSelectedAnswer(answer)
   }
-
   const handleSubmitAnswer = () => {
     if (!selectedAnswer) return
 
     try {
       const currentQuestion = quizQuestions[currentQuestionIndex]
+      
+      if (!currentQuestion) {
+        console.error('No current question available')
+        setError('Question data is missing. Please try again.')
+        return
+      }
+      
+      if (!currentQuestion.card || !currentQuestion.card.id) {
+        console.error('Question card data is invalid:', currentQuestion)
+        setError('Question card data is invalid. Please try again.')
+        return
+      }
+      
       const correct = selectedAnswer === currentQuestion.correctAnswer
       
       setIsCorrect(correct)
       setShowResult(true)
       
-      // Record the attempt
+      // Record the attempt with validation
       ProgressTracker.recordQuizAttempt(
         currentQuestion.card.id,
         correct,
-        currentQuestion.card.meridian
+        currentQuestion.card.meridian || 'Unknown'
       )
       
       // Update session results
