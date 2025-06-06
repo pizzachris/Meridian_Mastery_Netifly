@@ -66,6 +66,8 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const [flagReason, setFlagReason] = useState('')
   const [flagSubmitted, setFlagSubmitted] = useState(false)
   const [showInsightModal, setShowInsightModal] = useState(false)
+  const [showPronunciationModal, setShowPronunciationModal] = useState(false)
+  const [pronunciationBreakdown, setPronunciationBreakdown] = useState([])
   const [pronunciation, setPronunciation] = useState(null)
   const [progress, setProgress] = useState(null)
   const [error, setError] = useState(null)
@@ -86,14 +88,17 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
         setError('Initialization failed. Please try refreshing.')
       }
     }
-    initialize()  }, [])
-    // Load flashcards based on session mode
+    initialize()
+  }, [])
+
+  // Load flashcards based on session mode
   useEffect(() => {
     const loadCards = async () => {
       setIsLoading(true)
       setError(null)
       try {
-        let cards = []        // Default behavior: show all pressure points (no Hohn Soo) unless specific session mode
+        let cards = []
+          // Default behavior: show all pressure points (no Hohn Soo) unless specific session mode
         if (!sessionMode || sessionMode === 'all' || sessionMode === 'flashcards') {
           cards = await getAllPoints()
           // Filter out Hohn Soo points - they should only appear in Maek sessions
@@ -101,7 +106,7 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
             const pointName = (card.nameEnglish || card.english || '').toLowerCase()
             return !pointName.includes('hohn soo') && !pointName.includes('hoan su')
           })
-        }else if (sessionMode.startsWith('meridian-')) {
+        } else if (sessionMode.startsWith('meridian-')) {
           const meridian = sessionMode.replace('meridian-', '')
           cards = await getPointsByMeridian(meridian)
           // Filter out Hohn Soo points from meridian sessions too
@@ -138,12 +143,12 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
         }
 
         // Only shuffle if shuffleMode is explicitly enabled
-        if (shuffleMode) {
-          for (let i = cards.length - 1; i > 0; i--) {
+        if (shuffleMode) {          for (let i = cards.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [cards[i], cards[j]] = [cards[j], cards[i]];
           }
-        }        
+        }
+        
         setFlashcards(cards)
         setCurrentCard(0)
         setIsFlipped(false)  // Always start with front side
@@ -232,6 +237,21 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
     }
   }, [pronunciation])
 
+  const handlePronunciationBreakdown = useCallback(() => {
+    if (!pronunciation || !currentCardData) return;
+    
+    const romanized = currentCardData.romanized || currentCardData.nameRomanized;
+    if (!romanized) return;
+    
+    try {
+      const breakdown = pronunciation.breakdownRomanized(romanized);
+      setPronunciationBreakdown(breakdown);
+      setShowPronunciationModal(true);
+    } catch (error) {
+      console.error('Failed to create pronunciation breakdown:', error);
+    }
+  }, [pronunciation, currentCardData])
+
   const handleFlag = useCallback(() => {
     setShowFlagModal(true)
     setFlagSubmitted(false)
@@ -318,11 +338,10 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   // Memoized computed card properties for performance
   const cardProperties = useMemo(() => {
     if (!currentCardData) return null;
-    
-    const pointNumber = currentCardData.point_number || currentCardData.number;
-    const nameHangul = currentCardData.hangul || currentCardData.nameHangul;
-    const nameRomanized = currentCardData.romanized || currentCardData.nameRomanized;
-    const nameEnglish = currentCardData.english || currentCardData.nameEnglish;
+      const pointNumber = currentCardData.point_number || currentCardData.number;
+    const nameHangul = currentCardData.nameHangul || currentCardData.hangul;
+    const nameRomanized = currentCardData.nameRomanized || currentCardData.romanized;
+    const nameEnglish = currentCardData.nameEnglish || currentCardData.english;
     const meridianName = currentCardData.meridian;
     const meridianAbbrev = getMeridianAbbreviation(meridianName, pointNumber);
     const element = getElementFromMeridian(meridianName);
@@ -448,12 +467,23 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
                 {/* English translation - responsive */}
                 <div className="text-lg sm:text-xl text-white text-center font-medium px-2">
                   {nameEnglish}
-                </div>
-
-                {/* Romanized Korean - responsive */}
+                </div>                {/* Romanized Korean - responsive */}
                 <div className="text-sm sm:text-base text-gray-300 text-center mt-1 sm:mt-2 px-2">
                   {nameRomanized}
                 </div>
+
+                {/* Pronunciation breakdown button - styled to match approved design */}
+                {pronunciation && nameRomanized && (
+                  <div className="mt-3 sm:mt-4 flex justify-center">
+                    <button
+                      onClick={handlePronunciationBreakdown}
+                      className="bg-yellow-600 hover:bg-yellow-700 text-black font-semibold text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors"
+                      aria-label="Learn pronunciation"
+                    >
+                      📖 Learn Pronunciation
+                    </button>
+                  </div>
+                )}
 
               </div>
             </div>            {/* Back Side - full content with proper mobile layout */}
@@ -631,6 +661,57 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
             <div className="p-4 border-t border-gray-700 flex justify-end">
               <button
                 onClick={() => setShowInsightModal(false)}
+                className="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-lg text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>      )}
+
+      {/* Pronunciation Breakdown Modal */}
+      {showPronunciationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-4 border-b border-gray-700">
+              <h3 className="text-lg font-bold text-yellow-400">Pronunciation Guide</h3>
+              <p className="text-sm text-gray-300 mt-1">{nameRomanized}</p>
+              <p className="text-xs text-gray-400 mt-1">Break down each syllable to learn proper pronunciation</p>
+            </div>
+            <div className="p-4 space-y-3">
+              {pronunciationBreakdown.map((syllableObj, index) => (
+                <div key={index} className="bg-gray-700 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-yellow-400 font-bold text-lg">
+                      {syllableObj.syllable}
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      Syllable {index + 1}
+                    </span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    <span className="font-medium">How to say:</span> {syllableObj.pronunciation}
+                  </div>
+                </div>
+              ))}
+              
+              {pronunciationBreakdown.length === 0 && (
+                <div className="text-center text-gray-400 py-4">
+                  <p>No pronunciation breakdown available for this term.</p>
+                </div>
+              )}
+              
+              <div className="mt-4 p-3 bg-yellow-900 bg-opacity-30 rounded-lg">
+                <h4 className="text-yellow-400 font-semibold text-sm mb-1">💡 Tip:</h4>
+                <p className="text-gray-300 text-xs">
+                  Practice each syllable slowly, then combine them smoothly. 
+                  Use the audio button on the flashcard to hear the full pronunciation.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 border-t border-gray-700 flex justify-end">
+              <button
+                onClick={() => setShowPronunciationModal(false)}
                 className="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded-lg text-sm"
               >
                 Close

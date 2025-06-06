@@ -17,9 +17,8 @@ const DailySession = memo(({ navigateTo }) => {
     { id: 'maek-chi-ki', name: 'Maek Chi Ki', icon: '👊', description: 'Fist techniques' },
     { id: 'maek-cha-ki', name: 'Maek Cha Ki', icon: '🦶', description: 'Foot techniques' }
   ]
-
   // Memoized navigation handlers for better performance
-  const handleStartSession = useCallback((sessionOptions) => {
+  const handleStartSession = useCallback((sessionMode) => {
     if (isNavigating) return
     
     setIsNavigating(true)
@@ -27,18 +26,17 @@ const DailySession = memo(({ navigateTo }) => {
     
     try {
       // Validate mode
-      if (!sessionOptions.type) {
+      if (!sessionMode) {
         throw new Error('Please select a study mode')
       }
       
       // Track session completion
-      ProgressTracker.completeSession(sessionOptions.type)
+      ProgressTracker.completeSession(sessionMode)
       
       // Navigate to flashcards
       navigateTo('flashcards', {
-        sessionMode: sessionOptions.type,
-        shuffleMode: shuffleMode,
-        ...sessionOptions
+        sessionMode: sessionMode,
+        shuffleMode: shuffleMode
       })
     } catch (error) {
       console.error('Failed to start session:', error)

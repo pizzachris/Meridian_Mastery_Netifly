@@ -18,21 +18,20 @@ export const getAllPoints = async () => {
     return transformedAllPointsCache;
   }
 
-  try {
-    const transformedData = allPointsData.map(point => ({
+  try {    const transformedData = allPointsData.map(point => ({
       id: point.id || point.ID || `point_${Math.random()}`,
-      nameEnglish: point.nameEnglish || point.english || point.name_english || '',
-      nameHangul: point.nameHangul || point.hangul || point.name_hangul || '',
-      nameRomanized: point.nameRomanized || point.romanized || point.name_romanized || '',
-      meridian: point.meridian || point.Meridian || '',
-      number: point.number || point.Number || point.point_number || '',  
-      location: point.location || point.Location || '',
+      nameEnglish: point["English Translation (Verified)"] || point.english || point.nameEnglish || '',
+      nameHangul: point["Korean Name (Hangul)"] || point.hangul || point.nameHangul || '',
+      nameRomanized: point["Romanized Korean"] || point.romanized || point.nameRomanized || '',
+      meridian: point["Meridian Name"] || point.meridian || point.Meridian || '',
+      point_number: point["Point Number"] || point.number || point.Number || point.point_number || '',  
+      location: point["Anatomical Location"] || point.location || point.Location || '',
       tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
-      healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
-      martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
+      healingFunction: point["Healing Function"] || point.healingFunction || point.healing_function || point.HealingFunction || '',
+      martialApplication: point["Martial Application"] || point.martialApplication || point.martial_application || point.MartialApplication || '',
       warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
-      side: point.side || point.Side || 'bilateral',
-      insights: point.insights || point.Insights || ''
+      bilateral: point.Bilateral || point.side || point.Side || 'bilateral',
+      insight: point.Insight || point.insights || point.Insights || ''
     }));
 
     transformedAllPointsCache = transformedData;
@@ -49,21 +48,20 @@ export const getMaekChiKiPoints = async () => {
     return transformedMaekChiKiCache;
   }
 
-  try {
-    const transformedData = maekChiKiData.map(point => ({
+  try {    const transformedData = maekChiKiData.map(point => ({
       id: point.id || point.ID || `maek_chi_ki_${Math.random()}`,
-      nameEnglish: point.nameEnglish || point.english || point.name_english || '',
-      nameHangul: point.nameHangul || point.hangul || point.name_hangul || '',
-      nameRomanized: point.nameRomanized || point.romanized || point.name_romanized || '',
+      nameEnglish: point.english || point.nameEnglish || point.name_english || '',
+      nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
+      nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
       meridian: point.meridian || point.Meridian || 'Maek Chi Ki',
-      number: point.number || point.Number || point.point_number || '',
+      point_number: point.point_number || point.number || point.Number || '',
       location: point.location || point.Location || '',
       tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
       healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
       martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
       warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
-      side: point.side || point.Side || 'bilateral',
-      insights: point.insights || point.Insights || ''
+      bilateral: point.side || point.Side || 'bilateral',
+      insight: point.insights || point.Insights || ''
     }));
 
     transformedMaekChiKiCache = transformedData;
@@ -80,21 +78,20 @@ export const getMaekChaKiPoints = async () => {
     return transformedMaekChaKiCache;
   }
 
-  try {
-    const transformedData = maekChaKiData.map(point => ({
+  try {    const transformedData = maekChaKiData.map(point => ({
       id: point.id || point.ID || `maek_cha_ki_${Math.random()}`,
-      nameEnglish: point.nameEnglish || point.english || point.name_english || '',
-      nameHangul: point.nameHangul || point.hangul || point.name_hangul || '',
-      nameRomanized: point.nameRomanized || point.romanized || point.name_romanized || '',
+      nameEnglish: point.english || point.nameEnglish || point.name_english || '',
+      nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
+      nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
       meridian: point.meridian || point.Meridian || 'Maek Cha Ki',
-      number: point.number || point.Number || point.point_number || '',
+      point_number: point.point_number || point.number || point.Number || '',
       location: point.location || point.Location || '',
       tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
       healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
       martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
       warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
-      side: point.side || point.Side || 'bilateral',
-      insights: point.insights || point.Insights || ''
+      bilateral: point.side || point.Side || 'bilateral',
+      insight: point.insights || point.Insights || ''
     }));
 
     transformedMaekChaKiCache = transformedData;

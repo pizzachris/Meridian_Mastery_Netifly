@@ -284,6 +284,150 @@ class PronunciationManager {
     await this.loadVoices()
     return this.getVoiceInfo()
   }
+
+  /**
+   * Break down romanized Korean text into syllables for pronunciation learning
+   * @param {string} romanizedText - The romanized Korean text to break down
+   * @returns {Array} Array of syllable objects with syllable and pronunciation guide
+   */
+  breakdownRomanized(romanizedText) {
+    if (!romanizedText || typeof romanizedText !== 'string') {
+      return []
+    }
+
+    // Clean the text and split into potential syllables
+    const cleanText = romanizedText.trim().toLowerCase()
+    
+    // Common Korean romanization patterns - split on these boundaries
+    const syllablePatterns = [
+      // Double consonants that should stay together
+      'kk', 'tt', 'pp', 'ss', 'jj', 'ch', 'th', 'ph', 'ng',
+      // Vowel combinations that form single sounds
+      'ae', 'ai', 'ao', 'au', 'aw', 'ay', 'ea', 'ei', 'eo', 'eu', 'ey',
+      'ia', 'ie', 'io', 'iu', 'oa', 'oe', 'oo', 'ou', 'ow', 'oy', 'ua', 'ue', 'ui', 'uo', 'uy',
+      'yae', 'yai', 'yao', 'yau', 'yaw', 'yay', 'yea', 'yeo', 'yeu', 'yey'
+    ]
+
+    // Split text into syllables using common patterns
+    let syllables = []
+    let currentSyllable = ''
+    let i = 0
+
+    while (i < cleanText.length) {
+      let char = cleanText[i]
+      let nextChar = cleanText[i + 1] || ''
+      let twoChar = char + nextChar
+      let threeChar = cleanText.substring(i, i + 3)
+
+      // Skip spaces and hyphens
+      if (char === ' ' || char === '-') {
+        if (currentSyllable) {
+          syllables.push(currentSyllable)
+          currentSyllable = ''
+        }
+        i++
+        continue
+      }
+
+      // Check for three-character combinations first
+      if (syllablePatterns.includes(threeChar)) {
+        currentSyllable += threeChar
+        i += 3
+        continue
+      }
+
+      // Check for two-character combinations
+      if (syllablePatterns.includes(twoChar)) {
+        currentSyllable += twoChar
+        i += 2
+        continue
+      }
+
+      // Add single character
+      currentSyllable += char
+      
+      // Check if we should end the syllable
+      // Typically end on vowels unless followed by specific consonant patterns
+      const isVowel = 'aeiouyw'.includes(char)
+      const nextIsConsonant = nextChar && !'aeiouyw'.includes(nextChar)
+      const nextIsSyllableEnd = nextChar === ' ' || nextChar === '-' || !nextChar
+
+      if (isVowel && (nextIsSyllableEnd || (nextIsConsonant && !syllablePatterns.includes(char + nextChar)))) {
+        // End syllable after vowel, unless it's part of a pattern
+        if (nextIsConsonant && cleanText[i + 2] && 'aeiouyw'.includes(cleanText[i + 2])) {
+          // Don't end if consonant is followed by vowel (likely start of next syllable)
+        } else {
+          syllables.push(currentSyllable)
+          currentSyllable = ''
+        }
+      }
+
+      i++
+    }
+
+    // Add any remaining syllable
+    if (currentSyllable) {
+      syllables.push(currentSyllable)
+    }
+
+    // Convert to syllable objects with pronunciation guides
+    return syllables.map((syllable, index) => ({
+      syllable: syllable,
+      pronunciation: this.getSyllablePronunciationGuide(syllable),
+      index: index
+    }))
+  }
+
+  /**
+   * Get pronunciation guide for a single syllable
+   * @param {string} syllable - Single syllable to get pronunciation guide for
+   * @returns {string} Pronunciation guide text
+   */
+  getSyllablePronunciationGuide(syllable) {
+    const guides = {
+      // Vowels
+      'a': 'ah (like "father")',
+      'ae': 'eh (like "bed")',
+      'e': 'eh (like "bed")',
+      'eo': 'uh (like "cut")',
+      'eu': 'oo (like "book")',
+      'i': 'ee (like "see")',
+      'o': 'oh (like "low")',
+      'u': 'oo (like "moon")',
+      'ya': 'yah',
+      'yae': 'yeh',
+      'ye': 'yeh',
+      'yeo': 'yuh',
+      'yo': 'yoh',
+      'yu': 'yoo',
+      // Common consonant combinations
+      'ch': 'ch (like "chair")',
+      'th': 'soft t',
+      'ph': 'soft p',
+      'kh': 'soft k',
+      'ng': 'ng (like "sing")',
+      'kk': 'hard k',
+      'tt': 'hard t',
+      'pp': 'hard p',
+      'ss': 'hard s',
+      'jj': 'hard j'
+    }
+
+    // Check for exact matches first
+    if (guides[syllable]) {
+      return guides[syllable]
+    }
+
+    // Look for partial matches
+    for (const [pattern, guide] of Object.entries(guides)) {
+      if (syllable.includes(pattern)) {
+        return guide
+      }
+    }
+
+    // Default guide
+    return 'sound it out phonetically'
+  }
 }
 
 export default PronunciationManager
