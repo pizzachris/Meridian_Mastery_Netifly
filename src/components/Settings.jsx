@@ -460,13 +460,11 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
             
             {/* Full Dedication */}
             <div className="prose prose-sm text-gray-300 max-w-xl mx-auto mt-6 pt-6 border-t border-gray-600">
-              <h4 className="text-lg font-semibold text-center text-yellow-400 mb-4">Dedication</h4>
-              <p className="text-sm leading-relaxed mb-4">
-                This app is humbly dedicated to those who have shaped my journey in Kuk Sool Won® and made this work possible.
-              </p>
-              <p className="text-sm leading-relaxed mb-4">
-                <strong className="text-yellow-300">Grandmaster In-Hyuk Suh (Kuk Sa Nym)</strong> – founder of Kuk Sool Won®, whose vision, dedication, and transmission of traditional Korean martial knowledge laid the foundation for all of us who follow. It is with deep respect and gratitude that this app is offered in his honor.
+              <h4 className="text-lg font-semibold text-center text-yellow-400 mb-4">Dedication</h4>              <p className="text-sm leading-relaxed mb-4">
+                This app is humbly dedicated to those who have shaped my martial arts journey and made this work possible.
               </p>              <p className="text-sm leading-relaxed mb-4">
+                <strong className="text-yellow-300">Grandmaster In-Hyuk Suh (Kuk Sa Nym)</strong> – whose vision, dedication, and transmission of traditional Korean martial knowledge laid the foundation for all of us who follow. It is with deep respect and gratitude that this app is offered in his honor.
+              </p><p className="text-sm leading-relaxed mb-4">
                 <strong className="text-yellow-300">Master Barry Harmon</strong> – for his invaluable work in documenting the meridian and pressure point systems, ensuring this knowledge is preserved and made accessible for dedicated students.
               </p>
               <p className="text-sm leading-relaxed mb-4">
