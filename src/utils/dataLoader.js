@@ -44,6 +44,9 @@ export const getAllPoints = async () => {
 
 // Get Maek Chi Ki points with proper field mapping and location cross-reference
 export const getMaekChiKiPoints = async () => {
+  // Force refresh cache for debugging
+  transformedMaekChiKiCache = null;
+  
   if (transformedMaekChiKiCache) {
     return transformedMaekChiKiCache;
   }
@@ -56,9 +59,7 @@ export const getMaekChiKiPoints = async () => {
       if (point.point_number) {
         allPointsMap.set(point.point_number, point);
       }
-    });
-
-    const transformedData = maekChiKiData.map(point => {
+    });    const transformedData = maekChiKiData.map(point => {
       // Try to get location from cross-reference if not in Maek data
       let location = point.location || point.Location || '';
       if (!location && point.point_number) {
@@ -66,6 +67,15 @@ export const getMaekChiKiPoints = async () => {
         if (crossRefPoint && crossRefPoint.location) {
           location = crossRefPoint.location;
         }
+      }
+
+      // Debug logging for HOHN_SOO points
+      if (point.point_number && point.point_number.includes('HOHN_SOO')) {
+        console.log('HOHN_SOO DEBUG:', {
+          point_number: point.point_number,
+          originalLocation: point.location,
+          finalLocation: location
+        });
       }
 
       return {
