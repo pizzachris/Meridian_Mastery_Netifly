@@ -6,11 +6,11 @@
     "Romanized Korean": "Joong Boo",
     "English Translation (Verified)": "Central Residence ",
     "Anatomical Location": "Below the collarbone, about one hand-width from the center of the chest, near the first rib",
-    "Healing Function": "Regulates Lung Qi, clears heat, treats cough and chest pain",
+    "Healing Function": "Regulates Lung Ki, clears heat, treats cough and chest pain",
     "Martial Application": "Shock the chest, affect breathing",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Regulates Lung Qi, clears heat, treats cough and chest pain"
+    "Insight": "Picture this point as a breathing control switch. Regulates Lung Ki, clears heat, treats cough and chest pain"
   },
   {
     "Meridian Name": "Lung (LU)",
@@ -19,11 +19,11 @@
     "Romanized Korean": "Oon Moon",
     "English Translation (Verified)": "Cloud's Door ",
     "Anatomical Location": "Just under the shoulder tip, at the corner where the collarbone ends",
-    "Healing Function": "Clears Lung heat, descends Lung Qi",
+    "Healing Function": "Clears Lung heat, descends Lung Ki",
     "Martial Application": "Causes breath loss or collapse when struck",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Clears Lung heat, descends Lung Qi"
+    "Insight": "Picture this point as a breathing control switch. Clears Lung heat, descends Lung Ki"
   },
   {
     "Meridian Name": "Lung (LU)",
@@ -45,11 +45,11 @@
     "Romanized Korean": "Hyup Baek",
     "English Translation (Verified)": "Gallantry",
     "Anatomical Location": "A little below LU3, on the front of the upper arm in line with the bicep",
-    "Healing Function": "Regulates Qi and blood in the chest",
+    "Healing Function": "Regulates Ki and blood in the chest",
     "Martial Application": "Pain or paralysis in arm when struck",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Qi and blood in the chest"
+    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Ki and blood in the chest"
   },
   {
     "Meridian Name": "Lung (LU)",
@@ -97,11 +97,11 @@
     "Romanized Korean": "Kyuhng Guh",
     "English Translation (Verified)": "Across the Ditch ",
     "Anatomical Location": "Just one finger above LU9, next to the wrist crease on the thumb side",
-    "Healing Function": "Descends Lung Qi, alleviates cough and wheezing",
+    "Healing Function": "Descends Lung Ki, alleviates cough and wheezing",
     "Martial Application": "Affects radial nerve and wrist function",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Descends Lung Qi, alleviates cough and wheezing"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Descends Lung Ki, alleviates cough and wheezing"
   },
   {
     "Meridian Name": "Lung (LU)",
@@ -175,11 +175,11 @@
     "Romanized Korean": "Sahm Gahn",
     "English Translation (Verified)": "Between Three",
     "Anatomical Location": "On the index finger, just above the second joint",
-    "Healing Function": "Regulates Qi, clears heat, benefits throat and teeth",
+    "Healing Function": "Regulates Ki, clears heat, benefits throat and teeth",
     "Martial Application": "Used to affect grip strength or disrupt wrist control",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Qi, clears heat, benefits throat and teeth"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Ki, clears heat, benefits throat and teeth"
   },
   {
     "Meridian Name": "Large Intestine (LI)",
@@ -266,11 +266,11 @@
     "Romanized Korean": "Soo Sahm Nee",
     "English Translation (Verified)": "Arm Three Measures",
     "Anatomical Location": "Two fingers below the elbow crease on the outer forearm",
-    "Healing Function": "Regulates Qi and blood, harmonizes intestines and stomach",
-    "Martial Application": "Very painful point, disrupts Qi flow in arm",
+    "Healing Function": "Regulates Ki and blood, harmonizes intestines and stomach",
+    "Martial Application": "Very painful point, disrupts Ki flow in arm",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Qi and blood, harmonizes intestines and stomach"
+    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Ki and blood, harmonizes intestines and stomach"
   },
   {
     "Meridian Name": "Large Intestine (LI)",
@@ -318,11 +318,11 @@
     "Romanized Korean": "Bee Noe",
     "English Translation (Verified)": "Arm and Scapula",
     "Anatomical Location": "Midway between elbow and shoulder on outer arm",
-    "Healing Function": "Regulates Qi and benefits eyes",
+    "Healing Function": "Regulates Ki and benefits eyes",
     "Martial Application": "Nerve strike affecting deltoid and upper arm",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Qi and benefits eyes"
+    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Regulates Ki and benefits eyes"
   },
   {
     "Meridian Name": "Large Intestine (LI)",
@@ -331,11 +331,11 @@
     "Romanized Korean": "Kyuhn Oo",
     "English Translation (Verified)": "Shoulder Bone",
     "Anatomical Location": "Front dip of the shoulder when you raise your arm",
-    "Healing Function": "Relieves shoulder pain, regulates Qi and blood",
+    "Healing Function": "Relieves shoulder pain, regulates Ki and blood",
     "Martial Application": "Disrupts shoulder joint and causes collapse",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Relieves shoulder pain, regulates Qi and blood"
+    "Insight": "Imagine this point as a collapse trigger when struck. Relieves shoulder pain, regulates Ki and blood"
   },
   {
     "Meridian Name": "Large Intestine (LI)",
@@ -513,11 +513,11 @@
     "Romanized Korean": "In Yuhng",
     "English Translation (Verified)": "Man's Welcome",
     "Anatomical Location": "On the side of the neck, level with the Adam\u2019s apple",
-    "Healing Function": "Regulates Qi and blood, lowers hypertension, benefits throat",
+    "Healing Function": "Regulates Ki and blood, lowers hypertension, benefits throat",
     "Martial Application": "Severe strike can cause blackout or death due to arterial trauma",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Qi and blood, lowers hypertension, benefits throat"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Ki and blood, lowers hypertension, benefits throat"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -539,11 +539,11 @@
     "Romanized Korean": "Kee Sah",
     "English Translation (Verified)": "Ki's Residence",
     "Anatomical Location": "At the base of the neck, just above the inner end of the collarbone",
-    "Healing Function": "Regulates Qi, benefits throat and chest",
+    "Healing Function": "Regulates Ki, benefits throat and chest",
     "Martial Application": "Pressing here can cause choking or breath loss, used in restraint techniques",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Regulates Qi, benefits throat and chest"
+    "Insight": "Picture this point as a breathing control switch. Regulates Ki, benefits throat and chest"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -552,11 +552,11 @@
     "Romanized Korean": "Kyuhl Boon",
     "English Translation (Verified)": "Empty Basin",
     "Anatomical Location": "In the soft dip above the collarbone, directly down from the center of the shoulder",
-    "Healing Function": "Disperses and descends lung Qi, clears heat from chest",
+    "Healing Function": "Disperses and descends lung Ki, clears heat from chest",
     "Martial Application": "Can shock lungs or diaphragm when struck or compressed",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Disperses and descends lung Qi, clears heat from chest"
+    "Insight": "Imagine this point as a collapse trigger when struck. Disperses and descends lung Ki, clears heat from chest"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -604,11 +604,11 @@
     "Romanized Korean": "Eung Chang",
     "English Translation (Verified)": "Breast's Window",
     "Anatomical Location": "Fourth rib area, straight down from the shoulder line",
-    "Healing Function": "Benefits breasts, regulates Qi in chest",
+    "Healing Function": "Benefits breasts, regulates Ki in chest",
     "Martial Application": "Painful chest cavity point, can stun or drop opponent",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Benefits breasts, regulates Qi in chest"
+    "Insight": "Picture this point as a breathing control switch. Benefits breasts, regulates Ki in chest"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -643,11 +643,11 @@
     "Romanized Korean": "Bool Yohng",
     "English Translation (Verified)": "Uncontainable",
     "Anatomical Location": "Upper abdomen, 4 finger-widths up from the belly button, and 2 finger-widths to the side",
-    "Healing Function": "Harmonizes stomach, descends rebellious Qi",
+    "Healing Function": "Harmonizes stomach, descends rebellious Ki",
     "Martial Application": "Striking may cause digestive disruption or solar plexus trauma",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Harmonizes stomach, descends rebellious Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Harmonizes stomach, descends rebellious Ki"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -786,11 +786,11 @@
     "Romanized Korean": "Kee Choong ",
     "English Translation (Verified)": "Pouring Ki",
     "Anatomical Location": "At the crease where the leg meets the body, two fingers out from the center",
-    "Healing Function": "Regulates Qi in lower Jiao, nourishes sea of food",
+    "Healing Function": "Regulates Ki in lower Jiao, nourishes sea of food",
     "Martial Application": "Powerful knockout point, can affect whole body if struck",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Qi in lower Jiao, nourishes sea of food"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Ki in lower Jiao, nourishes sea of food"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -864,11 +864,11 @@
     "Romanized Korean": "Johk Sahm Ri",
     "English Translation (Verified)": "Leg Three Measures",
     "Anatomical Location": "A hand below ST35, one finger to the outside of the shinbone",
-    "Healing Function": "Boosts immunity, regulates digestion and Qi",
+    "Healing Function": "Boosts immunity, regulates digestion and Ki",
     "Martial Application": "Paralyzes leg temporarily when struck, disrupts energy",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Boosts immunity, regulates digestion and Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Boosts immunity, regulates digestion and Ki"
   },
   {
     "Meridian Name": "Stomach (ST)",
@@ -1150,11 +1150,11 @@
     "Romanized Korean": "Boo Sah",
     "English Translation (Verified)": "Dwelling",
     "Anatomical Location": "On the lower abdomen, a hand below the belly button and to the side",
-    "Healing Function": "Regulates Qi in abdomen",
+    "Healing Function": "Regulates Ki in abdomen",
     "Martial Application": "Stunning point for midsection collapse",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Regulates Qi in abdomen"
+    "Insight": "Imagine this point as a collapse trigger when struck. Regulates Ki in abdomen"
   },
   {
     "Meridian Name": "Spleen (SP)",
@@ -1176,11 +1176,11 @@
     "Romanized Korean": "Dae Hoeng",
     "English Translation (Verified)": "Big Horizontal",
     "Anatomical Location": "At the side of the belly, in line with the belly button",
-    "Healing Function": "Moves Qi, strengthens intestines",
+    "Healing Function": "Moves Ki, strengthens intestines",
     "Martial Application": "Target for gut trauma or bowel collapse",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Moves Qi, strengthens intestines"
+    "Insight": "Imagine this point as a collapse trigger when struck. Moves Ki, strengthens intestines"
   },
   {
     "Meridian Name": "Spleen (SP)",
@@ -1215,11 +1215,11 @@
     "Romanized Korean": "Chuhn Gyea",
     "English Translation (Verified)": "Heavenly Stream",
     "Anatomical Location": "On the side of the chest, at the level of the fourth rib",
-    "Healing Function": "Regulates Qi, promotes lactation",
+    "Healing Function": "Regulates Ki, promotes lactation",
     "Martial Application": "Painful chest point, disturbs breathing",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Regulates Qi, promotes lactation"
+    "Insight": "Picture this point as a breathing control switch. Regulates Ki, promotes lactation"
   },
   {
     "Meridian Name": "Spleen (SP)",
@@ -1241,11 +1241,11 @@
     "Romanized Korean": "Joo Yuhng",
     "English Translation (Verified)": "Encircling Glory",
     "Anatomical Location": "On the side of the chest, at the level of the second rib",
-    "Healing Function": "Regulates Qi, clears chest phlegm",
+    "Healing Function": "Regulates Ki, clears chest phlegm",
     "Martial Application": "Can stun or stagger when struck",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Qi, clears chest phlegm"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Ki, clears chest phlegm"
   },
   {
     "Meridian Name": "Spleen (SP)",
@@ -1501,11 +1501,11 @@
     "Romanized Korean": "Noe Yoo",
     "English Translation (Verified)": "Scapula's Hollow",
     "Anatomical Location": "On the shoulder blade, in the corner where it meets the back",
-    "Healing Function": "Benefits shoulder, moves Qi and blood",
+    "Healing Function": "Benefits shoulder, moves Ki and blood",
     "Martial Application": "Controls upper arm movement and shoulder stability",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Benefits shoulder, moves Qi and blood"
+    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Benefits shoulder, moves Ki and blood"
   },
   {
     "Meridian Name": "Small Intestine (SI)",
@@ -1566,11 +1566,11 @@
     "Romanized Korean": "Kyuhn Joong Yoo",
     "English Translation (Verified)": "Mid-Should Hollow",
     "Anatomical Location": "Lower neck, about two fingers out from the spine",
-    "Healing Function": "Descends lung Qi, clears heat",
+    "Healing Function": "Descends lung Ki, clears heat",
     "Martial Application": "Disrupts upper back control and respiratory tension",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Descends lung Qi, clears heat"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Descends lung Ki, clears heat"
   },
   {
     "Meridian Name": "Small Intestine (SI)",
@@ -1826,11 +1826,11 @@
     "Romanized Korean": "Dohk Yoo",
     "English Translation (Verified)": "Governing Hollow",
     "Anatomical Location": "1.5 cun lateral to the lower border of the spinous process of t6.",
-    "Healing Function": "Regulates the Governing Vessel and spinal Qi.",
+    "Healing Function": "Regulates the Governing Vessel and spinal Ki.",
     "Martial Application": "Spinal destabilization or trauma point.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates the Governing Vessel and spinal Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates the Governing Vessel and spinal Ki"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -1930,11 +1930,11 @@
     "Romanized Korean": "Ki Hae Soo",
     "English Translation (Verified)": "Sea of Ki Hollow",
     "Anatomical Location": "1.5 cun lateral to the lower border of the spinous process of l3.",
-    "Healing Function": "Tonifies Qi, strengthens lower back and knees.",
+    "Healing Function": "Tonifies Ki, strengthens lower back and knees.",
     "Martial Application": "Strike causes pain or dysfunction in lower back and kidney region.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Tonifies Qi, strengthens lower back and knees"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Tonifies Ki, strengthens lower back and knees"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -2152,7 +2152,7 @@
     "English Translation (Verified)": "Diaphragms Hinge",
     "Anatomical Location": "2 cun below ub40, between heads of gastrocnemius.",
     "Healing Function": "Strengthens lower leg and bladder function.",
-    "Martial Application": "Disrupts leg Qi or gait.",
+    "Martial Application": "Disrupts leg Ki or gait.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
     "Insight": "Associate this point with restoring balance and internal Ki flow. Strengthens lower leg and bladder function"
@@ -2164,11 +2164,11 @@
     "Romanized Korean": "Baek Hoh",
     "English Translation (Verified)": "Soul\u2019s Door",
     "Anatomical Location": "3 cun lateral to ub13, level with t3.",
-    "Healing Function": "Influences Lung Qi and Corporeal Soul.",
+    "Healing Function": "Influences Lung Ki and Corporeal Soul.",
     "Martial Application": "Shock to this area affects breath and consciousness.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Influences Lung Qi and Corporeal Soul"
+    "Insight": "Picture this point as a breathing control switch. Influences Lung Ki and Corporeal Soul"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -2177,11 +2177,11 @@
     "Romanized Korean": "Koh Hwahng",
     "English Translation (Verified)": "Yang's Parameter",
     "Anatomical Location": "3 cun lateral to the lower border of t4 (level with ub14).",
-    "Healing Function": "Calms the spirit and nourishes Heart and Lung Qi.",
+    "Healing Function": "Calms the spirit and nourishes Heart and Lung Ki.",
     "Martial Application": "Causes chest shock or emotional imbalance when struck.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Calms the spirit and nourishes Heart and Lung Qi"
+    "Insight": "Picture this point as a breathing control switch. Calms the spirit and nourishes Heart and Lung Ki"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -2229,11 +2229,11 @@
     "Romanized Korean": "Hohn Moon",
     "English Translation (Verified)": "Will's Dwelling",
     "Anatomical Location": "3 cun lateral to t9 (level with ub18).",
-    "Healing Function": "Regulates Liver Qi and emotion flow.",
+    "Healing Function": "Regulates Liver Ki and emotion flow.",
     "Martial Application": "Can cause dizziness or emotional imbalance.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Liver Qi and emotion flow"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Liver Ki and emotion flow"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -2450,11 +2450,11 @@
     "Romanized Korean": "Shin Maek",
     "English Translation (Verified)": "Extending Vessel",
     "Anatomical Location": "inferior to lateral malleolus, posterior to peroneal tendon.",
-    "Healing Function": "Regulates Yang Qiao Mai, benefits eyes and mind.",
+    "Healing Function": "Regulates Yang Kiao Mai, benefits eyes and mind.",
     "Martial Application": "Affects balance or stance.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Think of this point as a mental clarity reset button. Regulates Yang Qiao Mai, benefits eyes and mind"
+    "Insight": "Think of this point as a mental clarity reset button. Regulates Yang Kiao Mai, benefits eyes and mind"
   },
   {
     "Meridian Name": "Urinary Bladder (UB)",
@@ -2541,11 +2541,11 @@
     "Romanized Korean": "Tae Johng",
     "English Translation (Verified)": "Big Goblet",
     "Anatomical Location": "Just behind KI3, in the soft area above the heel bone",
-    "Healing Function": "Anchors Qi and benefits hearing.",
+    "Healing Function": "Anchors Ki and benefits hearing.",
     "Martial Application": "Affects hearing or balance when struck.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Anchors Qi and benefits hearing"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Anchors Ki and benefits hearing"
   },
   {
     "Meridian Name": "Kidney (KI)",
@@ -2555,7 +2555,7 @@
     "English Translation (Verified)": "Water Spring",
     "Anatomical Location": "One finger below KI3, under the inner side of the heel",
     "Healing Function": "Regulates menstruation and urination.",
-    "Martial Application": "Target for disrupting pelvic Qi flow.",
+    "Martial Application": "Target for disrupting pelvic Ki flow.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
     "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates menstruation and urination"
@@ -2567,11 +2567,11 @@
     "Romanized Korean": "Joh Hae",
     "English Translation (Verified)": "Shining Sea",
     "Anatomical Location": "Directly below the inner ankle bone, in the soft spot",
-    "Healing Function": "Regulates Yin Qiao Mai and benefits throat.",
+    "Healing Function": "Regulates Yin Kiao Mai and benefits throat.",
     "Martial Application": "Striking affects leg motion or speech.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Yin Qiao Mai and benefits throat"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Yin Kiao Mai and benefits throat"
   },
   {
     "Meridian Name": "Kidney (KI)",
@@ -2658,11 +2658,11 @@
     "Romanized Korean": "Kee Hyul",
     "English Translation (Verified)": "Ki Orfice",
     "Anatomical Location": "Two fingers above KI11, still off-center",
-    "Healing Function": "Regulates Qi and benefits urination.",
-    "Martial Application": "Shocks lower Jiao and disrupts Qi flow.",
+    "Healing Function": "Regulates Ki and benefits urination.",
+    "Martial Application": "Shocks lower Jiao and disrupts Ki flow.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Regulates Qi and benefits urination"
+    "Insight": "Imagine this point as a collapse trigger when struck. Regulates Ki and benefits urination"
   },
   {
     "Meridian Name": "Kidney (KI)",
@@ -2788,11 +2788,11 @@
     "Romanized Korean": "Shin Bohng",
     "English Translation (Verified)": "Spirit Seal",
     "Anatomical Location": "One rib up from KI22, under the chest",
-    "Healing Function": "Regulates Qi and opens chest.",
+    "Healing Function": "Regulates Ki and opens chest.",
     "Martial Application": "Affects breathing or heart rhythm.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Regulates Qi and opens chest"
+    "Insight": "Picture this point as a breathing control switch. Regulates Ki and opens chest"
   },
   {
     "Meridian Name": "Kidney (KI)",
@@ -2866,11 +2866,11 @@
     "Romanized Korean": "Chuhn Chuhn",
     "English Translation (Verified)": "Heaven's Spring",
     "Anatomical Location": "Front of the upper arm, two fingers below the armpit fold",
-    "Healing Function": "Unblocks Qi in chest and calms the spirit.",
+    "Healing Function": "Unblocks Ki in chest and calms the spirit.",
     "Martial Application": "Strike can disrupt arm movement or cause breath loss.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Unblocks Qi in chest and calms the spirit"
+    "Insight": "Picture this point as a breathing control switch. Unblocks Ki in chest and calms the spirit"
   },
   {
     "Meridian Name": "Pericardium (PC)",
@@ -2879,11 +2879,11 @@
     "Romanized Korean": "Gohk Taek",
     "English Translation (Verified)": "Crooked Marsh",
     "Anatomical Location": "Inside elbow crease, on the pinky side of the arm fold",
-    "Healing Function": "Clears heat from Qi, Ying, and blood levels.",
+    "Healing Function": "Clears heat from Ki, Ying, and blood levels.",
     "Martial Application": "Affects heart rhythm; may numb or paralyze arm.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Clears heat from Qi, Ying, and blood levels"
+    "Insight": "Visualize striking this point to disrupt arm or shoulder function. Clears heat from Ki, Ying, and blood levels"
   },
   {
     "Meridian Name": "Pericardium (PC)",
@@ -2919,7 +2919,7 @@
     "English Translation (Verified)": "Internal Gate",
     "Anatomical Location": "Four fingers up from the wrist crease, center of the inner forearm",
     "Healing Function": "Opens chest, regulates Heart, and calms spirit.",
-    "Martial Application": "Stunning point; disrupts breath or Qi flow.",
+    "Martial Application": "Stunning point; disrupts breath or Ki flow.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
     "Insight": "Picture this point as a breathing control switch. Opens chest, regulates Heart, and calms spirit"
@@ -2996,11 +2996,11 @@
     "Romanized Korean": "Joong Juh",
     "English Translation (Verified)": "Middle Island",
     "Anatomical Location": "Just behind the knuckles of the ring and pinky fingers",
-    "Healing Function": "Clears heat, regulates Qi, benefits ears.",
+    "Healing Function": "Clears heat, regulates Ki, benefits ears.",
     "Martial Application": "Can numb hand or shock nervous system.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Imagine this point as a collapse trigger when struck. Clears heat, regulates Qi, benefits ears"
+    "Insight": "Imagine this point as a collapse trigger when struck. Clears heat, regulates Ki, benefits ears"
   },
   {
     "Meridian Name": "Triple Burner (TB)",
@@ -3036,7 +3036,7 @@
     "English Translation (Verified)": "Branch Ditch",
     "Anatomical Location": "Three finger widths above TB4, between the forearm bones",
     "Healing Function": "Clears heat, benefits voice, relieves pain.",
-    "Martial Application": "Target for controlling arm Qi.",
+    "Martial Application": "Target for controlling arm Ki.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
     "Insight": "Visualize striking this point to disrupt arm or shoulder function. Clears heat, benefits voice, relieves pain"
@@ -3126,11 +3126,11 @@
     "Romanized Korean": "Soh Bahk",
     "English Translation (Verified)": "Shoulder\u2019s Meeting",
     "Anatomical Location": "Three fingers down from the shoulder on the back of the arm",
-    "Healing Function": "Regulates Qi and dissipates masses.",
+    "Healing Function": "Regulates Ki and dissipates masses.",
     "Martial Application": "Strike can weaken deltoid region.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Qi and dissipates masses"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Ki and dissipates masses"
   },
   {
     "Meridian Name": "Triple Burner (TB)",
@@ -3802,11 +3802,11 @@
     "Romanized Korean": "Jee Oh Hoe",
     "English Translation (Verified)": "Ground\u2019s Fifth Meeting",
     "Anatomical Location": "Top of the foot, just behind GB41",
-    "Healing Function": "Regulates Liver and Gallbladder Qi, resolves stagnation.",
+    "Healing Function": "Regulates Liver and Gallbladder Ki, resolves stagnation.",
     "Martial Application": "Affects foot balance or causes sharp pain.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Liver and Gallbladder Qi, resolves stagnation"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates Liver and Gallbladder Ki, resolves stagnation"
   },
   {
     "Meridian Name": "Gallbladder (GB)",
@@ -3854,11 +3854,11 @@
     "Romanized Korean": "Haeng Gahn",
     "English Translation (Verified)": "Between Columns",
     "Anatomical Location": "Between the big toe and second toe, just past the web",
-    "Healing Function": "Clears Liver fire, regulates Qi and blood.",
+    "Healing Function": "Clears Liver fire, regulates Ki and blood.",
     "Martial Application": "Disrupts focus or causes sharp foot pain.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Clears Liver fire, regulates Qi and blood"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Clears Liver fire, regulates Ki and blood"
   },
   {
     "Meridian Name": "Liver (LV)",
@@ -3867,11 +3867,11 @@
     "Romanized Korean": "Tae Choong",
     "English Translation (Verified)": "Great Impact",
     "Anatomical Location": "Top of the foot, in the dip between the big and second toe bones",
-    "Healing Function": "Spreads Liver Qi, nourishes blood, calms spirit.",
-    "Martial Application": "Destabilizes leg or causes Qi reversal.",
+    "Healing Function": "Spreads Liver Ki, nourishes blood, calms spirit.",
+    "Martial Application": "Destabilizes leg or causes Ki reversal.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Spreads Liver Qi, nourishes blood, calms spirit"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Spreads Liver Ki, nourishes blood, calms spirit"
   },
   {
     "Meridian Name": "Liver (LV)",
@@ -3880,11 +3880,11 @@
     "Romanized Korean": "Joong Bohng",
     "English Translation (Verified)": "Middle Seal",
     "Anatomical Location": "Front of the inside ankle, just below the ankle bone",
-    "Healing Function": "Regulates menstruation and Liver Qi.",
+    "Healing Function": "Regulates menstruation and Liver Ki.",
     "Martial Application": "Striking affects ankle balance.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates menstruation and Liver Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates menstruation and Liver Ki"
   },
   {
     "Meridian Name": "Liver (LV)",
@@ -3907,7 +3907,7 @@
     "English Translation (Verified)": "Middle Metropolis",
     "Anatomical Location": "Seven finger widths above the inside ankle, slightly behind the shin",
     "Healing Function": "Invigorates blood, regulates uterus.",
-    "Martial Application": "Strike impacts reproductive Qi.",
+    "Martial Application": "Strike impacts reproductive Ki.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
     "Insight": "Associate this point with restoring balance and internal Ki flow. Invigorates blood, regulates uterus"
@@ -4010,11 +4010,11 @@
     "Romanized Korean": "Kee Moon",
     "English Translation (Verified)": "Expectation\u2019s Door",
     "Anatomical Location": "Below the chest, under the nipple at the bottom of the ribs",
-    "Healing Function": "Front-mu of Liver; spreads Liver Qi, benefits chest.",
+    "Healing Function": "Front-mu of Liver; spreads Liver Ki, benefits chest.",
     "Martial Application": "Can collapse chest or affect breath.",
     "Shared Name Indicator": null,
     "Bilateral": "Yes",
-    "Insight": "Picture this point as a breathing control switch. Front-mu of Liver; spreads Liver Qi, benefits chest"
+    "Insight": "Picture this point as a breathing control switch. Front-mu of Liver; spreads Liver Ki, benefits chest"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4062,11 +4062,11 @@
     "Romanized Korean": "Gwahn Wuhn",
     "English Translation (Verified)": "Pass of Source",
     "Anatomical Location": "Three fingers below the belly button, center line",
-    "Healing Function": "Strengthens original Qi, benefits essence and uterus.",
+    "Healing Function": "Strengthens original Ki, benefits essence and uterus.",
     "Martial Application": "Collapse or reproductive shock.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Imagine this point as a collapse trigger when struck. Strengthens original Qi, benefits essence and uterus"
+    "Insight": "Imagine this point as a collapse trigger when struck. Strengthens original Ki, benefits essence and uterus"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4088,11 +4088,11 @@
     "Romanized Korean": "Kee Hae",
     "English Translation (Verified)": "Sea of Ki",
     "Anatomical Location": "A bit above CV5, about 1.5 fingers below the belly button",
-    "Healing Function": "Tonifies Qi and yang, regulates menstruation.",
+    "Healing Function": "Tonifies Ki and yang, regulates menstruation.",
     "Martial Application": "Disrupts breathing or abdominal strength.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Picture this point as a breathing control switch. Tonifies Qi and yang, regulates menstruation"
+    "Insight": "Picture this point as a breathing control switch. Tonifies Ki and yang, regulates menstruation"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4102,7 +4102,7 @@
     "English Translation (Verified)": "Eum\u2019s Junction",
     "Anatomical Location": "One finger below the belly button, center line",
     "Healing Function": "Regulates menstruation and warms the womb.",
-    "Martial Application": "Affects uterus or reproductive Qi.",
+    "Martial Application": "Affects uterus or reproductive Ki.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
     "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates menstruation and warms the womb"
@@ -4114,11 +4114,11 @@
     "Romanized Korean": "Shin Gwuhl",
     "English Translation (Verified)": "Middle of the Navel",
     "Anatomical Location": "Center of the belly button",
-    "Healing Function": "Tonifies original Qi and rescues collapse.",
+    "Healing Function": "Tonifies original Ki and rescues collapse.",
     "Martial Application": "Strike causes breath loss or shock.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Picture this point as a breathing control switch. Tonifies original Qi and rescues collapse"
+    "Insight": "Picture this point as a breathing control switch. Tonifies original Ki and rescues collapse"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4128,7 +4128,7 @@
     "English Translation (Verified)": "Water Separation",
     "Anatomical Location": "One finger above the belly button, center line",
     "Healing Function": "Regulates water passages, benefits urination.",
-    "Martial Application": "Shocks digestion and abdominal Qi.",
+    "Martial Application": "Shocks digestion and abdominal Ki.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
     "Insight": "Imagine this point as a collapse trigger when struck. Regulates water passages, benefits urination"
@@ -4179,11 +4179,11 @@
     "Romanized Korean": "Sahng Wahn",
     "English Translation (Verified)": "Upper Epigastrium",
     "Anatomical Location": "Five fingers above the belly button, center line",
-    "Healing Function": "Regulates stomach and descends rebellious Qi.",
+    "Healing Function": "Regulates stomach and descends rebellious Ki.",
     "Martial Application": "Strike impairs digestion.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates stomach and descends rebellious Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Regulates stomach and descends rebellious Ki"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4231,11 +4231,11 @@
     "Romanized Korean": "Dahn Joong",
     "English Translation (Verified)": "Between the Breasts",
     "Anatomical Location": "Center of the chest between the nipples",
-    "Healing Function": "Front-mu of Pericardium; regulates Qi and opens chest.",
+    "Healing Function": "Front-mu of Pericardium; regulates Ki and opens chest.",
     "Martial Application": "Stunning or breath-disrupting strike.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Picture this point as a breathing control switch. Front-mu of Pericardium; regulates Qi and opens chest"
+    "Insight": "Picture this point as a breathing control switch. Front-mu of Pericardium; regulates Ki and opens chest"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4244,11 +4244,11 @@
     "Romanized Korean": "Ohk Dahng",
     "English Translation (Verified)": "Jade Court",
     "Anatomical Location": "One rib below CV17, center chest",
-    "Healing Function": "Regulates Qi and unbinds chest.",
+    "Healing Function": "Regulates Ki and unbinds chest.",
     "Martial Application": "Strike causes temporary breath loss.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Picture this point as a breathing control switch. Regulates Qi and unbinds chest"
+    "Insight": "Picture this point as a breathing control switch. Regulates Ki and unbinds chest"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4296,11 +4296,11 @@
     "Romanized Korean": "Chuhhn Dohl",
     "English Translation (Verified)": "Heaven\u2019s Prominence",
     "Anatomical Location": "Center of the throat, in the hollow above the collarbones",
-    "Healing Function": "Clears heat, descends Qi, relieves cough.",
+    "Healing Function": "Clears heat, descends Ki, relieves cough.",
     "Martial Application": "Can impair breathing.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Picture this point as a breathing control switch. Clears heat, descends Qi, relieves cough"
+    "Insight": "Picture this point as a breathing control switch. Clears heat, descends Ki, relieves cough"
   },
   {
     "Meridian Name": "Conception Vessel (CV)",
@@ -4362,7 +4362,7 @@
     "English Translation (Verified)": "Lumbar\u2019s Yahng Hinge",
     "Anatomical Location": "Lower back, just above the hips",
     "Healing Function": "Strengthens lower back and tonifies Kidney.",
-    "Martial Application": "Disrupts spine and Qi flow.",
+    "Martial Application": "Disrupts spine and Ki flow.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
     "Insight": "Associate this point with restoring balance and internal Ki flow. Strengthens lower back and tonifies Kidney"
@@ -4374,11 +4374,11 @@
     "Romanized Korean": "Myuhng Moon",
     "English Translation (Verified)": "Life\u2019s Gate",
     "Anatomical Location": "Lower back, in line with the belly button",
-    "Healing Function": "Tonifies Kidney and original Qi.",
-    "Martial Application": "Strike affects consciousness and organ Qi.",
+    "Healing Function": "Tonifies Kidney and original Ki.",
+    "Martial Application": "Strike affects consciousness and organ Ki.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
-    "Insight": "Associate this point with restoring balance and internal Ki flow. Tonifies Kidney and original Qi"
+    "Insight": "Associate this point with restoring balance and internal Ki flow. Tonifies Kidney and original Ki"
   },
   {
     "Meridian Name": "Governing Vessel (GV)",
@@ -4583,7 +4583,7 @@
     "English Translation (Verified)": "Hundred Meetings",
     "Anatomical Location": "Top of the head, in line with the tops of the ears",
     "Healing Function": "Raises yang and lifts spirit.",
-    "Martial Application": "Major reset point for Qi shock.",
+    "Martial Application": "Major reset point for Ki shock.",
     "Shared Name Indicator": null,
     "Bilateral": "No",
     "Insight": "Imagine this point as a collapse trigger when struck. Raises yang and lifts spirit"
