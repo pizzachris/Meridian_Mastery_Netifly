@@ -88,8 +88,7 @@
     "element": "Water",
     "bilateral": "No",
     "insight": "Affects the tongue and throat. Used to assist speech recovery and moisten dryness."
-  },
-  {
+  },  {
     "point_number": "HOHN_SOO_3",
     "hangul": "혼수",
     "romanized": "Hohn Soo",
@@ -97,6 +96,7 @@
     "meridian": "Anatomical Strike",
     "element": "N/A",
     "bilateral": "No",
+    "location": "Carotid arteries in the neck",
     "insight": "Anatomical strike point on the neck. Not a traditional pressure point - used for martial application only."
   },
   {

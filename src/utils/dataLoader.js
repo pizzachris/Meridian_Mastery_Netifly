@@ -42,27 +42,48 @@ export const getAllPoints = async () => {
   }
 };
 
-// Get Maek Chi Ki points with proper field mapping
+// Get Maek Chi Ki points with proper field mapping and location cross-reference
 export const getMaekChiKiPoints = async () => {
   if (transformedMaekChiKiCache) {
     return transformedMaekChiKiCache;
   }
 
-  try {    const transformedData = maekChiKiData.map(point => ({
-      id: point.id || point.ID || `maek_chi_ki_${Math.random()}`,
-      nameEnglish: point.english || point.nameEnglish || point.name_english || '',
-      nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
-      nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
-      meridian: point.meridian || point.Meridian || 'Maek Chi Ki',
-      point_number: point.point_number || point.number || point.Number || '',
-      location: point.location || point.Location || '',
-      tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
-      healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
-      martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
-      warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
-      bilateral: point.side || point.Side || 'bilateral',
-      insight: point.insights || point.Insights || ''
-    }));
+  try {
+    // Get all points for location cross-reference
+    const allPoints = await getAllPoints();
+    const allPointsMap = new Map();
+    allPoints.forEach(point => {
+      if (point.point_number) {
+        allPointsMap.set(point.point_number, point);
+      }
+    });
+
+    const transformedData = maekChiKiData.map(point => {
+      // Try to get location from cross-reference if not in Maek data
+      let location = point.location || point.Location || '';
+      if (!location && point.point_number) {
+        const crossRefPoint = allPointsMap.get(point.point_number);
+        if (crossRefPoint && crossRefPoint.location) {
+          location = crossRefPoint.location;
+        }
+      }
+
+      return {
+        id: point.id || point.ID || `maek_chi_ki_${Math.random()}`,
+        nameEnglish: point.english || point.nameEnglish || point.name_english || '',
+        nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
+        nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
+        meridian: point.meridian || point.Meridian || 'Maek Chi Ki',
+        point_number: point.point_number || point.number || point.Number || '',
+        location: location,
+        tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
+        healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
+        martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
+        warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
+        bilateral: point.side || point.Side || 'bilateral',
+        insight: point.insights || point.Insights || ''
+      };
+    });
 
     transformedMaekChiKiCache = transformedData;
     return transformedData;
@@ -72,27 +93,48 @@ export const getMaekChiKiPoints = async () => {
   }
 };
 
-// Get Maek Cha Ki points with proper field mapping
+// Get Maek Cha Ki points with proper field mapping and location cross-reference
 export const getMaekChaKiPoints = async () => {
   if (transformedMaekChaKiCache) {
     return transformedMaekChaKiCache;
   }
 
-  try {    const transformedData = maekChaKiData.map(point => ({
-      id: point.id || point.ID || `maek_cha_ki_${Math.random()}`,
-      nameEnglish: point.english || point.nameEnglish || point.name_english || '',
-      nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
-      nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
-      meridian: point.meridian || point.Meridian || 'Maek Cha Ki',
-      point_number: point.point_number || point.number || point.Number || '',
-      location: point.location || point.Location || '',
-      tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
-      healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
-      martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
-      warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
-      bilateral: point.side || point.Side || 'bilateral',
-      insight: point.insights || point.Insights || ''
-    }));
+  try {
+    // Get all points for location cross-reference
+    const allPoints = await getAllPoints();
+    const allPointsMap = new Map();
+    allPoints.forEach(point => {
+      if (point.point_number) {
+        allPointsMap.set(point.point_number, point);
+      }
+    });
+
+    const transformedData = maekChaKiData.map(point => {
+      // Try to get location from cross-reference if not in Maek data
+      let location = point.location || point.Location || '';
+      if (!location && point.point_number) {
+        const crossRefPoint = allPointsMap.get(point.point_number);
+        if (crossRefPoint && crossRefPoint.location) {
+          location = crossRefPoint.location;
+        }
+      }
+
+      return {
+        id: point.id || point.ID || `maek_cha_ki_${Math.random()}`,
+        nameEnglish: point.english || point.nameEnglish || point.name_english || '',
+        nameHangul: point.hangul || point.nameHangul || point.name_hangul || '',
+        nameRomanized: point.romanized || point.nameRomanized || point.name_romanized || '',
+        meridian: point.meridian || point.Meridian || 'Maek Cha Ki',
+        point_number: point.point_number || point.number || point.Number || '',
+        location: location,
+        tcmFunction: point.tcmFunction || point.tcm_function || point.TCMFunction || '',
+        healingFunction: point.healingFunction || point.healing_function || point.HealingFunction || '',
+        martialApplication: point.martialApplication || point.martial_application || point.MartialApplication || '',
+        warningNote: point.warningNote || point.warning_note || point.WarningNote || '',
+        bilateral: point.side || point.Side || 'bilateral',
+        insight: point.insights || point.Insights || ''
+      };
+    });
 
     transformedMaekChaKiCache = transformedData;
     return transformedData;

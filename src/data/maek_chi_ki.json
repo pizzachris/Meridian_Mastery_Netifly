@@ -38,8 +38,7 @@
     "element": "Fire",
     "bilateral": "Yes",
     "insight": "Opens the chest and activates arm circulation. Supports emotional release and relieves shoulder pain."
-  },
-  {
+  },  {
     "point_number": "HOHN_SOO_1",
     "hangul": "혼수",
     "romanized": "Hohn Soo",
@@ -47,6 +46,7 @@
     "meridian": "Anatomical Strike",
     "element": "N/A",
     "bilateral": "No",
+    "location": "Carotid arteries in the neck",
     "insight": "Anatomical strike point on the side of the neck. Not a traditional pressure point - used for martial application only."
   },
   {
@@ -58,8 +58,7 @@
     "element": "Wood",
     "bilateral": "Yes",
     "insight": "Alleviates temporal headaches, jaw tension, and facial nerve disorders. Useful for TMJ and ear-related pain."
-  },
-  {
+  },  {
     "point_number": "HOHN_SOO_2",
     "hangul": "혼수",
     "romanized": "Hohn Soo",
@@ -67,6 +66,7 @@
     "meridian": "Anatomical Strike",
     "element": "N/A",
     "bilateral": "No",
+    "location": "Carotid arteries in the neck",
     "insight": "Anatomical strike point on the other side of the neck. Not a traditional pressure point - used for martial application only."
   },
   {
