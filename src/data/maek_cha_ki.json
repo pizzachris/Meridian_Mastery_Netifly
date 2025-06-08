@@ -1,7 +1,7 @@
 [
   {
     "point_number": "SP6",
-    "hangul": "삼음교",
+    "hangul": "\uc0bc\uc74c\uad50",
     "romanized": "Sahm Um Kyo",
     "english": "Three Yin Intersection",
     "meridian": "Spleen",
@@ -11,7 +11,7 @@
   },
   {
     "point_number": "ST35",
-    "hangul": "독비",
+    "hangul": "\ub3c5\ube44",
     "romanized": "Dohk Bi",
     "english": "Calf's Nose",
     "meridian": "Stomach",
@@ -21,7 +21,7 @@
   },
   {
     "point_number": "BL40",
-    "hangul": "위중",
+    "hangul": "\uc704\uc911",
     "romanized": "Wee Joong",
     "english": "Central Middle",
     "meridian": "Urinary Bladder",
@@ -31,7 +31,7 @@
   },
   {
     "point_number": "SP10",
-    "hangul": "혈해",
+    "hangul": "\ud608\ud574",
     "romanized": "Hyul Hae",
     "english": "Sea of Blood",
     "meridian": "Spleen",
@@ -41,7 +41,7 @@
   },
   {
     "point_number": "LV13",
-    "hangul": "장문",
+    "hangul": "\uc7a5\ubb38",
     "romanized": "Jahng Moon",
     "english": "Completion Gate",
     "meridian": "Liver",
@@ -51,7 +51,7 @@
   },
   {
     "point_number": "HT1",
-    "hangul": "극천",
+    "hangul": "\uadf9\ucc9c",
     "romanized": "Geuk Chuhn",
     "english": "Utmost Spring",
     "meridian": "Heart",
@@ -61,7 +61,7 @@
   },
   {
     "point_number": "CV8",
-    "hangul": "기해",
+    "hangul": "\uae30\ud574",
     "romanized": "Ki Hae",
     "english": "Sea of Ki",
     "meridian": "Conception Vessel",
@@ -71,7 +71,7 @@
   },
   {
     "point_number": "CV15",
-    "hangul": "구미",
+    "hangul": "\uad6c\ubbf8",
     "romanized": "Goo Mi",
     "english": "Turtledove Tail",
     "meridian": "Conception Vessel",
@@ -81,27 +81,28 @@
   },
   {
     "point_number": "CV23",
-    "hangul": "염천",
+    "hangul": "\uc5fc\ucc9c",
     "romanized": "Yuhm Chuhn",
     "english": "Gliding Spring",
     "meridian": "Conception Vessel",
     "element": "Water",
     "bilateral": "No",
     "insight": "Affects the tongue and throat. Used to assist speech recovery and moisten dryness."
-  },  {
+  },
+  {
     "point_number": "HOHN_SOO_3",
-    "hangul": "혼수",
+    "hangul": "\ud63c\uc218",
     "romanized": "Hohn Soo",
     "english": "Anatomical Strike - Neck",
     "meridian": "Anatomical Strike",
     "element": "N/A",
     "bilateral": "No",
-    "location": "Carotid arteries in the neck",
+    "location": "Side of the neck, along the carotid artery just behind the jaw muscle.",
     "insight": "Anatomical strike point on the neck. Not a traditional pressure point - used for martial application only."
   },
   {
     "point_number": "ST18",
-    "hangul": "유근",
+    "hangul": "\uc720\uadfc",
     "romanized": "Yoo Geun",
     "english": "Root of the Breast",
     "meridian": "Stomach",
@@ -111,7 +112,7 @@
   },
   {
     "point_number": "GV15",
-    "hangul": "아문",
+    "hangul": "\uc544\ubb38",
     "romanized": "Ah Moon",
     "english": "Mute Gate",
     "meridian": "Governing Vessel",
@@ -121,7 +122,7 @@
   },
   {
     "point_number": "GB3",
-    "hangul": "객주인",
+    "hangul": "\uac1d\uc8fc\uc778",
     "romanized": "Gaek Joo In",
     "english": "Guest of the Head",
     "meridian": "Gallbladder",
@@ -131,7 +132,7 @@
   },
   {
     "point_number": "GV14",
-    "hangul": "대추",
+    "hangul": "\ub300\ucd94",
     "romanized": "Dae Choo",
     "english": "Great Vertebra",
     "meridian": "Governing Vessel",
@@ -141,7 +142,7 @@
   },
   {
     "point_number": "GB34",
-    "hangul": "능천",
+    "hangul": "\ub2a5\ucc9c",
     "romanized": "Yahng Neung Chuhn",
     "english": "Yang Mound Spring",
     "meridian": "Gallbladder",
