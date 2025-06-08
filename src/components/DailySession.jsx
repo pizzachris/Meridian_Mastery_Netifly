@@ -1,22 +1,70 @@
-import React, { useState, useEffect, useCallback, memo } from 'react'
+import React, { useState, useEffect, useCallback, memo, useMemo } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
 import TriskelionLogo from './TriskelionLogo'
+import { getOptimalTouchTargetSize } from '../utils/mobileOptimization'
 
-const DailySession = memo(({ navigateTo }) => {
-  const [selectedMode, setSelectedMode] = useState(null)
+// Memoized study mode components for performance
+const StudyModeCard = memo(({ mode, isSelected, onSelect, isNavigating }) => {
+  const touchSize = getOptimalTouchTargetSize();
+  
+  return (
+    <button
+      onClick={() => onSelect(mode.id)}
+      disabled={isNavigating}
+      className={`p-3 sm:p-4 border-2 rounded-lg transition-all duration-200 text-left w-full ${
+        isSelected 
+          ? 'border-yellow-400 bg-yellow-400 bg-opacity-20' 
+          : 'border-gray-600 hover:border-yellow-400 hover:border-opacity-50'
+      } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
+      style={{ minHeight: touchSize.minHeight, minWidth: touchSize.minWidth }}
+    >
+      <h3 className="text-sm sm:text-base font-semibold text-yellow-400 mb-1">
+        {mode.name}
+      </h3>
+      <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+        {mode.description}
+      </p>
+    </button>
+  );
+});
+
+const HiddenModeCard = memo(({ mode, onStart, isNavigating }) => {
+  const touchSize = getOptimalTouchTargetSize();
+  
+  return (
+    <button
+      onClick={() => onStart(mode.id)}
+      disabled={isNavigating}
+      className={`bg-gradient-to-br from-red-800 to-red-900 border-2 border-red-600 p-3 sm:p-4 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 text-center ${
+        isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+      style={{ minHeight: touchSize.minHeight, minWidth: touchSize.minWidth }}
+    >
+      <div className="text-xl sm:text-2xl mb-1 sm:mb-2">{mode.icon}</div>
+      <h3 className="text-sm sm:text-base font-bold text-yellow-400 mb-1">
+        {mode.name}
+      </h3>
+      <p className="text-xs text-gray-300">{mode.description}</p>
+    </button>
+  );
+});
+
+const DailySession = memo(({ navigateTo }) => {  const [selectedMode, setSelectedMode] = useState(null)
   const [shuffleMode, setShuffleMode] = useState(false)
   const [isNavigating, setIsNavigating] = useState(false)
   const [error, setError] = useState(null)
 
-  const studyModes = [
+  // Memoized study mode configurations
+  const studyModes = useMemo(() => [
     { id: 'meridian', name: 'By Meridian', description: 'Study points organized by meridian pathways' },
     { id: 'region', name: 'By Region', description: 'Study points by body regions' },
     { id: 'theme', name: 'By Theme', description: 'Study points by healing themes' }
-  ]
-  const hiddenModes = [
+  ], []);
+  
+  const hiddenModes = useMemo(() => [
     { id: 'maek-chi-ki', name: 'Maek Chi Ki', icon: '👊', description: 'Fist techniques' },
     { id: 'maek-cha-ki', name: 'Maek Cha Ki', icon: '🦶', description: 'Foot techniques' }
-  ]
+  ], []);
   // Memoized navigation handlers for better performance
   const handleStartSession = useCallback((sessionMode) => {
     if (isNavigating) return
@@ -81,11 +129,10 @@ const DailySession = memo(({ navigateTo }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
       <div className="container mx-auto px-4 py-8">        {/* Header */}
-        <header className="text-center mb-8">
-          <button 
+        <header className="text-center mb-8">          <button 
             onClick={() => navigateTo('home')}
             disabled={isNavigating}
-            className={`inline-block mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center ${
+            className={`mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center ${
               isNavigating ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             aria-label="Go to Home"

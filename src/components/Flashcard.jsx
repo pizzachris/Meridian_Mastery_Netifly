@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { getAllPoints, getPointsByMeridian, getPointsByRegion, getPointsByTheme, getMaekChiKiPoints, getMaekChaKiPoints } from '../utils/dataLoader'
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react'
+import { getAllPoints, getPointsByMeridian, getPointsByRegion, getPointsByTheme, getMaekChiKiPoints, getMaekChaKiPoints } from '../utils/dataLoaderOptimized'
 import { ProgressTracker } from '../utils/progressTracker'
 import PronunciationManager from '../utils/pronunciation'
 import TriskelionLogo from './TriskelionLogo'
+import { setupTouchGestures, getOptimalTouchTargetSize } from '../utils/mobileOptimization'
 
 // Helper to get meridian abbreviation for badge
 const getMeridianAbbreviation = (meridianName, pointNumber) => {
@@ -96,7 +97,23 @@ const getElementColors = (element) => {
   return colorMap[element] || colorMap['Metal']; // Default to Metal if unknown
 };
 
-const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
+// Memoized helper components for better performance
+const MemoizedPointBadge = memo(({ abbreviation, colors }) => (
+  <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${colors.bg} ${colors.border} ${colors.text} border-2`}>
+    {abbreviation}
+  </div>
+));
+
+const MemoizedProgressBar = memo(({ current, total }) => (
+  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+    <div 
+      className="bg-yellow-400 h-2.5 rounded-full transition-all duration-300 ease-out" 
+      style={{ width: `${total > 0 ? ((current + 1) / total) * 100 : 0}%` }}
+    ></div>
+  </div>
+));
+
+const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
   // All state hooks must be at the top level - never conditional
   const [currentCard, setCurrentCard] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)  // Always start with front side
@@ -113,16 +130,47 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
   const [flashcards, setFlashcards] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   
+  // Refs for touch gesture support
+  const cardContainerRef = useRef(null)
+  
+  // Memoized navigation functions for better performance - defined early to avoid reference errors
+  const nextCard = useCallback(async () => {
+    if (flashcards.length === 0) return;
+    
+    // Record study event
+    if (flashcards.length > 0 && currentCard < flashcards.length) {
+      const card = flashcards[currentCard]
+      if (card) {
+        try {
+          await ProgressTracker.studyPoint(card.id, card.meridian)
+          // Update progress asynchronously
+          const progressData = await ProgressTracker.getProgress()
+          setProgress(progressData)
+        } catch (error) {
+          console.error('Failed to update progress:', error)
+        }
+      }
+    }
+
+    setIsFlipped(false)
+    setCurrentCard((prev) => (prev + 1) % flashcards.length)
+  }, [flashcards, currentCard])
+
+  const prevCard = useCallback(() => {
+    if (flashcards.length === 0) return;
+    setIsFlipped(false)
+    setCurrentCard((prev) => (prev - 1 + flashcards.length) % flashcards.length)
+  }, [flashcards])
+
+  const flipCard = useCallback(() => {
+    setIsFlipped(!isFlipped)
+  }, [isFlipped])
+  
   // Current card data - derived from state
   const currentCardData = flashcards[currentCard] || null
-  
-  // Memoized computed card properties for performance
+    // Memoized computed card properties for performance
   const cardProperties = useMemo(() => {
-    console.log('🔄 Computing card properties for card:', currentCard, 'Data:', currentCardData)
-    if (!currentCardData) {
-      console.log('❌ No currentCardData available')
-      return null;
-    }
+    if (!currentCardData) return null;
     
     const pointNumber = currentCardData.point_number || currentCardData.number;
     const nameHangul = currentCardData.nameHangul || currentCardData.hangul;
@@ -277,42 +325,23 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
       const pointIndex = flashcards.findIndex(card => card.id === selectedPointId)
       if (pointIndex !== -1) {
         setCurrentCard(pointIndex)
-        setIsFlipped(false)
-      }
+        setIsFlipped(false)      }
     }
   }, [selectedPointId, flashcards])
-    // Memoized navigation functions for better performance
-  const nextCard = useCallback(async () => {
-    if (flashcards.length === 0) return;
+  
+  // Setup touch gestures for mobile navigation
+  useEffect(() => {
+    if (!cardContainerRef.current) return;
     
-    // Record study event
-    if (flashcards.length > 0 && currentCard < flashcards.length) {
-      const card = flashcards[currentCard]
-      if (card) {
-        try {
-          await ProgressTracker.studyPoint(card.id, card.meridian)
-          // Update progress asynchronously
-          const progressData = await ProgressTracker.getProgress()
-          setProgress(progressData)
-        } catch (error) {
-          console.error('Failed to update progress:', error)
-        }
-      }
-    }
-
-    setIsFlipped(false)
-    setCurrentCard((prev) => (prev + 1) % flashcards.length)
-  }, [flashcards, currentCard])
-
-  const prevCard = useCallback(() => {
-    if (flashcards.length === 0) return;
-    setIsFlipped(false)
-    setCurrentCard((prev) => (prev - 1 + flashcards.length) % flashcards.length)
-  }, [flashcards])
-
-  const flipCard = useCallback(() => {
-    setIsFlipped(!isFlipped)
-  }, [isFlipped])
+    const cleanup = setupTouchGestures(cardContainerRef.current, {
+      onSwipeLeft: nextCard,
+      onSwipeRight: prevCard,
+      onTap: flipCard,
+      threshold: 50 // Adjust sensitivity as needed
+    });
+    
+    return cleanup;
+  }, [nextCard, prevCard, flipCard])
 
   const handlePronunciation = useCallback(async (text, isKorean = false) => {
     if (!pronunciation) return;
@@ -495,7 +524,11 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
       </div>      {/* Main Content - moved up closer to study session bar */}
       <div className="flex flex-col items-center justify-start min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)] px-2 sm:px-3 pt-0">        {/* Flashcard - optimized positioning for mobile */}
         <div className="w-full max-w-sm sm:max-w-md mx-auto mt-1 sm:mt-2">
-          <div className={`relative w-full h-[25rem] sm:h-[30rem] md:h-[32rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>{/* Front Side - mobile optimized */}
+          <div 
+            ref={cardContainerRef}
+            className={`relative w-full h-[25rem] sm:h-[30rem] md:h-[32rem] transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+            style={{ minHeight: getOptimalTouchTargetSize().minHeight }}
+          >{/* Front Side - mobile optimized */}
             <div className="absolute inset-0 w-full h-full backface-hidden">
               <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600 rounded-xl h-full flex flex-col justify-center items-center p-4 sm:p-6 relative">
                   {/* Meridian badge with element colors at top - mobile responsive */}
@@ -775,13 +808,15 @@ const Flashcard = ({ navigateTo, selectedPointId, sessionMode, shuffleMode = fal
               >
                 Close
               </button>
-            </div>
-          </div>
+            </div>          </div>
         </div>
       )}
 
     </div>
   );
-};
+});
+
+// Add display name for debugging
+Flashcard.displayName = 'Flashcard';
 
 export default Flashcard;

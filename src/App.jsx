@@ -9,6 +9,7 @@ import Quiz from './components/Quiz'
 import QuizSelection from './components/QuizSelection'
 import FlaggedIssues from './components/FlaggedIssues'
 import DisclaimerModal from './components/DisclaimerModal'
+import { OptimizationTester } from './utils/optimizationTester'
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
@@ -17,6 +18,15 @@ function App() {
   const [shuffleMode, setShuffleMode] = useState(false)
   const [quizOptions, setQuizOptions] = useState(null)
   const [showDisclaimer, setShowDisclaimer] = useState(false)
+  
+  // Development mode - add optimization tester to window for console access
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      window.optimizationTester = new OptimizationTester();
+      window.runOptimizationTests = () => window.optimizationTester.runAllTests();
+      console.log('🔧 Dev Mode: Use window.runOptimizationTests() to run performance tests');
+    }
+  }, [])
   
   // Check if user has seen disclaimer on first load
   useEffect(() => {
