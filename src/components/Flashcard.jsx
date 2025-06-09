@@ -492,9 +492,7 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
           onClick={() => navigateTo('home')}
           className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
         >
-          <div className="w-7 h-7 sm:w-8 sm:h-8">
-            <Logo />
-          </div>
+          <Logo />
           <div className="text-left">
             <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
             <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>

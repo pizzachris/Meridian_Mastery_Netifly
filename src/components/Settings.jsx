@@ -279,15 +279,12 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
-      {/* Logo Home Button */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">      {/* Logo Home Button */}
       <button        onClick={() => navigateTo('home')}
         className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200 mb-8"
         aria-label="Go to Home"
       >
-        <div className="w-10 h-10">
-          <Logo />
-        </div>
+        <Logo />
       </button>
 
       <h1 className="text-3xl md:text-4xl font-bold mb-8">Settings</h1>

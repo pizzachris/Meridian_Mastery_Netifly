@@ -1,6 +1,6 @@
 export default function Logo() {
   return (
-    <div className="w-32 h-32">
+    <div className="w-24 h-24">
       <svg
         id="Layer_2"
         data-name="Layer 2"
