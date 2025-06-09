@@ -486,24 +486,29 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
   } = cardProperties;
 
   return (
-    <div className="min-h-screen bg-black text-white relative">      {/* Header - mobile optimized with centered logo */}
-      <div className="flex flex-col items-center p-3 sm:p-4 border-b border-gray-800">
-        {/* Progress counter - top right */}
-        <div className="self-end text-yellow-400 text-xs sm:text-sm font-medium mb-2">
-          {currentCard + 1} / {flashcards.length}
-        </div>
-        
-        {/* Centered Logo and title */}
+    <div className="min-h-screen bg-black text-white relative">      {/* Header - Logo left, title center, progress right */}
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800">
+        {/* Logo Home Button - Left side, smaller size */}
         <button 
           onClick={() => navigateTo('home')}
-          className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
+          className="text-yellow-400 hover:text-yellow-300 transition-colors"
+          aria-label="Go to Home"
         >
-          <Logo />
-          <div className="text-center">
-            <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
-            <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>
+          <div className="w-12 h-12">
+            <Logo />
           </div>
         </button>
+        
+        {/* Centered title */}
+        <div className="flex-1 text-center">
+          <h1 className="text-base sm:text-lg font-bold text-yellow-400">MERIDIAN</h1>
+          <p className="text-xs sm:text-sm text-yellow-400 opacity-80">MASTERY COACH</p>
+        </div>
+        
+        {/* Progress counter - Right side */}
+        <div className="text-yellow-400 text-xs sm:text-sm font-medium">
+          {currentCard + 1} / {flashcards.length}
+        </div>
       </div>
 
       {/* Study Session Progress Bar - Moved up below header */}
