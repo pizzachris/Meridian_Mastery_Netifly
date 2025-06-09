@@ -485,18 +485,14 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
     isBilateral
   } = cardProperties;
 
-  return (
-    <div className="min-h-screen bg-black text-white relative">      {/* Header - Logo left, title center, progress right */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800">
-        {/* Logo Home Button - Left side, smaller size */}
+  return (    <div className="min-h-screen bg-black text-white relative">      {/* Header - Logo left, title center, progress right */}
+      <div className="flex items-center justify-between p-3 sm:p-4">        {/* Logo Home Button - Left side, smaller size */}
         <button 
           onClick={() => navigateTo('home')}
           className="text-yellow-400 hover:text-yellow-300 transition-colors"
           aria-label="Go to Home"
         >
-          <div className="w-12 h-12">
-            <Logo />
-          </div>
+          <Logo className="w-8 h-8" />
         </button>
         
         {/* Centered title */}
@@ -509,10 +505,8 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
         <div className="text-yellow-400 text-xs sm:text-sm font-medium">
           {currentCard + 1} / {flashcards.length}
         </div>
-      </div>
-
-      {/* Study Session Progress Bar - Moved up below header */}
-      <div className="w-full p-3 sm:p-4 border-b border-gray-800">
+      </div>      {/* Study Session Progress Bar - Clean without borders */}
+      <div className="w-full p-3 sm:p-4">
         <div className="w-full max-w-sm sm:max-w-md mx-auto">
           <div className="bg-gray-800 rounded-full h-1.5 sm:h-2">
             <div 
@@ -526,7 +520,7 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
              'Study Session'}
           </div>
         </div>
-      </div>      {/* Main Content - moved up closer to study session bar */}
+      </div>{/* Main Content - moved up closer to study session bar */}
       <div className="flex flex-col items-center justify-start min-h-[calc(100vh-140px)] sm:min-h-[calc(100vh-160px)] px-2 sm:px-3 pt-0">        {/* Flashcard - optimized positioning for mobile */}
         <div className="w-full max-w-sm sm:max-w-md mx-auto mt-1 sm:mt-2">
           <div 

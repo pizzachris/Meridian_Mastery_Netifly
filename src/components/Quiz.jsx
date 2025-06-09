@@ -572,9 +572,7 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
           className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
           aria-label="Go to Home"
         >
-           <div className="w-10 h-10">
-             <Logo />
-           </div>
+           <Logo className="w-8 h-8" />
         </button>
 
         {/* Back to Daily Sessions Button */}
