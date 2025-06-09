@@ -42,10 +42,10 @@ const Progress = ({ navigateTo }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
-          <p className="text-gold">Loading progress...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+          <p className="text-yellow-400">Loading progress...</p>
         </div>
       </div>
     )
@@ -53,12 +53,12 @@ const Progress = ({ navigateTo }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
         <div className="text-center text-red-400">
           <p className="mb-4">Failed to load progress: {error}</p>
           <button 
             onClick={loadProgress}
-            className="bg-gold text-dark px-4 py-2 rounded-lg hover:bg-yellow-400"
+            className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-300"
           >
             Retry
           </button>
@@ -69,7 +69,7 @@ const Progress = ({ navigateTo }) => {
 
   if (!progressData) {
     return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex items-center justify-center">
         <div className="text-center text-gray-400">
           <p>No progress data available</p>
         </div>
@@ -113,54 +113,55 @@ const Progress = ({ navigateTo }) => {
   })
 
   return (
-    <div className="min-h-screen bg-dark flex flex-col items-center justify-center py-8">
-      <div className="w-20 h-20 mb-6 flex items-center justify-center">
-        <button onClick={() => navigateTo('home')} aria-label="Go to Home">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8">
+      <div className="flex flex-col items-center mb-8">
+        <button onClick={() => navigateTo('home')} aria-label="Go to Home" className="mb-4">
           <Logo />
         </button>
+        <h1 className="text-3xl md:text-4xl font-bold text-yellow-400">Progress</h1>
       </div>
-      <h2 className="text-3xl font-serif font-bold text-gold mb-8 uppercase tracking-wide">Progress</h2>
-      <div className="w-full max-w-sm space-y-6">
+      
+      <div className="w-full max-w-sm space-y-6 px-4">
         {/* Points Studied */}
-        <div className="bg-dark border-2 border-gold rounded-xl p-4 shadow-lg">
+        <div className="bg-gray-800 border-2 border-yellow-400 rounded-xl p-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-gold font-serif font-bold text-lg">Points Studied</span>
-            <span className="text-gold font-sans font-bold">{pointsStudied} / {totalPoints}</span>
+            <span className="text-yellow-400 font-bold text-lg">Points Studied</span>
+            <span className="text-yellow-400 font-bold">{pointsStudied} / {totalPoints}</span>
           </div>
-          <div className="w-full bg-gray-800 rounded-full h-3 border border-gold">
+          <div className="w-full bg-gray-700 rounded-full h-3 border border-yellow-400">
             <div
-              className="bg-deepred h-3 rounded-full"
+              className="bg-red-600 h-3 rounded-full"
               style={{ width: getProgressBarWidth(pointsStudied, totalPoints) }}
             />
           </div>
         </div>
 
         {/* Meridians */}
-        <div className="bg-dark border-2 border-gold rounded-xl p-4 shadow-lg">
+        <div className="bg-gray-800 border-2 border-yellow-400 rounded-xl p-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-gold font-serif font-bold text-lg">Meridians</span>
-            <span className="text-gold font-sans font-bold">{completedMeridians} / {totalMeridians}</span>
+            <span className="text-yellow-400 font-bold text-lg">Meridians</span>
+            <span className="text-yellow-400 font-bold">{completedMeridians} / {totalMeridians}</span>
           </div>
-          <div className="w-full bg-gray-800 rounded-full h-3 border border-gold">
+          <div className="w-full bg-gray-700 rounded-full h-3 border border-yellow-400">
             <div
-              className="bg-deepred h-3 rounded-full"
+              className="bg-red-600 h-3 rounded-full"
               style={{ width: getProgressBarWidth(completedMeridians, totalMeridians) }}
             />
           </div>
         </div>
 
         {/* Quiz Performance */}
-        <div className="bg-dark border-2 border-gold rounded-xl p-4 shadow-lg">
+        <div className="bg-gray-800 border-2 border-yellow-400 rounded-xl p-4 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-gold font-serif font-bold text-lg">Quiz Mastery</span>
-            <span className="text-gold font-sans font-bold">{progressData.totalQuizAttempts || 0} Attempts</span>
+            <span className="text-yellow-400 font-bold text-lg">Quiz Mastery</span>
+            <span className="text-yellow-400 font-bold">{progressData.totalQuizAttempts || 0} Attempts</span>
           </div>
           <div className="text-gray-400 text-sm">
             Average Retention: {averageRetention}%
           </div>
         </div>
       </div>
-      <div className="mt-8 text-center text-gold font-sans text-lg">Progress comes with practice.</div>
+      <div className="mt-8 text-center text-yellow-400 text-lg">Progress comes with practice.</div>
     </div>
   )
 }

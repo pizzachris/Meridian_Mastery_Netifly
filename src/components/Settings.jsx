@@ -277,17 +277,21 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
       </div>
     )
   }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">      {/* Logo Home Button */}
-      <button        onClick={() => navigateTo('home')}
-        className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200 mb-8"
-        aria-label="Go to Home"
-      >
-        <Logo />
-      </button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
+      {/* Header with Logo and Title */}
+      <div className="flex flex-col items-center mb-8">
+        {/* Logo Home Button */}
+        <button 
+          onClick={() => navigateTo('home')}
+          className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200 mb-4"
+          aria-label="Go to Home"
+        >
+          <Logo />
+        </button>
 
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">Settings</h1>
+        <h1 className="text-3xl md:text-4xl font-bold">Settings</h1>
+      </div>
 
       <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Error Display */}

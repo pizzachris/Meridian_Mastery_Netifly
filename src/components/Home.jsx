@@ -31,20 +31,22 @@ const Home = memo(({ navigateTo }) => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
       <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header with Korean Aesthetic - Enhanced Mobile */}
         <header className="text-center mb-6 sm:mb-12 relative px-2">
-          <div className="mb-3 sm:mb-6 relative">            {/* Energy Circles around Logo - Smaller on mobile */}            <div className="absolute inset-0 flex items-center justify-center">
+          <div className="mb-4 sm:mb-6 relative flex flex-col items-center">
+            {/* Energy Circles around Logo - Smaller on mobile */}
+            <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-20 h-20 sm:w-40 sm:h-40 rounded-full border border-yellow-400/20 animate-pulse"></div>
               <div className="absolute w-24 h-24 sm:w-48 sm:h-48 rounded-full border border-red-400/10 animate-ping"></div>
             </div>
             
-            {/* Logo Component - Centered in circle */}
-            <div className="relative z-10 flex items-center justify-center">
+            {/* Logo Component - Directly centered above title */}
+            <div className="relative z-10 mb-2">
               <Logo />
             </div>
           </div>
           
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-4 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-600 bg-clip-text text-transparent leading-tight">
             Meridian Mastery
-          </h1>          <p className="text-sm sm:text-lg text-yellow-400 font-medium mb-2 px-2">
+          </h1><p className="text-sm sm:text-lg text-yellow-400 font-medium mb-2 px-2">
             국술원 • Pressure Points
           </p>
           
