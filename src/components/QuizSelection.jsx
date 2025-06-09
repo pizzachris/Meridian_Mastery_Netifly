@@ -1,4 +1,5 @@
 import React, { useState, memo, useCallback, useMemo } from 'react'
+import Logo from './Logo'
 
 const QuizSelection = memo(({ navigateTo }) => {
   const [isNavigating, setIsNavigating] = useState(false)
@@ -102,16 +103,9 @@ const QuizSelection = memo(({ navigateTo }) => {
           >
             ← Back to Home
           </button>
-          
-          {/* Logo */}
+            {/* Logo */}
           <div className="flex items-center justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mr-4">
-              <div className="relative">
-                <div className="w-10 h-10 border-2 border-yellow-400 rounded-full"></div>
-                <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-                <div className="absolute inset-2 border border-yellow-400/30 rounded-full"></div>
-              </div>
-            </div>
+            <Logo className="w-16 h-16 mr-4" />
             <div className="text-left">
               <h1 className="text-3xl font-bold text-white">MERIDIAN</h1>
               <h2 className="text-2xl text-gray-300">MASTERY COACH</h2>
