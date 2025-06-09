@@ -31,18 +31,9 @@ const Home = memo(({ navigateTo }) => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
       <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header with Korean Aesthetic - Enhanced Mobile */}
         <header className="text-center mb-6 sm:mb-12 relative px-2">
-          {/* Logo directly above title with energy circles */}
-          <div className="relative mb-4 sm:mb-6 flex items-center justify-center">
-            {/* Energy Circles behind logo */}
-            <div className="absolute">
-              <div className="w-20 h-20 sm:w-40 sm:h-40 rounded-full border border-yellow-400/20 animate-pulse"></div>
-              <div className="absolute inset-0 w-24 h-24 sm:w-48 sm:h-48 rounded-full border border-red-400/10 animate-ping -translate-x-2 -translate-y-2"></div>
-            </div>
-            
-            {/* Logo Component - Centered */}
-            <div className="relative z-10">
-              <Logo />
-            </div>
+          {/* Logo centered where the circle outline is */}
+          <div className="flex justify-center mb-4 sm:mb-6">
+            <Logo />
           </div>
           
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-4 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-600 bg-clip-text text-transparent leading-tight">
