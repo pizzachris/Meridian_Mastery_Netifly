@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Logo from './Logo'
 
 const DisclaimerModal = ({ isOpen, onAccept }) => {
   const [isChecked, setIsChecked] = useState(false)
@@ -9,14 +10,8 @@ const DisclaimerModal = ({ isOpen, onAccept }) => {
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-yellow-600 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="p-6 border-b border-gray-700">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-red-800 to-red-900 rounded-full flex items-center justify-center border-2 border-yellow-500 mr-3">
-              <div className="relative">
-                <div className="w-6 h-6 border-2 border-yellow-400 rounded-full"></div>
-                <div className="absolute inset-1 border border-yellow-400/60 rounded-full"></div>
-              </div>
-            </div>
+        <div className="p-6 border-b border-gray-700">          <div className="flex items-center justify-center mb-4">
+            <Logo className="w-12 h-12 mr-3" />
             <div className="text-left">
               <h1 className="text-xl font-bold text-white">MERIDIAN</h1>
               <h2 className="text-lg text-gray-300">MASTERY</h2>
