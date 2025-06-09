@@ -31,9 +31,8 @@ const Home = memo(({ navigateTo }) => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
       <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header with Korean Aesthetic - Enhanced Mobile */}
         <header className="text-center mb-6 sm:mb-12 relative px-2">
-          {/* Logo centered where the circle outline is */}
-          <div className="flex justify-center mb-4 sm:mb-6">
-            <Logo />
+          <div className="flex justify-center items-center pt-10">
+            <Logo className="w-32 h-32" />
           </div>
           
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-4 bg-gradient-to-r from-yellow-400 via-red-400 to-yellow-600 bg-clip-text text-transparent leading-tight">
