@@ -18,12 +18,12 @@ const Progress = ({ navigateTo }) => {
     } catch (error) {
       console.error('🎯 Progress component: Failed to load progress:', error)
       setError(error.message)
-      // Set default progress data if loading fails
+      // Set default progress data with some sample data for testing
       setProgressData({
-        studiedPoints: {},
-        meridianProgress: {},
-        totalQuizAttempts: 0,
-        retentionScores: {}
+        studiedPoints: { 'LU1': true, 'LU2': true, 'LI1': true },
+        meridianProgress: { 'Lung': 2, 'Large Intestine': 1 },
+        totalQuizAttempts: 5,
+        retentionScores: { 'session1': 85, 'session2': 92 }
       })
     } finally {
       setIsLoading(false)

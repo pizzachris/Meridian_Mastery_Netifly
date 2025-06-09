@@ -486,26 +486,24 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
   } = cardProperties;
 
   return (
-    <div className="min-h-screen bg-black text-white relative">      {/* Header - mobile optimized */}
-      <div className="relative p-3 sm:p-4 border-b border-gray-800">
-        {/* Centered Logo and title */}
-        <div className="flex flex-col items-center">
-          <button 
-            onClick={() => navigateTo('home')}
-            className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors mb-2"
-          >
-            <Logo />
-            <div className="text-center">
-              <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
-              <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>
-            </div>
-          </button>
-        </div>
-        
+    <div className="min-h-screen bg-black text-white relative">      {/* Header - mobile optimized with centered logo */}
+      <div className="flex flex-col items-center p-3 sm:p-4 border-b border-gray-800">
         {/* Progress counter - top right */}
-        <div className="absolute top-3 right-3 text-yellow-400 text-xs sm:text-sm font-medium">
+        <div className="self-end text-yellow-400 text-xs sm:text-sm font-medium mb-2">
           {currentCard + 1} / {flashcards.length}
         </div>
+        
+        {/* Centered Logo and title */}
+        <button 
+          onClick={() => navigateTo('home')}
+          className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
+        >
+          <Logo />
+          <div className="text-center">
+            <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
+            <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>
+          </div>
+        </button>
       </div>
 
       {/* Study Session Progress Bar - Moved up below header */}
