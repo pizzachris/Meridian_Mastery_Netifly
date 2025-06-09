@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, memo, useMemo } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
-import TriskelionLogo from './TriskelionLogo'
+import Logo from './Logo'
 import { getOptimalTouchTargetSize } from '../utils/mobileOptimization'
 
 // Memoized study mode components for performance
@@ -131,13 +131,14 @@ const DailySession = memo(({ navigateTo }) => {  const [selectedMode, setSelecte
       <div className="container mx-auto px-4 py-8">        {/* Header */}
         <header className="text-center mb-8">          <button 
             onClick={() => navigateTo('home')}
-            disabled={isNavigating}
-            className={`mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center ${
+            disabled={isNavigating}            className={`mb-4 text-yellow-400 hover:text-yellow-300 text-sm font-medium flex items-center ${
               isNavigating ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             aria-label="Go to Home"
           >
-             <TriskelionLogo size={40} />
+             <div className="w-10 h-10">
+               <Logo />
+             </div>
           </button>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Daily Session</h1>
           <p className="text-gray-300">Choose your study mode</p>

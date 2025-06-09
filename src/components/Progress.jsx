@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { ProgressTracker } from '../utils/progressTracker'
-import TriskelionLogo from './TriskelionLogo'
+import Logo from './Logo'
 
 const Progress = ({ navigateTo }) => {
   const [progressData, setProgressData] = useState(null)
@@ -116,7 +116,7 @@ const Progress = ({ navigateTo }) => {
     <div className="min-h-screen bg-dark flex flex-col items-center justify-center py-8">
       <div className="w-20 h-20 mb-6 flex items-center justify-center">
         <button onClick={() => navigateTo('home')} aria-label="Go to Home">
-          <TriskelionLogo size={80} />
+          <Logo />
         </button>
       </div>
       <h2 className="text-3xl font-serif font-bold text-gold mb-8 uppercase tracking-wide">Progress</h2>

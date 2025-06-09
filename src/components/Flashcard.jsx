@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from '
 import { getAllPoints, getPointsByMeridian, getPointsByRegion, getPointsByTheme, getMaekChiKiPoints, getMaekChaKiPoints } from '../utils/dataLoaderOptimized'
 import { ProgressTracker } from '../utils/progressTracker'
 import PronunciationManager from '../utils/pronunciation'
-import TriskelionLogo from './TriskelionLogo'
+import Logo from './Logo'
 import { setupTouchGestures, getOptimalTouchTargetSize } from '../utils/mobileOptimization'
 
 // Helper to get meridian abbreviation for badge
@@ -488,12 +488,13 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
   return (
     <div className="min-h-screen bg-black text-white relative">      {/* Header - mobile optimized */}
       <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-800">
-        {/* Logo and title - clickable to go home */}
-        <button 
+        {/* Logo and title - clickable to go home */}        <button 
           onClick={() => navigateTo('home')}
           className="flex items-center space-x-2 sm:space-x-3 text-yellow-400 hover:text-yellow-300 transition-colors"
         >
-          <TriskelionLogo size={28} className="sm:w-8 sm:h-8" />
+          <div className="w-7 h-7 sm:w-8 sm:h-8">
+            <Logo />
+          </div>
           <div className="text-left">
             <h1 className="text-base sm:text-lg font-bold">MERIDIAN</h1>
             <p className="text-xs sm:text-sm opacity-80">MASTERY COACH</p>
