@@ -1,13 +1,13 @@
 {  "short_name": "MeridianCoach",
   "name": "Meridian Mastery Coach",  "icons": [
     {
-      "src": "/icons/triskelion.svg?v=3",
+      "src": "/icons/triskelion.svg?v=5&t=20250609",
       "type": "image/svg+xml",
       "sizes": "any"
     },
     {
-      "src": "/icons/apple-touch-icon.svg?v=3",
-      "type": "image/svg+xml",
+      "src": "/icons/apple-touch-icon.png?v=5&t=20250609",
+      "type": "image/png",
       "sizes": "180x180"
     },
     {
