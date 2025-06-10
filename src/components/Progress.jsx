@@ -131,8 +131,8 @@ const Progress = ({ navigateTo }) => {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8">
-      <div className="flex flex-col items-center mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 mobile-safe">
+      <div className="flex flex-col items-center mb-8 mobile-header-safe">
         <button onClick={() => navigateTo('home')} aria-label="Go to Home" className="mb-4">
           <Logo />
         </button>

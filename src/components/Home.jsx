@@ -26,10 +26,9 @@ const Home = memo(({ navigateTo }) => {
   const handleNavigateToFlagged = useCallback(() => {
     navigateTo('flagged-issues')
   }, [navigateTo])
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow">
-      <div className="container mx-auto px-4 py-6 sm:py-8">        {/* Header with Korean Aesthetic - Enhanced Mobile */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white korean-flow-pattern yin-yang-flow mobile-safe">
+      <div className="container mx-auto px-4 py-6 sm:py-8 mobile-header-safe">{/* Header with Korean Aesthetic - Enhanced Mobile */}
         <header className="text-center mb-6 sm:mb-12 relative px-2">
           {/* Logo positioned perfectly centered where the circle outline appears */}
           <div className="flex justify-center mb-4">

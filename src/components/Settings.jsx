@@ -275,11 +275,10 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
           <p className="text-yellow-400">Loading settings...</p>
         </div>
       </div>
-    )
-  }  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
+    )  }  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4 mobile-safe">
       {/* Header with just Logo */}
-      <div className="flex flex-col items-center mb-8">
+      <div className="flex flex-col items-center mb-8 mobile-header-safe">
         {/* Logo Home Button */}
         <button 
           onClick={() => navigateTo('home')}

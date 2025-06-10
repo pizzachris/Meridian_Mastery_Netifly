@@ -562,11 +562,10 @@ const Quiz = ({ navigateTo, sessionMode, quizOptions }) => {
   }
 
   const currentQuestion = quizQuestions[currentQuestionIndex]
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white flex flex-col items-center py-8 px-4 mobile-safe">
       {/* Header: Logo and Back Button */}
-      <div className="w-full max-w-lg mx-auto mb-8 flex justify-between items-center">        {/* Logo Home Button */}
+      <div className="w-full max-w-lg mx-auto mb-8 flex justify-between items-center mobile-header-safe">{/* Logo Home Button */}
         <button 
           onClick={() => navigateTo('home')}
           className="flex items-center text-yellow-400 hover:text-yellow-300 transition-colors duration-200"

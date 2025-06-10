@@ -484,9 +484,8 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
     insightText,
     isBilateral
   } = cardProperties;
-
-  return (    <div className="min-h-screen bg-black text-white relative">      {/* Header - Logo left, title center, progress right */}
-      <div className="flex items-center justify-between p-3 sm:p-4">        {/* Logo Home Button - Left side, smaller size */}
+  return (    <div className="min-h-screen bg-black text-white relative mobile-safe">      {/* Header - Logo left, title center, progress right */}
+      <div className="flex items-center justify-between p-3 sm:p-4 mobile-header-safe">{/* Logo Home Button - Left side, smaller size */}
         <button 
           onClick={() => navigateTo('home')}
           className="text-yellow-400 hover:text-yellow-300 transition-colors"

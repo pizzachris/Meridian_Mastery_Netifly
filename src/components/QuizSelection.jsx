@@ -90,10 +90,9 @@ const QuizSelection = memo(({ navigateTo }) => {
   const goHome = useCallback(() => {
     navigateTo('home')
   }, [navigateTo])
-
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="min-h-screen bg-black text-white mobile-safe">
+      <div className="container mx-auto px-4 py-8 max-w-2xl mobile-header-safe">
         {/* Header */}
         <header className="text-center mb-8">
           <button 
