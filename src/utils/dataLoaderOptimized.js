@@ -151,9 +151,42 @@ export const getPointsByMeridian = async (meridian) => {
   }
 
   const allPoints = await getAllPoints();
-  const meridianPoints = allPoints.filter(point => 
-    point.meridian && point.meridian.toLowerCase() === meridian.toLowerCase()
-  );
+  
+  // Clean up the meridian name for matching
+  // Remove parentheses and abbreviations to match the transformed data
+  const cleanMeridian = meridian.replace(/\s*\([^)]*\)/, '').trim();
+  
+  console.log(`🔍 Searching for meridian: "${meridian}" -> cleaned: "${cleanMeridian}"`);
+  
+  const meridianPoints = allPoints.filter(point => {
+    if (!point.meridian) return false;
+    
+    const pointMeridian = point.meridian.toLowerCase();
+    const searchMeridian = cleanMeridian.toLowerCase();
+    
+    // Direct match
+    if (pointMeridian === searchMeridian) return true;
+    
+    // Handle some common variations
+    const variations = {
+      'urinary bladder': 'bladder',
+      'bladder': 'urinary bladder',
+      'triple burner': 'triple heater',
+      'triple heater': 'triple burner'
+    };
+    
+    if (variations[searchMeridian] && pointMeridian === variations[searchMeridian]) return true;
+    if (variations[pointMeridian] && searchMeridian === variations[pointMeridian]) return true;
+    
+    return false;
+  });
+  
+  console.log(`✅ Found ${meridianPoints.length} points for "${cleanMeridian}"`);
+  if (meridianPoints.length > 0) {
+    console.log('📋 Sample points:', meridianPoints.slice(0, 3).map(p => `${p.point_number}: ${p.nameEnglish}`));
+  } else {
+    console.log('❌ No points found. Available meridians:', [...new Set(allPoints.map(p => p.meridian))].slice(0, 10));
+  }
   
   meridianCache.set(meridian, meridianPoints);
   return meridianPoints;
