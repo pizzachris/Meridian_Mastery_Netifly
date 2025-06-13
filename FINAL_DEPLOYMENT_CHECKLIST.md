@@ -10,6 +10,27 @@
 - [x] Progress tracking implemented
 - [x] All build errors resolved
 - [x] Code committed to git
+- [x] Element Theory Modal system implemented
+- [ ] **DEBUGGING**: Element Theory Modals not triggering in production
+- [ ] **ISSUE**: Settings toggle unchecking after navigation
+
+## 🐛 CURRENT DEBUGGING STATUS
+**Issue**: Element Theory popups implemented but not working in production
+**Symptoms**: 
+- Settings checkbox unchecks itself after navigation
+- Modal never appears when encountering new meridians
+- Feature works in development but not in deployed version
+
+**Debugging Added**:
+- Console logging in FlashcardSession for modal triggers  
+- Settings persistence debugging in SettingsContext
+- Removed conflicting SettingsContext.jsx file
+
+**Next Steps**:
+1. Check browser console for debug logs
+2. Test settings persistence behavior
+3. Verify modal triggering conditions
+4. Check for context provider issues
 
 ## 🎯 DEPLOYMENT OPTIONS
 
