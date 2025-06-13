@@ -17,11 +17,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
   // Load settings from localStorage on mount
   useEffect(() => {
     const savedSettings = localStorage.getItem('meridianMasterySettings');
+    console.log('🔧 Loading settings from localStorage:', savedSettings);
     if (savedSettings) {
       try {
         const settings = JSON.parse(savedSettings);
         if (typeof settings.showElementTheoryModal === 'boolean') {
           setShowElementTheoryModal(settings.showElementTheoryModal);
+          console.log('✅ Loaded showElementTheoryModal:', settings.showElementTheoryModal);
         }
       } catch (error) {
         console.error('Error loading settings:', error);
@@ -34,6 +36,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) 
     const settings = {
       showElementTheoryModal
     };
+    console.log('💾 Saving settings to localStorage:', settings);
     localStorage.setItem('meridianMasterySettings', JSON.stringify(settings));
   }, [showElementTheoryModal]);
 
