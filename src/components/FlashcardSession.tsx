@@ -11,6 +11,15 @@ interface FlashcardSessionProps {
   [key: string]: any; // For any other props passed through to Flashcard
 }
 
+// Type the Flashcard component props to avoid TypeScript errors
+interface FlashcardProps {
+  sessionMode: string;
+  shuffleMode: boolean;
+  navigateTo: (page: string) => void;
+  onCardChange?: (cardData: any) => void;
+  [key: string]: any;
+}
+
 // Helper to get element from meridian name
 const getElementFromMeridian = (meridianName: string): string => {
   if (!meridianName) return 'Metal';
@@ -64,16 +73,15 @@ const FlashcardSession: React.FC<FlashcardSessionProps> = ({
     setShowModal(false);
     setCurrentElement('');
   };
-
   return (
     <>
-      <Flashcard
-        sessionMode={sessionMode}
-        shuffleMode={shuffleMode}
-        navigateTo={navigateTo}
-        onCardChange={handleCardChange}
-        {...otherProps}
-      />
+      {React.createElement(Flashcard as any, {
+        sessionMode,
+        shuffleMode,
+        navigateTo,
+        onCardChange: handleCardChange,
+        ...otherProps
+      } as FlashcardProps)}
       
       {showModal && currentElement && (
         <FlashcardModal
