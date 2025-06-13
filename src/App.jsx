@@ -78,13 +78,13 @@ function App() {
       case 'progress':
         return <Progress navigateTo={navigateTo} />
       case 'settings':
-        return <Settings navigateTo={navigateTo} darkMode={darkMode} setDarkMode={setDarkMode} />
-      case 'flagged-issues':
+        return <Settings navigateTo={navigateTo} darkMode={darkMode} setDarkMode={setDarkMode} />      case 'flagged-issues':
         return <FlaggedIssues navigateTo={navigateTo} />
       default:
         return <Home navigateTo={navigateTo} />
     }
   }
+
   return (
     <SettingsProvider>
       <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
