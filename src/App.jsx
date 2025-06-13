@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Home from './components/Home'
 import DailySession from './components/DailySession'
-import Flashcard from './components/Flashcard'
+import FlashcardSession from './components/FlashcardSession'
 import BodyMap from './components/BodyMap'
 import Settings from './components/Settings'
 import Progress from './components/Progress'
@@ -9,6 +9,7 @@ import Quiz from './components/Quiz'
 import QuizSelection from './components/QuizSelection'
 import FlaggedIssues from './components/FlaggedIssues'
 import DisclaimerModal from './components/DisclaimerModal'
+import { SettingsProvider } from './context/SettingsContext'
 import { OptimizationTester } from './utils/optimizationTester'
 
 function App() {
@@ -60,15 +61,14 @@ function App() {
     }
   }
 
-  // Main page rendering logic
-  const renderCurrentPage = () => {
+  // Main page rendering logic  const renderCurrentPage = () => {
     switch (currentPage) {
       case 'home':
         return <Home navigateTo={navigateTo} />
       case 'session':
         return <DailySession navigateTo={navigateTo} />
       case 'flashcards':
-        return <Flashcard navigateTo={navigateTo} sessionMode={sessionMode} shuffleMode={shuffleMode} />
+        return <FlashcardSession navigateTo={navigateTo} sessionMode={sessionMode} shuffleMode={shuffleMode} />
       case 'bodymap':
         return <BodyMap navigateTo={navigateTo} />
       case 'quiz-selection':
@@ -85,19 +85,20 @@ function App() {
         return <Home navigateTo={navigateTo} />
     }
   }
-
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-      <div className="bg-white dark:bg-gray-900 min-h-screen">
-        {renderCurrentPage()}
+    <SettingsProvider>
+      <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+        <div className="bg-white dark:bg-gray-900 min-h-screen">
+          {renderCurrentPage()}
+        </div>
+        
+        {/* Disclaimer Modal */}
+        <DisclaimerModal 
+          isOpen={showDisclaimer} 
+          onAccept={handleDisclaimerAccept} 
+        />
       </div>
-      
-      {/* Disclaimer Modal */}
-      <DisclaimerModal 
-        isOpen={showDisclaimer} 
-        onAccept={handleDisclaimerAccept} 
-      />
-    </div>
+    </SettingsProvider>
   )
 }
 

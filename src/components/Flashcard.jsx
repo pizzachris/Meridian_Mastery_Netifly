@@ -113,7 +113,7 @@ const MemoizedProgressBar = memo(({ current, total }) => (
   </div>
 ));
 
-const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode = false }) => {
+const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode = false, onCardChange }) => {
   // All state hooks must be at the top level - never conditional
   const [currentCard, setCurrentCard] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)  // Always start with front side
@@ -203,8 +203,15 @@ const Flashcard = memo(({ navigateTo, selectedPointId, sessionMode, shuffleMode 
       martialApplication,
       insightText,
       isBilateral
-    };
-  }, [currentCardData, currentCard])
+    };  }, [currentCardData, currentCard])
+
+  // Notify parent of card changes
+  useEffect(() => {
+    if (onCardChange && currentCardData) {
+      onCardChange(currentCardData);
+    }
+  }, [onCardChange, currentCardData]);
+
     // Initialize pronunciation manager and load progress
   useEffect(() => {
     const initialize = async () => {

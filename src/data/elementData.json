@@ -1,0 +1,420 @@
+{
+  "Lung": {
+    "element": "Metal",
+    "color": "#CCCCCC",
+    "season": "Autumn",
+    "emotion": "Grief",
+    "time": "3-5 AM",
+    "yin_yang": "Yin",
+    "description": "The Lung meridian is associated with the Metal element, which governs organization, boundaries, and letting go. It relates to the emotion of grief and the process of release. The Lung is responsible for taking in pure qi from the air and dispersing it throughout the body.",
+    "characteristics": [
+      "Governs respiration and energy distribution",
+      "Controls skin and body hair (defensive qi)",
+      "Regulates water passages",
+      "Stores corporeal soul (Po)",
+      "Manifests in the lung organ"
+    ],
+    "imbalance_symptoms": [
+      "Respiratory problems",
+      "Skin issues",
+      "Excessive grief or depression",
+      "Weak immune system",
+      "Difficulty letting go"
+    ],
+    "balancing_practices": [
+      "Deep breathing exercises",
+      "Spending time in nature",
+      "Practicing organization and structure",
+      "Working with grief and loss in healthy ways"
+    ]
+  },
+  "Large Intestine": {
+    "element": "Metal",
+    "color": "#CCCCCC",
+    "season": "Autumn",
+    "emotion": "Grief",
+    "time": "5-7 AM",
+    "yin_yang": "Yang",
+    "description": "The Large Intestine meridian is the yang pair to the Lung meridian, also associated with the Metal element. It represents elimination, letting go, and making space for the new. It works in tandem with the Lungs to clear waste from the body.",
+    "characteristics": [
+      "Responsible for waste elimination",
+      "Extracts last bits of pure qi from food waste",
+      "Helps establish healthy boundaries",
+      "Assists in the release of emotional waste",
+      "Manifests in the colon"
+    ],
+    "imbalance_symptoms": [
+      "Constipation or diarrhea",
+      "Difficulty letting go of the past",
+      "Skin problems (acne, rashes)",
+      "Rigid thinking",
+      "Excessive perfectionism"
+    ],
+    "balancing_practices": [
+      "Regular elimination habits",
+      "Practices that support release (journaling, decluttering)",
+      "Setting healthy boundaries",
+      "Mindfulness meditation"
+    ]
+  },
+  "Stomach": {
+    "element": "Earth",
+    "color": "#F2CC8F",
+    "season": "Late Summer",
+    "emotion": "Pensiveness/Worry",
+    "time": "7-9 AM",
+    "yin_yang": "Yang",
+    "description": "The Stomach meridian is associated with the Earth element, which governs nourishment, stability, and centeredness. The Stomach receives food and begins the digestive process, transforming it into nutrients that can be absorbed.",
+    "characteristics": [
+      "Responsible for receiving and ripening food",
+      "Governs rotting and ripening",
+      "Creates the foundation for post-natal qi",
+      "Supports the spleen in nourishing the body",
+      "Manifests in the stomach organ"
+    ],
+    "imbalance_symptoms": [
+      "Digestive issues (acid reflux, ulcers)",
+      "Eating disorders",
+      "Excessive worry or overthinking",
+      "Insatiable hunger (physical or emotional)",
+      "Difficulty with transitions"
+    ],
+    "balancing_practices": [
+      "Regular, mindful eating habits",
+      "Grounding exercises",
+      "Establishing routines",
+      "Spending time in nature",
+      "Practicing presence and mindfulness"
+    ]
+  },
+  "Spleen": {
+    "element": "Earth",
+    "color": "#F2CC8F",
+    "season": "Late Summer",
+    "emotion": "Pensiveness/Worry",
+    "time": "9-11 AM",
+    "yin_yang": "Yin",
+    "description": "The Spleen meridian is the yin Earth element meridian, working in partnership with the Stomach. It transforms food into energy and blood, distributing nourishment throughout the body. The Spleen governs our ability to digest not just food, but also experiences and information.",
+    "characteristics": [
+      "Transforms food into qi and blood",
+      "Governs transportation and distribution",
+      "Holds blood in the vessels",
+      "Houses the intellect (Yi)",
+      "Controls muscles and limbs"
+    ],
+    "imbalance_symptoms": [
+      "Fatigue and low energy",
+      "Digestive weakness (bloating, loose stools)",
+      "Blood deficiency or bleeding issues",
+      "Muscle weakness",
+      "Overthinking and worry"
+    ],
+    "balancing_practices": [
+      "Eating warm, cooked foods",
+      "Setting boundaries around overthinking",
+      "Creating stability and routine",
+      "Grounding meditation",
+      "Gentle strengthening exercises"
+    ]
+  },
+  "Heart": {
+    "element": "Fire",
+    "color": "#E76F51",
+    "season": "Summer",
+    "emotion": "Joy",
+    "time": "11 AM-1 PM",
+    "yin_yang": "Yin",
+    "description": "The Heart meridian is associated with the Fire element, governing joy, love, and spiritual connection. The Heart is considered the Emperor in Chinese medicine, housing the Shen (spirit) and governing consciousness and mental activity.",
+    "characteristics": [
+      "Governs blood and blood vessels",
+      "Houses the spirit (Shen)",
+      "Controls mental activity and consciousness",
+      "Manifests in the face (complexion)",
+      "Opens into the tongue"
+    ],
+    "imbalance_symptoms": [
+      "Anxiety and restlessness",
+      "Sleep disturbances",
+      "Palpitations",
+      "Poor circulation",
+      "Mental confusion or emotional instability"
+    ],
+    "balancing_practices": [
+      "Meditation and mindfulness",
+      "Cultivating joy and genuine connection",
+      "Heart-opening practices (gratitude, compassion)",
+      "Adequate rest and relaxation",
+      "Maintaining healthy relationships"
+    ]
+  },
+  "Small Intestine": {
+    "element": "Fire",
+    "color": "#E76F51",
+    "season": "Summer",
+    "emotion": "Joy",
+    "time": "1-3 PM",
+    "yin_yang": "Yang",
+    "description": "The Small Intestine meridian is the yang pair to the Heart meridian, associated with the Fire element. It sorts pure from impure, assimilating what is useful and eliminating what is not. This sorting function applies to both nutrients and ideas/experiences.",
+    "characteristics": [
+      "Separates pure from impure",
+      "Transforms food into nutrients",
+      "Assists the Heart in clarity of mind",
+      "Helps with discernment and decision-making",
+      "Manifests in the small intestine organ"
+    ],
+    "imbalance_symptoms": [
+      "Digestive disturbances",
+      "Difficulty making decisions",
+      "Confusion about one's path",
+      "Inability to discriminate between thoughts",
+      "Shoulder and neck tension"
+    ],
+    "balancing_practices": [
+      "Clarity-enhancing meditation",
+      "Journaling for decision-making",
+      "Setting clear boundaries",
+      "Simplifying one's environment",
+      "Eating easily digestible foods"
+    ]
+  },
+  "Urinary Bladder": {
+    "element": "Water",
+    "color": "#219EBC",
+    "season": "Winter",
+    "emotion": "Fear",
+    "time": "3-5 PM",
+    "yin_yang": "Yang",
+    "description": "The Urinary Bladder meridian is associated with the Water element, governing resources, willpower, and reserves. The longest meridian in the body, it runs down the back along the spine, connecting to all major organ systems. It stores and excretes liquid waste.",
+    "characteristics": [
+      "Stores and excretes fluids",
+      "Governs the muscles and bones of the back",
+      "Receives fluids from the Small Intestine",
+      "Reflects the health of the nervous system",
+      "Manifests in the urinary bladder organ"
+    ],
+    "imbalance_symptoms": [
+      "Urinary problems (UTIs, incontinence)",
+      "Lower back pain",
+      "Low energy reserves",
+      "Difficulties with fear and insecurity",
+      "Poor adaptation to change"
+    ],
+    "balancing_practices": [
+      "Adequate hydration",
+      "Back-strengthening exercises",
+      "Rest and energy conservation",
+      "Practices that build willpower",
+      "Working consciously with fear"
+    ]
+  },
+  "Kidney": {
+    "element": "Water",
+    "color": "#219EBC",
+    "season": "Winter",
+    "emotion": "Fear",
+    "time": "5-7 PM",
+    "yin_yang": "Yin",
+    "description": "The Kidney meridian is the yin Water element meridian, considered the foundation of all yin and yang energies in the body. It stores our essential life force (Jing) and governs growth, reproduction, and development. The Kidneys are associated with willpower, courage, and wisdom.",
+    "characteristics": [
+      "Stores essence (Jing)",
+      "Governs birth, growth, and reproduction",
+      "Controls water metabolism",
+      "Grasps the qi from the lungs",
+      "Houses willpower (Zhi)"
+    ],
+    "imbalance_symptoms": [
+      "Fatigue and exhaustion",
+      "Reproductive or sexual issues",
+      "Bone problems",
+      "Premature aging",
+      "Chronic fear and insecurity"
+    ],
+    "balancing_practices": [
+      "Adequate rest and sleep",
+      "Gentle kidney-nourishing exercises",
+      "Conservation of sexual energy",
+      "Meditation on inner stillness",
+      "Foods that support kidney function"
+    ]
+  },
+  "Pericardium": {
+    "element": "Fire",
+    "color": "#E76F51",
+    "season": "Summer",
+    "emotion": "Joy",
+    "time": "7-9 PM",
+    "yin_yang": "Yin",
+    "description": "The Pericardium meridian is associated with the Fire element, specifically the Ministerial Fire aspect. The Pericardium serves as the protector of the Heart, governing our boundaries in relationships and our capacity for intimacy while maintaining protection.",
+    "characteristics": [
+      "Protects the Heart physically and emotionally",
+      "Regulates circulation",
+      "Governs intimate relationships",
+      "Controls boundaries in connection with others",
+      "Manifests in the pericardium membrane"
+    ],
+    "imbalance_symptoms": [
+      "Relationship difficulties",
+      "Inappropriate boundaries (too rigid or too porous)",
+      "Chest pain or discomfort",
+      "Emotional volatility in relationships",
+      "Circulation problems"
+    ],
+    "balancing_practices": [
+      "Heart-opening practices with healthy boundaries",
+      "Conscious relationship building",
+      "Exercises that promote healthy circulation",
+      "Practicing appropriate vulnerability",
+      "Balancing connection and protection"
+    ]
+  },
+  "Triple Burner": {
+    "element": "Fire",
+    "color": "#E76F51",
+    "season": "Summer",
+    "emotion": "Joy",
+    "time": "9-11 PM",
+    "yin_yang": "Yang",
+    "description": "The Triple Burner (or Triple Heater) meridian is the yang pair to the Pericardium, associated with the Fire element. Unlike other meridians, it doesn't correspond to a specific organ but rather coordinates the functions between three body regions or 'burners'. It regulates temperature, fluid distribution, and metabolic activities.",
+    "characteristics": [
+      "Regulates the relationship between organ systems",
+      "Governs the transformation and movement of fluids",
+      "Coordinates temperature regulation",
+      "Assists the Pericardium in protection",
+      "Manifests as the coordination between systems"
+    ],
+    "imbalance_symptoms": [
+      "Edema and fluid retention",
+      "Temperature regulation issues",
+      "Hormonal imbalances",
+      "Difficulty with transitions",
+      "Immune system dysfunction"
+    ],
+    "balancing_practices": [
+      "Harmonizing exercises that integrate body systems",
+      "Balanced hydration",
+      "Practices that support metabolism",
+      "Activities that promote smooth transitions",
+      "Thermal regulation exercises"
+    ]
+  },
+  "Gallbladder": {
+    "element": "Wood",
+    "color": "#8DB580",
+    "season": "Spring",
+    "emotion": "Anger",
+    "time": "11 PM-1 AM",
+    "yin_yang": "Yang",
+    "description": "The Gallbladder meridian is associated with the Wood element, governing decisions, planning, and execution. The Gallbladder stores and releases bile, which symbolically relates to making clear judgments and having the courage to take action.",
+    "characteristics": [
+      "Stores and secretes bile",
+      "Governs decision-making and judgment",
+      "Provides courage and initiative",
+      "Controls the sinews and tendons",
+      "Manifests in the gallbladder organ"
+    ],
+    "imbalance_symptoms": [
+      "Indecisiveness",
+      "Timidity or recklessness",
+      "Rib and side pain",
+      "Tendon problems",
+      "Difficulty with planning or execution"
+    ],
+    "balancing_practices": [
+      "Decision-making exercises",
+      "Gentle stretching for tendons and sinews",
+      "Practices that build healthy assertiveness",
+      "Strategic planning activities",
+      "Finding middle path between action and restraint"
+    ]
+  },
+  "Liver": {
+    "element": "Wood",
+    "color": "#8DB580",
+    "season": "Spring",
+    "emotion": "Anger",
+    "time": "1-3 AM",
+    "yin_yang": "Yin",
+    "description": "The Liver meridian is the yin Wood element meridian, governing the smooth flow of qi throughout the body. The Liver is responsible for planning and vision, and it stores blood during rest. It is closely connected to emotional flow and creative expression.",
+    "characteristics": [
+      "Ensures smooth flow of qi",
+      "Stores blood",
+      "Houses the ethereal soul (Hun)",
+      "Governs tendons and ligaments",
+      "Controls planning and vision"
+    ],
+    "imbalance_symptoms": [
+      "Irritability and anger",
+      "Headaches and migraines",
+      "Menstrual irregularities",
+      "Eye problems",
+      "Difficulty planning or visualizing the future"
+    ],
+    "balancing_practices": [
+      "Regular, gentle movement",
+      "Creative expression",
+      "Emotional release techniques",
+      "Vision and planning exercises",
+      "Practices that promote flexibility (physical and mental)"
+    ]
+  },
+  "Conception Vessel": {
+    "element": "Extraordinary",
+    "color": "#8338EC",
+    "season": "All seasons",
+    "emotion": "Balance of all emotions",
+    "time": "N/A",
+    "yin_yang": "Yin",
+    "description": "The Conception Vessel (Ren Mai) is one of the eight extraordinary meridians, running up the front midline of the body. It governs all yin energies and is known as the 'Sea of Yin'. It's deeply connected to creation, nourishment, and development.",
+    "characteristics": [
+      "Regulates all yin meridians",
+      "Governs reproduction and development",
+      "Connects to the uterus and genitals",
+      "Influences the anterior and interior aspects of the body",
+      "Supports the creation of new life and ideas"
+    ],
+    "imbalance_symptoms": [
+      "Reproductive issues",
+      "Hormonal imbalances",
+      "Digestive disturbances",
+      "Difficulty with self-nurturing",
+      "Depletion of yin energy reserves"
+    ],
+    "balancing_practices": [
+      "Yin yoga",
+      "Abdominal breathing",
+      "Self-nurturing practices",
+      "Meditation on receiving and accepting",
+      "Gentle touch along the midline"
+    ]
+  },
+  "Governing Vessel": {
+    "element": "Extraordinary",
+    "color": "#8338EC",
+    "season": "All seasons",
+    "emotion": "Balance of all emotions",
+    "time": "N/A",
+    "yin_yang": "Yang",
+    "description": "The Governing Vessel (Du Mai) is one of the eight extraordinary meridians, running up the back midline of the body along the spine. It governs all yang energies and is known as the 'Sea of Yang'. It's connected to our core strength, willpower, and autonomy.",
+    "characteristics": [
+      "Regulates all yang meridians",
+      "Governs the spine and brain",
+      "Controls the posterior and exterior aspects of the body",
+      "Stores and distributes ancestral energy",
+      "Supports individuation and self-governance"
+    ],
+    "imbalance_symptoms": [
+      "Spinal issues",
+      "Headaches and migraines",
+      "Mental health struggles",
+      "Difficulty with autonomy and self-direction",
+      "Depletion of yang energy reserves"
+    ],
+    "balancing_practices": [
+      "Spinal strengthening exercises",
+      "Standing meditation",
+      "Practices that build independence",
+      "Back tapping or warming",
+      "Mindful attention to posture and alignment"
+    ]
+  }
+}

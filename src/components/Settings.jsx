@@ -3,6 +3,7 @@ import DisclaimerModal from './DisclaimerModal'
 import pwaInstaller from '../utils/pwaInstaller'
 import { ProgressTracker } from '../utils/progressTracker'
 import Logo from './Logo'
+import { useSettings } from '../context/SettingsContext'
 
 // Debounce utility for localStorage saves
 const debounce = (func, wait) => {
@@ -18,6 +19,7 @@ const debounce = (func, wait) => {
 };
 
 const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
+  const { showElementTheoryModal, setShowElementTheoryModal } = useSettings()
   const [showDisclaimer, setShowDisclaimer] = useState(false)
   const [autoFlip, setAutoFlip] = useState(() => {
     try {
@@ -341,13 +343,21 @@ const Settings = ({ navigateTo, darkMode, setDarkMode }) => {
                   onChange={(e) => setShowRomanization(e.target.checked)}
                   className="w-4 h-4 accent-yellow-500" 
                 />
-              </div>
-              <div className="flex items-center justify-between">
+              </div>              <div className="flex items-center justify-between">
                 <span>Voice pronunciation</span>
                 <input 
                   type="checkbox" 
                   checked={voicePronunciation}
                   onChange={(e) => setVoicePronunciation(e.target.checked)}
+                  className="w-4 h-4 accent-yellow-500" 
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Element theory popups</span>
+                <input 
+                  type="checkbox" 
+                  checked={showElementTheoryModal}
+                  onChange={(e) => setShowElementTheoryModal(e.target.checked)}
                   className="w-4 h-4 accent-yellow-500" 
                 />
               </div>

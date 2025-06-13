@@ -6,7 +6,19 @@
 ## Build Date: January 2025 - PRODUCTION READY
 ## Status: ✅ COMPLETE - Ready for GitHub deployment
 
-### **LATEST UPDATE**: Mobile Optimization & Icon Fixes (June 9, 2025)
+### **LATEST UPDATE**: Element Theory Modal Feature (June 13, 2025)
+- **ELEMENT THEORY MODALS**: One-time educational popups when encountering new meridians
+- **DYNAMIC BACKGROUNDS**: Using element mockup images (earth element.PNG, fire element.PNG, etc.)
+- **ELEMENT-SPECIFIC STYLING**: Color schemes and themes matching each of the five elements
+- **PROFESSIONAL UI**: Organized sections for emotions, theory, qualities, and physiological functions
+- **SESSION TRACKING**: Each element modal shows only once per app session
+- **USER CONTROLLABLE**: Toggle setting in Settings > Study Preferences > "Element theory popups"
+- **NON-DISRUPTIVE**: Modal overlays flashcard session without interrupting navigation
+- **MODULAR ARCHITECTURE**: Separate components for FlashcardSession, FlashcardModal, SettingsContext
+- **FUTURE-EXPANDABLE**: Easy to add more educational content without UI changes
+- **CONTINUE BUTTON**: Professional modal dismissal maintaining flashcard flow
+
+### **PREVIOUS UPDATE**: Mobile Optimization & Icon Fixes (June 9, 2025)
 - **MOBILE VIEWPORT**: Added safe area support for iPhone notch/status bar interference
 - **CSS CLASSES**: Added mobile-safe and mobile-header-safe classes for proper spacing
 - **ALL PAGES OPTIMIZED**: Home, Flashcard, Quiz, Settings, Progress pages adjusted for mobile screens
@@ -169,6 +181,39 @@
 - Admin interface for reviewing and managing reports
 - Individual issue deletion and bulk clearing
 
+#### 10. **FlashcardSession Component** (`src/components/FlashcardSession.tsx`) - **NEW**
+- **MODAL INTEGRATION WRAPPER** for flashcard sessions
+- Monitors meridian changes during flashcard navigation
+- Triggers element theory modals for new elements
+- Session-based tracking (each element shows once per app session)
+- Respects user settings for modal display preferences
+- Non-disruptive overlay system maintaining flashcard flow
+- Smart element detection from meridian names
+
+#### 11. **FlashcardModal Component** (`src/components/FlashcardModal.tsx`) - **NEW**
+- **BEAUTIFUL ELEMENT THEORY POPUPS** with professional design
+- Dynamic backgrounds using element mockup images from `public/icons/`
+- Element-specific color schemes:
+  - Metal: Gray gradients with silver accents
+  - Wood: Green gradients with natural tones
+  - Fire: Red gradients with warm colors
+  - Earth: Yellow gradients with earthy tones
+  - Water: Blue gradients with flowing aesthetics
+- Organized content sections:
+  - Emotional aspects (challenge vs balance states)
+  - Element theory explanations
+  - Key qualities and characteristics
+  - Physiological functions and meridian associations
+- Professional "CONTINUE" button for dismissal
+- Future-expandable design for additional content
+
+#### 12. **SettingsContext** (`src/context/SettingsContext.tsx`) - **NEW**
+- **GLOBAL STATE MANAGEMENT** for app-wide settings
+- Modal toggle preferences with localStorage persistence
+- React Context pattern for settings distribution
+- Settings provider wrapping entire application
+- Automatic settings loading and saving
+
 ### ✅ Utility Systems
 
 #### **Progress Tracker** (`src/utils/progressTracker.js`)
@@ -191,6 +236,14 @@
   - localStorage integration with Map/Set serialization
   - Progress data survives browser sessions
   - Reset functionality for testing
+
+#### **Modal Session Tracking** (`src/utils/hasSeenPopup.ts`) - **NEW**
+- **SESSION-BASED POPUP CONTROL** for element theory modals
+- Tracks which element modals have been shown in current session
+- Element-based tracking (Metal, Wood, Fire, Earth, Water)
+- Session reset on app reload (fresh start each session)
+- Utility functions for checking and marking modal display
+- Legacy compatibility functions for different naming conventions
 
 ### ✅ Enhanced Features
 
@@ -249,6 +302,16 @@
 - **Flashcards**: JSON format with Korean/English names, locations, functions
 - **Progress**: Map/Set based tracking with localStorage serialization
 - **Flags**: Array-based issue reporting with categorization
+- **Element Theory**: Complete TCM element data (`src/data/elementTheoryData.json`)
+  - Five elements (Metal, Wood, Fire, Earth, Water)
+  - Seasonal associations and meridian mappings
+  - Emotional aspects (challenge vs balance states)
+  - Theoretical foundations and key qualities
+  - Physiological functions and clinical applications
+- **Element Images**: High-quality mockup images in `public/icons/`
+  - earth element.PNG, fire element.PNG, metal element.PNG
+  - water element.PNG, wood element.PNG
+  - Used as dynamic backgrounds in modal displays
 
 ### **Performance Optimizations**
 - Component-level state management

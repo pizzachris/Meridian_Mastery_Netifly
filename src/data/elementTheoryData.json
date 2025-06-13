@@ -1,0 +1,112 @@
+{
+  "metal": {
+    "element": "Metal",
+    "meridians": ["Lung", "Large Intestine"],
+    "season": "Autumn",
+    "emotion": "Grief/Sadness",
+    "positiveEmotion": "Courage/Righteousness",
+    "color": "#9CA3AF",
+    "accentColor": "#6B7280",
+    "theory": "The Metal element represents structure, organization, and boundaries. It governs the lungs and large intestine, controlling respiration and elimination. In autumn, Metal energy helps us let go of what we no longer need, just as trees shed their leaves. When balanced, Metal provides discipline, focus, and the ability to discern what is valuable. When imbalanced, it can manifest as grief, rigidity, or difficulty letting go.",
+    "qualities": [
+      "Structure and organization",
+      "Boundaries and protection", 
+      "Letting go and release",
+      "Discernment and value"
+    ],
+    "functions": [
+      "Controls respiration and oxygen exchange",
+      "Manages elimination and detoxification",
+      "Regulates skin and body hair",
+      "Influences immune function"
+    ]
+  },
+  "wood": {
+    "element": "Wood",
+    "meridians": ["Liver", "Gallbladder"],
+    "season": "Spring",
+    "emotion": "Anger/Frustration",
+    "positiveEmotion": "Patience/Kindness",
+    "color": "#22C55E",
+    "accentColor": "#16A34A",
+    "theory": "The Wood element embodies growth, flexibility, and vision. It governs the liver and gallbladder, managing the smooth flow of qi throughout the body. In spring, Wood energy promotes new growth and planning. When balanced, Wood provides creativity, flexibility, and the ability to adapt to change. When imbalanced, it can manifest as anger, frustration, or stagnation.",
+    "qualities": [
+      "Growth and expansion",
+      "Flexibility and adaptation",
+      "Vision and planning",
+      "Smooth flow of energy"
+    ],
+    "functions": [
+      "Ensures smooth flow of qi and blood",
+      "Stores and filters blood",
+      "Controls tendons and ligaments",
+      "Influences emotional regulation"
+    ]
+  },
+  "fire": {
+    "element": "Fire",
+    "meridians": ["Heart", "Small Intestine", "Pericardium", "Triple Burner"],
+    "season": "Summer",
+    "emotion": "Overexcitement/Mania",
+    "positiveEmotion": "Joy/Love",
+    "color": "#EF4444",
+    "accentColor": "#DC2626",
+    "theory": "The Fire element represents warmth, connection, and consciousness. It governs the heart, small intestine, pericardium, and triple heater, controlling circulation and emotional expression. In summer, Fire energy brings joy, communication, and social connection. When balanced, Fire provides warmth, compassion, and clear communication. When imbalanced, it can manifest as anxiety, insomnia, or emotional instability.",
+    "qualities": [
+      "Warmth and connection",
+      "Joy and celebration",
+      "Communication and expression",
+      "Consciousness and awareness"
+    ],
+    "functions": [
+      "Controls blood circulation",
+      "Manages consciousness and spirit",
+      "Regulates sleep and emotions",
+      "Influences speech and communication"
+    ]
+  },
+  "earth": {
+    "element": "Earth",
+    "meridians": ["Spleen", "Stomach"],
+    "season": "Late Summer",
+    "emotion": "Worry/Pensiveness", 
+    "positiveEmotion": "Thoughtfulness/Compassion",
+    "color": "#A3A3A3",
+    "accentColor": "#737373",
+    "theory": "The Earth element represents nourishment, stability, and centering. It governs the spleen and stomach, managing digestion and transformation of food into energy. In late summer, Earth energy provides grounding and harvest. When balanced, Earth offers stability, nurturing, and the ability to support others. When imbalanced, it can manifest as worry, overthinking, or digestive issues.",
+    "qualities": [
+      "Nourishment and support",
+      "Stability and grounding",
+      "Transformation and digestion",
+      "Centering and balance"
+    ],
+    "functions": [
+      "Controls digestion and absorption",
+      "Transforms food into qi and blood",
+      "Supports muscles and flesh",
+      "Influences thinking and concentration"
+    ]
+  },
+  "water": {
+    "element": "Water",
+    "meridians": ["Kidney", "Urinary Bladder"],
+    "season": "Winter",
+    "emotion": "Fear/Fright",
+    "positiveEmotion": "Wisdom/Will",
+    "color": "#3B82F6",
+    "accentColor": "#2563EB",
+    "theory": "The Water element represents wisdom, willpower, and fundamental life force. It governs the kidneys and bladder, storing essence and controlling water metabolism. In winter, Water energy encourages rest, reflection, and conservation of energy. When balanced, Water provides wisdom, determination, and deep reserves of strength. When imbalanced, it can manifest as fear, exhaustion, or lack of willpower.",
+    "qualities": [
+      "Wisdom and deep knowledge",
+      "Willpower and determination",
+      "Fundamental life essence",
+      "Flow and adaptability"
+    ],
+    "functions": [
+      "Stores kidney essence (jing)",
+      "Controls water metabolism",
+      "Supports bones and marrow",
+      "Influences reproduction and development"
+    ]
+  }
+}
