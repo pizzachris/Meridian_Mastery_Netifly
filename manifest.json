@@ -1,0 +1,49 @@
+{  "short_name": "MeridianCoach",
+  "name": "Meridian Mastery Coach",  "icons": [
+    {
+      "src": "/icons/triskelion.svg?v=5&t=20250609",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png?v=5&t=20250609",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "/icons/favicon-16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    },
+    {
+      "src": "/icons/favicon-32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/triskelion-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/triskelion-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#7c2421",
+  "description": "Martial arts and healing pressure point trainer - Korean meridian mastery system.",
+  "orientation": "portrait",
+  "categories": ["education", "health", "martial-arts"],
+  "lang": "en-US"
+}
