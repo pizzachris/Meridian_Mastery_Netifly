@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #111;
+  --accent: #DC143C;
+  --secondary: #FFD700;
+  --card: #222;
+}
+
+body {
+  background-color: var(--background);
+  color: white;
+}
+
+.card-flip {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card-flip.flipped {
+  transform: rotateY(180deg);
+}
